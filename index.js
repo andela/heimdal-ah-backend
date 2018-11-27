@@ -1,7 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+import nodeLogger from 'logger';
 
+const logger = nodeLogger.createLogger();
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -11,5 +13,5 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.listen(PORT, () => {
-  console.log(`connected on port ${PORT}`);
+  logger.info(`connected on port ${PORT}`);
 });
