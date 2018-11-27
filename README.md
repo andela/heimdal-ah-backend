@@ -1,5 +1,7 @@
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-a873d1.svg)](https://houndci.com)
+[![Build Status](https://travis-ci.org/andela/heimdal-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/heimdal-ah-backend)
 [![Coverage Status](https://coveralls.io/repos/github/andela/heimdal-ah-backend/badge.svg?branch=develop)](https://coveralls.io/github/andela/heimdal-ah-backend?branch=develop)
+
 
 Authors Haven - A Social platform for the creative at heart.
 =======
