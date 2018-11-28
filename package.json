@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "nodemon index.js --exec babel-node -- ",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migration": "sequelize db:migrate"
+    "db:migrate": "sequelize db:migrate"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
