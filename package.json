@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=lcov mocha ./test/index.js --require babel-register --exit"
+    "test": "nyc mocha ./test/index.js --require babel-register --exit"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
