@@ -1,4 +1,4 @@
- {
+{
   "name": "express-authorshaven",
   "version": "1.0.0",
   "description": "A Social platform for the creative at heart",
@@ -43,6 +43,3 @@
     "eslint-plugin-import": "^2.14.0"
   }
 }
-
- 
-

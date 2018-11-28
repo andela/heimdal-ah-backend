@@ -15,3 +15,5 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.listen(PORT, () => {
   logger.info(`connected on port ${PORT}`);
 });
+
+export default app;
