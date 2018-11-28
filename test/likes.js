@@ -1,7 +1,7 @@
-import chai from 'chai';
-import chaiHttp from 'chai-http';
-import index from '../index';
+// import chai from 'chai';
+// import chaiHttp from 'chai-http';
+// import index from '../index';
 
-chai.use(chaiHttp);
+// chai.use(chaiHttp);
 
-const [expect] = [chai.expect];
+// const [expect] = [chai.expect];
