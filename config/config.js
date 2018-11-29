@@ -1,21 +1,23 @@
-import '@babel/register';
-import { config } from 'dotenv';
+require('@babel/register');
+const dotenv = require('dotenv');
 
-config();
+dotenv.config();
 
-export const development = {
-  use_env_variable: 'DEV_DB_URL',
-  dialect: 'postgres'
-};
-export const test = {
-  use_env_variable: 'TEST_DB_URL',
-  dialect: 'postgres'
-};
-export const production = {
-  use_env_variable: 'PROD_DB_URL',
-  dialect: 'postgres'
-};
-export const localDevelopment = {
-  use_env_variable: 'MY_POSTICO_URL',
-  dialect: 'postgres'
+module.exports = {
+  development: {
+    use_env_variable: 'DEV_DB_URL',
+    dialect: 'postgres',
+  },
+  test: {
+    use_env_variable: 'TEST_DB_URL',
+    dialect: 'postgres',
+  },
+  production: {
+    use_env_variable: 'PROD_DB_URL',
+    dialect: 'postgres',
+  },
+  localDevelopment: {
+    use_env_variable: 'MY_POSTICO_URL',
+    dialect: 'postgres',
+  },
 };
