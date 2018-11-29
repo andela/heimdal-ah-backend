@@ -1,6 +1,6 @@
 /**
- * This file will serve as the index to import all unit test in the order in which the testing should take place.
- */
+ * This file will serve as the index to import all unit test
+*/
 
 /*
 import './users.test';
