@@ -1,27 +1,39 @@
- {
+{
   "name": "express-authorshaven",
   "version": "1.0.0",
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
+    "pretest": "npm run db:undo:migrate & npm run db:migrate:test",
+    "posttest": "npm run db:undo:migrate",
     "test": "nyc mocha ./test/index.js --require @babel/register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start:dev": "nodemon index.js --exec babel-node -- ",
     "db:migrate": "sequelize db:migrate",
+    "db:undo:migrate": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
+    "db:migrate:test": "cross-env NODE_ENV=test sequelize db:migrate",
     "lint:fix": "eslint --fix ./ --ext .js --color"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/register": "*",
+    "@babel/runtime": "^7.1.5",
     "babel-core": "^6.26.3",
+    "bcrypt": "^3.0.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.4",
+    "install": "^0.12.2",
+    "jsonwebtoken": "^8.4.0",
     "logger": "0.0.1",
     "morgan": "^1.9.1",
+    "npm": "^6.4.1",
     "pg": "^7.6.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.41.2"
@@ -43,6 +55,3 @@
     "eslint-plugin-import": "^2.14.0"
   }
 }
-
- 
-
