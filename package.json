@@ -4,14 +4,12 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run db:undo:migrate & npm run db:migrate:test",
-    "posttest": "npm run db:undo:migrate",
+    "pretest": "npm run db:migrate",
+    "posttest": "sequelize db:migrate:undo:all",
     "test": "nyc mocha ./test/index.js --require @babel/register --exit",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start:dev": "nodemon index.js --exec babel-node -- ",
     "db:migrate": "sequelize db:migrate",
-    "db:undo:migrate": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
-    "db:migrate:test": "cross-env NODE_ENV=test sequelize db:migrate",
     "lint:fix": "eslint --fix ./ --ext .js --color"
   },
   "author": "Andela Simulations Programme",
