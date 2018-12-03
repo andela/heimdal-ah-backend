@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable valid-jsdoc */
 import { check, validationResult, body } from 'express-validator/check';
-import UserLibFile from '../lib/user';
+import UserModelQuery from '../lib/user';
 
 import db from '../models/index';
 const { User } = db;
@@ -119,7 +119,7 @@ class UserValidation {
   static async checkEmailExist(req, res, next) {
     const { email } = req.body;
     try {
-      const user = await UserLibFile.getUserByEmail(email);
+      const user = await UserModelQuery.getUserByEmail(email);
       if(user) {
         return res.status(409).json({
           errors : {
