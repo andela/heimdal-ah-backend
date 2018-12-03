@@ -8,7 +8,7 @@ const bodyHelper = {
   },
   signUp: {
     validUser: {
-      name: 'Henry',
+      username: 'Henry',
       email: TestHelper.userEmail,
       password: TestHelper.password
     }

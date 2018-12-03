@@ -17,11 +17,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/api/', routes);
 
-// Default to here when an invalid endpoint is entered
-app.use('/', (req, res) => res.status(200).json({
-  success: true,
-  message: 'Welcome to Authors Haven by Heimdal'
-}));
+// // Default to here when an invalid endpoint is entered
+// app.use('/', (req, res) => res.status(200).json({
+//   success: true,
+//   message: 'Welcome to Authors Haven by Heimdal'
+// }));
 
 app.listen(PORT, () => {
   logger.info(`connected on port ${PORT}`);

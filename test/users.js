@@ -7,19 +7,19 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('GET /', () => {
-  it('should return 200 for visiting a random endpoint on the app', (done) => {
-    chai
-      .request(app)
-      .get('/')
-      .end((err, result) => {
-        expect(result).to.have.status(200);
-        expect(result.body).to.be.an('object');
-        expect(result.body.success).to.be.equal(true);
-        done();
-      });
-  });
-});
+// describe('GET /', () => {
+//   it('should return 200 for visiting a random endpoint on the app', (done) => {
+//     chai
+//       .request(app)
+//       .get('/')
+//       .end((err, result) => {
+//         expect(result).to.have.status(200);
+//         expect(result.body).to.be.an('object');
+//         expect(result.body.success).to.be.equal(true);
+//         done();
+//       });
+//   });
+// });
 
 describe('POST /users/signup', () => {
   it('should return 201 for creating a user', (done) => {
