@@ -4,14 +4,14 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "pretest": "cross-env NODE_ENV=test sequelize db:migrate",
-    "test": "cross-env NODE_ENV=test nyc mocha ./test/index.js --require @babel/register --exit --timeout 10000",
-    "posttest": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
+    "pretest": "npm run db:undo:migrate & npm run db:migrate:test",
+    "test": "cross-env NODE_ENV=test nyc mocha ./test --require @babel/register --exit --timeout 250000",
+    "posttest": "npm run db:undo:migrate",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start:dev": "nodemon index.js --exec babel-node -- ",
-    "db:migrate": "sequelize db:migrate",
-    "db:migrate:undo": "sequelize db:migrate:undo",
-    "db:migrate:undo:all": "sequelize db:migrate:undo:all",
+    "db:undo:migrate": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo:all",
+    "db:migrate": "node_modules/.bin/sequelize db:migrate",
+    "db:migrate:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate",
     "lint:fix": "eslint --fix ./ --ext .js --color"
   },
   "author": "Andela Simulations Programme",
@@ -34,6 +34,7 @@
     "pg": "^7.6.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.41.2",
+    "sequelize-cli": "^5.4.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
