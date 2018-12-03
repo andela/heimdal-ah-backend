@@ -9,9 +9,9 @@
     "posttest": "npm run db:undo:migrate",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start:dev": "nodemon index.js --exec babel-node -- ",
-    "db:undo:migrate": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
-    "db:migrate": "sequelize db:migrate",
-    "db:migrate:test": "cross-env NODE_ENV=test sequelize db:migrate",
+    "db:undo:migrate": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo:all",
+    "db:migrate": "node_modules/.bin/sequelize db:migrate",
+    "db:migrate:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate",
     "lint:fix": "eslint --fix ./ --ext .js --color"
   },
   "author": "Andela Simulations Programme",
@@ -32,7 +32,8 @@
     "morgan": "^1.9.1",
     "pg": "^7.6.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.41.2"
+    "sequelize": "^4.41.2",
+    "sequelize-cli": "^5.4.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
