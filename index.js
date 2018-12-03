@@ -3,6 +3,9 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import nodeLogger from 'logger';
 
+// Import The Routes Index File =========================================
+import routes from './routes/index';
+
 const logger = nodeLogger.createLogger();
 const PORT = process.env.PORT || 4000;
 
@@ -12,6 +15,10 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use('/api/', routes);
+
 app.listen(PORT, () => {
   logger.info(`connected on port ${PORT}`);
 });
+
+export default app;

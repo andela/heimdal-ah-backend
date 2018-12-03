@@ -14,9 +14,7 @@ const DB_URL = process.env[config[NODE_ENV].use_env_variable];
 const sequelize = new Sequelize(DB_URL, config[NODE_ENV]);
 
 fs.readdirSync(__dirname)
-  .filter(
-    file => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
-  )
+  .filter(file => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
   .forEach((file) => {
     const model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;

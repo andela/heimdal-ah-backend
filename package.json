@@ -1,30 +1,40 @@
- {
+{
   "name": "express-authorshaven",
   "version": "1.0.0",
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha ./test/index.js --require @babel/register --exit",
+    "pretest": "cross-env NODE_ENV=test sequelize db:migrate",
+    "test": "cross-env NODE_ENV=test nyc mocha ./test/index.js --require @babel/register --exit",
+    "posttest": "cross-env NODE_ENV=test sequelize db:migrate:undo:all",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start:dev": "nodemon index.js --exec babel-node -- ",
     "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo",
+    "db:migrate:undo:all": "sequelize db:migrate:undo:all",
     "lint:fix": "eslint --fix ./ --ext .js --color"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/register": "*",
+    "@babel/runtime": "^7.1.5",
+    "@sendgrid/mail": "^6.3.1",
     "babel-core": "^6.26.3",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
+    "cross-env": "^5.2.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
     "logger": "0.0.1",
     "morgan": "^1.9.1",
     "pg": "^7.6.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.41.2"
+    "sequelize": "^4.41.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.5",
@@ -43,6 +53,3 @@
     "eslint-plugin-import": "^2.14.0"
   }
 }
-
- 
-
