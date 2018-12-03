@@ -1,9 +1,8 @@
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import nodeLogger from 'logger';
+import userRoutes from './routes/Users';
 
-const logger = nodeLogger.createLogger();
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -11,7 +10,10 @@ const app = express();
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use('/v1/api/', userRoutes);
 
 app.listen(PORT, () => {
-  logger.info(`connected on port ${PORT}`);
+  console.log(`connected on port ${PORT}`);
 });
+
+export default app;
