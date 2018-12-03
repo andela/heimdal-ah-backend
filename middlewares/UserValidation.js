@@ -120,7 +120,6 @@ class UserValidation {
     const { email } = req.body;
     try {
       const user = await UserLibFile.getUserByEmail(email);
-      
       if(user) {
         return res.status(409).json({
           errors : {

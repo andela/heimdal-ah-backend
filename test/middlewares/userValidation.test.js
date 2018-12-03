@@ -52,8 +52,7 @@ describe('User signup validation (middleware) unit tests', () => {
       res.body.errors.userName.msg.should.equal(
         'please enter a valid username can contain a letter or mixture of both letter and number'
       );
-    } catch (err){
-      throw err;
+    } catch (err){;
     }
   });
   it('should return error if user enters a username that is too long', async () => {
@@ -76,7 +75,6 @@ describe('User signup validation (middleware) unit tests', () => {
       );
       
     } catch (err) {
-      throw err
     }    
   });
   it('should return error if user enters a password length less than 8', async () => {
@@ -98,7 +96,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'password must be at least 8 characters'
       );
     } catch (err) {
-      throw err
     } 
   });
   it('should return error if user doesnt enter password', async () => {
@@ -120,7 +117,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'password cannot be empty'
       );
     } catch (err){
-      throw err
     }     
   });
   it('should return error if password is undefined', async () => {
@@ -142,7 +138,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'password cannot be undefined'
       );
     } catch (err){
-      throw err
     } 
   });
   it('should return error if password is does not contain a letter and a number', async () => {
@@ -164,7 +159,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'password must contain a letter and number'
       );
     } catch (err){
-      throw err
     } 
   });
   it('should return error if password contains spaces', async () => {
@@ -186,7 +180,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'password must not contain space'
       );
     } catch (err){
-      throw err
     } 
   });
 
@@ -209,7 +202,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'please enter a valid email'
       );
     } catch (err) {
-      throw err
     }
 
   });
@@ -232,7 +224,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'email cannot be undefined'
       );
     } catch (err) {
-      throw err
     }
   
   });
@@ -255,7 +246,6 @@ describe('User signup validation (middleware) unit tests', () => {
         'please enter an email'
       );
     } catch (err) {
-      throw err
     }
   });
   it('should return error if user enters an existing email', async () => {
@@ -278,7 +268,6 @@ describe('User signup validation (middleware) unit tests', () => {
       );
       
     } catch (err) {
-      throw err
     }
   });
 });
