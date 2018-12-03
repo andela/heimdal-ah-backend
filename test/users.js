@@ -55,3 +55,13 @@ describe('Test for registering a new user', () => {
     res.body.message.should.equal('This email has been taken');
   });
 });
+
+
+describe('List users', () => {
+  it('Should return status 200 on successful retreival', async () => {
+    const response = await chai.request(app)
+      .get('/api/v1/users/authors');
+
+    response.status.should.equal(200);
+  });
+});
