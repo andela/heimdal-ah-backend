@@ -22,19 +22,19 @@ class UsersController {
     const password = req.body.password || '12345';
     const link = `http://${req.headers.host}/api/users/verify-email`;
 
-    console.log('REQ', req.body);
+    // console.log('REQ', req.body);
 
     // generate an email token which can be used to verify the user.
-    const emailToken = Helper.generateEmailToken(email);
+    // const emailToken = Helper.generateEmailToken(email);
 
-    const verificationLink = `${link}/${emailToken}`;
-    const body = { email, name, verificationLink };
+    // const verificationLink = `${link}/${emailToken}`;
+    // const body = { email, name, verificationLink };
 
     // should restructure the email in such a way that it contains
     // userEmail, userName, emailSubject, emailBody;
     // console.log(verificationLink);
 
-    notificationSender.sendVerificationMail(body);
+    // notificationSender.sendVerificationMail(body);
 
     return User.create({
       username: name,
@@ -44,10 +44,14 @@ class UsersController {
     })
       .then(user => res.status(201).send({
         success: true,
-        user,
-        emailToken
+        user
+        // emailToken
       }))
-      .catch(error => res.status(400).send(error));
+      .catch((error) => {
+        console.log(error.message, ' ==========');
+
+        // res.status(400).send(error)
+      });
   }
 
   /**
