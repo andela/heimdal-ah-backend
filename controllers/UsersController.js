@@ -19,7 +19,7 @@ class UsersController {
   static signUp(req, res) {
     const email = req.body.email || 'henry.izontimi@gmail.com';
     const name = req.body.name || 'Henry';
-    const link = `http://${req.headers.host}/api/users/verify-email`;
+    const link = 'http://herokuapp.com/api/users/verify-email';
 
     // generate an email token which can be used to verify the user.
     const emailToken = Helper.generateEmailToken(email);
