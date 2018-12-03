@@ -1,4 +1,4 @@
 import signupController from './SignupController';
-import loginController from './LoginController';
+// import loginController from './LoginController';
 
-export default { signupController, loginController };
+export default { signupController };

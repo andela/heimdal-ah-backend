@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 describe('Test for registering a new user', () => {
   it('should return 201 on sucessfully creating a new user', async () => {
     const data = {
-      email: 'test@test.com',
+      email: 'testin@test.com',
       password: '123456',
       username: 'test'
     };

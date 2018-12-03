@@ -19,6 +19,7 @@ class SignupController {
    * @return {object} signUpCtrl response to user
    */
   static async signUpCtrl(req, res) {
+    // console.log('------->', req.body);
     const { email, password, username } = req.body;
     const { Users } = usersModel;
     let token;
