@@ -1,6 +1,6 @@
 import express from 'express';
-import Users from '../controllers/UsersController';
-import { checkUsersId, validProfileInput } from '../middlewares/UsersMiddleware';
+import Users from '../controllers/ProfilesController';
+import { checkUsersId, validProfileInput } from '../middlewares/ProfilesMiddleware';
 
 const router = express.Router();
 

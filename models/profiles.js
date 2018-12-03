@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-  const profiles = sequelize.define('profiles', {
+  const Profiles = sequelize.define('profiles', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -23,11 +23,11 @@ export default (sequelize, DataTypes) => {
     },
   }, {});
 
-  /* profiles.associate = (models) => {
-    profiles.belongsTo(models.Users, {
+  /* Profiles.associate = (models) => {
+    Profiles.belongsTo(models.Users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
   }; */
-  return profiles;
+  return Profiles;
 };

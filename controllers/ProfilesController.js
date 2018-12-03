@@ -1,7 +1,7 @@
 // import jwtDecode from 'jwt-decode';
 // import jwt from 'jsonwebtoken';
 import model from '../models';
-import { profileStatusResponseOk, profileStatusResponseError } from '../middlewares/UsersMiddleware';
+import Response from '../helpers/Response';
 
 const { profiles } = model;
 
@@ -11,7 +11,7 @@ const { profiles } = model;
  * @param {object} res
  * @returns {class} Users
  */
-class UsersController {
+class ProfilesController {
   /**
    * @description - This method takes care of creating a users profile after registration
    * @param {object} req
@@ -28,13 +28,19 @@ class UsersController {
         dateofbirth: req.body.dateofbirth
       });
       if (usersProfile) {
-        profileStatusResponseOk(res, 201, 'Users profile created succesfully', usersProfile);
+        Response.created(res, {
+          message: 'Users profile created succesfully',
+          profile: usersProfile
+        });
       }
     } catch (error) {
-      profileStatusResponseError(res, 500, 'users profile not created succesfully, please try again', {
-        body: [
-          `Internal server error => ${error}`
-        ]
+      Response.internalServerError(res, {
+        message: 'users profile not created succesfully, please try again',
+        error: {
+          body: [
+            `Internal server error => ${error}`
+          ]
+        }
       });
     }
   }
@@ -53,15 +59,24 @@ class UsersController {
         }
       });
       if (usersProfile === null) {
-        profileStatusResponseOk(res, 404, 'Users profile not found', usersProfile);
+        Response.notfound(res, {
+          message: 'Users profile not found',
+          profile: usersProfile
+        });
       } else {
-        profileStatusResponseOk(res, 200, 'Users profile returned succesfully', usersProfile);
+        Response.success(res, {
+          message: 'Users profile returned succesfully',
+          profile: usersProfile
+        });
       }
     } catch (error) {
-      profileStatusResponseError(res, 500, 'users profile not returned succesfully, please try again', {
-        body: [
-          `Internal server error => ${error}`
-        ]
+      Response.internalServerError(res, {
+        message: 'users profile not returned succesfully, please try again',
+        error: {
+          body: [
+            `Internal server error => ${error}`
+          ]
+        }
       });
     }
   }
@@ -77,10 +92,12 @@ class UsersController {
     // const token = req.headers['x-access-token'];
 
     if (req.body.userToken !== 'token') {
-      profileStatusResponseError(res, 401, '', {
-        body: [
-          'You cannot edit another persons profile'
-        ]
+      Response.unauthorized(res, {
+        errors: {
+          body: [
+            'You cannot edit another persons profile'
+          ]
+        }
       });
     }
 
@@ -99,24 +116,33 @@ class UsersController {
             dateofbirth: req.body.dateofbirth || usersProfile.dateofbirth
           });
           if (updatedUsersProfile) {
-            profileStatusResponseOk(res, 200, 'Users profile updated succesfully', updatedUsersProfile);
+            Response.success(res, {
+              message: 'Users profile updated successfully',
+              profile: updatedUsersProfile
+            });
           }
         } catch (error) {
-          profileStatusResponseError(res, 500, 'users profile not returned succesfully, please try again', {
-            body: [
-              `Internal server error => ${error}`
-            ]
+          Response.internalServerError(res, {
+            message: 'users profile not returned succesfully, please try again',
+            error: {
+              body: [
+                `Internal server error => ${error}`
+              ]
+            }
           });
         }
       }
     } catch (error) {
-      profileStatusResponseError(res, 500, 'users profile not returned succesfully, please try again', {
-        body: [
-          `Internal server error => ${error}`
-        ]
+      Response.internalServerError(res, {
+        message: 'users profile not returned succesfully, please try again',
+        error: {
+          body: [
+            `Internal server error => ${error}`
+          ]
+        }
       });
     }
   }
 }
 
-export default UsersController;
+export default ProfilesController;
