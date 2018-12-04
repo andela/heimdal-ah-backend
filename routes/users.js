@@ -10,4 +10,5 @@ router.put('/resetpassword/:token', passwordReset, userController.resetPassword)
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
+
 export default router;

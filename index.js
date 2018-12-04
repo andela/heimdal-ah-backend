@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import nodeLogger from 'logger';
 import validator from 'express-validator';
-import { auth, user } from './routes/index';
+import { auth, user } from './routes';
 
 const logger = nodeLogger.createLogger();
 
