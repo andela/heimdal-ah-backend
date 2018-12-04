@@ -50,8 +50,6 @@ describe('Test for registering a new user', () => {
     res.body.should.be.a('object');
     res.body.should.be.a('object');
     res.body.should.have.property('message');
-    res.body.message.should.equal(
-      'This email has been taken'
-    );
+    res.body.message.should.equal('This email has been taken');
   });
 });

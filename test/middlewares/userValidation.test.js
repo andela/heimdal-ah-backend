@@ -26,9 +26,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('username');
-    res.body.errors.username.msg.should.equal(
-      'please enter a Username, it cannot be empty'
-    );
+    res.body.errors.username.msg.should.equal('please enter a Username, it cannot be empty');
   });
   it('should return error if user enters a username that is not alphanumeric', async () => {
     const userDataWithNonAlphaNumeric = {
@@ -45,9 +43,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('username');
-    res.body.errors.username.msg.should.equal(
-      'please enter a valid username can contain a letter or mixture of both letter and number'
-    );
+    res.body.errors.username.msg.should.equal('please enter a valid username can contain a letter or mixture of both letter and number');
   });
   it('should return error if user enters a username that is too long', async () => {
     const userDataWithLongUserName = {
@@ -64,9 +60,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('username');
-    res.body.errors.username.msg.should.equal(
-      'please enter a valid username, cannot be more than 20 characters'
-    );
+    res.body.errors.username.msg.should.equal('please enter a valid username, cannot be more than 20 characters');
   });
   it('should return error if user enters a password length less than 8', async () => {
     const userDataWithShortPassword = {
@@ -83,9 +77,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('password');
-    res.body.errors.password.msg.should.equal(
-      'password must be at least 8 characters'
-    );
+    res.body.errors.password.msg.should.equal('password must be at least 8 characters');
   });
   it('should return error if user doesnt enter password', async () => {
     const userDataWithEmptyPassword = {
@@ -102,9 +94,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('password');
-    res.body.errors.password.msg.should.equal(
-      'password cannot be empty'
-    );
+    res.body.errors.password.msg.should.equal('password cannot be empty');
   });
   it('should return error if password is undefined', async () => {
     const userDataWithEmptyPassword = {
@@ -121,9 +111,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('password');
-    res.body.errors.password.msg.should.equal(
-      'password cannot be undefined'
-    );
+    res.body.errors.password.msg.should.equal('password cannot be undefined');
   });
   it('should return error if password is does not contain a letter and a number', async () => {
     const userDataWithNotLetterAndNumberPassword = {
@@ -140,9 +128,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('password');
-    res.body.errors.password.msg.should.equal(
-      'password must contain a letter and number'
-    );
+    res.body.errors.password.msg.should.equal('password must contain a letter and number');
   });
   it('should return error if password contains spaces', async () => {
     const userDataWithSpaces = {
@@ -159,9 +145,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('password');
-    res.body.errors.password.msg.should.equal(
-      'password must not contain space'
-    );
+    res.body.errors.password.msg.should.equal('password must not contain space');
   });
 
   it('should return error if user enters invalid email', async () => {
@@ -179,9 +163,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('email');
-    res.body.errors.email.msg.should.equal(
-      'please enter a valid email'
-    );
+    res.body.errors.email.msg.should.equal('please enter a valid email');
   });
   it('should return error if user email is undefined', async () => {
     const userDataWithEmptyEmail = {
@@ -198,9 +180,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('email');
-    res.body.errors.email.msg.should.equal(
-      'email cannot be undefined'
-    );
+    res.body.errors.email.msg.should.equal('email cannot be undefined');
   });
   it('should return error if user fails to enter an email', async () => {
     const userDataWithEmptyEmail = {
@@ -217,8 +197,6 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('email');
-    res.body.errors.email.msg.should.equal(
-      'please enter an email'
-    );
+    res.body.errors.email.msg.should.equal('please enter an email');
   });
 });

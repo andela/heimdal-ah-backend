@@ -20,8 +20,4 @@ app.listen(PORT, () => {
   logger.info(`connected on port ${PORT}`);
 });
 
-
-// Routes(app);
-
-
 export default app;
