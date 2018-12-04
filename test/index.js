@@ -8,3 +8,4 @@ import './articles.test';
 import './likes.test';
 import './comments.test';
 */
+import './middlewares/userValidation.test';

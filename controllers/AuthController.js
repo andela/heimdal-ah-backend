@@ -1,42 +1,45 @@
-import mailer from '../helpers/mailer';
-import Helper from '../helpers/helper';
-import models from '../models';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-const { User } = models;
+import usersModel from '../models';
+import statusResponse from '../helpers/statusResponse';
+import UserModelQuery from '../lib/user';
+
+import mailer from '../helpers/mailer';
+import helper from '../helpers/helper';
 
 /**
- * @description - This class handles the users
- * */
+ * Signup validation class
+ * classname should match file name and start with capital
+ */
 class AuthController {
   /**
-   * @description - Method to signup a new user
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} The reponse object containing the created user's token
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @return {object} signUpCtrl response to user
    */
   static async signUp(req, res) {
-    // This is where you should do your validation
+    const { email, password, username } = req.body;
+    const { Users, Roles } = usersModel;
 
-    // This is just a mock data, replace with yours
-    const email = req.body.email || 'henry.izontimi@gmail.com';
-    const name = req.body.username || 'Henry';
-    const password = req.body.password || '12345';
+    // hash password here
+    const genSalt = bcrypt.genSaltSync(8);
+    const hashPassword = bcrypt.hashSync(password, genSalt);
+    const role = 'user';
 
-    // generate an email token which can be used to verify the user.
-    const emailToken = Helper.generateEmailToken(email);
+    const emailToken = helper.generateEmailToken(email);
 
     // generate the email verification link
-    const link = `http://${req.headers.host}/api/v1/users/verify-email`;
-    const verificationLink = `${link}/${emailToken}`;
+    const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
 
     // Construct the email content here {emailSubject and emailBody}
     const emailSubject = 'Verify your email on Authors Haven';
 
     const emailBody = `
       <div>
-        <h2 style="color: blue">Hello ${name}, Thanks for signing up on heimdal</h2>
+        <h2 style="color: blue">Hello ${username}, Thanks for signing up on heimdal</h2>
         Please click here to verify your email address, this link expires in two days.
-        <a href="${verificationLink}">${verificationLink}</a>
+        <a href="${link}">${link}</a>
       </div>
     `;
 
@@ -46,23 +49,47 @@ class AuthController {
     mailer.sendCustomMail(email, emailContent);
 
     try {
-      // Create the user here, you can replace with yours
-      const user = await User.create({
-        email,
-        password,
-        username: name,
-        emailVerification: false
-      });
+      const user = await UserModelQuery.getUserByEmail(email);
 
-      return res.status(201).json({
-        success: true,
-        user,
-        emailToken
-      });
+      if (user) {
+        const payload = {
+          message: 'This email has been taken'
+        };
+        return statusResponse.conflict(res, payload);
+      }
+      try {
+        const emailVerification = 'false';
+        const userData = await Users.create({
+          email,
+          username,
+          emailVerification,
+          password: hashPassword
+        });
+
+        await Roles.create({
+          role,
+          userId: userData.id
+        });
+
+        const token = jwt.sign({ email, username }, process.env.tokenSecret, {
+          expiresIn: 86400
+        });
+        req.app.set('token', token);
+        userData.dataValues.password = undefined;
+
+        const payload = {
+          message: 'user created succesfully',
+          userData,
+          token,
+          emailToken
+        };
+
+        return statusResponse.success(res, payload);
+      } catch (error) {
+        return statusResponse.internalServerError(res);
+      }
     } catch (error) {
-      return res.status(500).json({
-        message: 'An internal error occured, try again'
-      });
+      return statusResponse.internalServerError(res);
     }
   }
 }
