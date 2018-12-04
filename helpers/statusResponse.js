@@ -54,16 +54,6 @@ class Response {
   static badRequest(res, data) {
     return res.status(400).json(data);
   }
-
-    /**
- * @param {object} res
- * @param {object} data
- * @returns {object} json data
- */
-static badRequest(res, data) {
-  return res.status(400).json(data);
-}
-
 }
 
 
