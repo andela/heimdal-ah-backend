@@ -50,14 +50,14 @@ class AuthController {
         const token = jwt.sign({ email, username }, process.env.tokenSecret, {
           expiresIn: 86400
         });
-
+        req.app.set('token', token);
         delete userData.dataValues.password;
-
         const payload = {
           message: 'user created succesfully',
           userData,
           token,
         };
+        console.log(req.app.get('token'));
         return statusResponse.success(res, payload);
       } catch (error) {
         return statusResponse.internalServerError(res);
