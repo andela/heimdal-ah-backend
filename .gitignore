@@ -40,3 +40,4 @@ node_modules
 # Vs code
 .vscode
 .vscode/settings.json
+build/
