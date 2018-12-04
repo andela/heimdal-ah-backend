@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  User.associate = (models) => {
+  User.associate = (/* models */) => {
     // associations can be defined here
     // User.hasOne(models.Profile, {
     //   foreignKey: 'id',
