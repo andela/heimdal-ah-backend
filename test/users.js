@@ -9,7 +9,26 @@ const logger = nodeLogger.createLogger();
 chai.use(chaiHttp);
 chai.should();
 
-describe('Heimdal Test Suite', () => {
+let userToken;
+before((done) => {
+  it('test user', async () => {
+    const data = {
+      email: 'peopleweysabi@test.com',
+      password: 'etydhfkjdkvl1',
+      username: 'test'
+    };
+    const res = await chai
+      .request(app)
+      .post('/api/v1/auth/signup')
+      .send(data);
+    const { token } = res.body;
+    userToken = token;
+  });
+
+  done();
+});
+
+describe('password reset test', () => {
   describe(' POST /v1/api/forgotpassword', () => {
     it('should return status code 400 when email is invalid', async () => {
       try {
@@ -29,6 +48,25 @@ describe('Heimdal Test Suite', () => {
         logger.info(error);
       }
     });
+
+    it('should retuen a 200 when users email is valid', async () => {
+      try {
+        const res = await chai
+          .request(app)
+          .post('/api/v1/forgotpassword')
+          .send({
+            email: 'peopleweysabi@test.com'
+          });
+        if (res) {
+          res.status.should.equal(200);
+          res.body.should.be.a('object');
+          // nres.body.should.have.property('message');
+          // res.body.message.should.equal(''please input a valid email'');
+        }
+      } catch (error) {
+        logger.info(error);
+      }
+    });
   });
 
   describe(' PUT /resetpassword/:token', () => {
@@ -36,7 +74,7 @@ describe('Heimdal Test Suite', () => {
       try {
         const res = await chai
           .request(app)
-          .put('/api/v1/resetpassword/jhuyytcfcyf')
+          .put('/api/v1/forgotpassword/resetpassword/jhuyytcfcyf')
           .send({
             password: '123456',
             confirmPassword: '123456'
@@ -51,5 +89,116 @@ describe('Heimdal Test Suite', () => {
         logger.info(error);
       }
     });
+
+    it('should return status code 200 when user token is valid', async () => {
+      try {
+        const res = await chai
+          .request(app)
+          .put(`/api/v1/forgotpassword/resetpassword/${userToken}`)
+          .send({
+            password: '123456',
+            confirmPassword: '123456'
+          });
+        if (res) {
+          res.status.should.equal(200);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+        }
+      } catch (error) {
+        logger.info(error);
+      }
+    });
+
+    it('should return status code 400 if password is not defined', async () => {
+      try {
+        const res = await chai
+          .request(app)
+          .put(`/api/v1/forgotpassword/resetpassword/${userToken}`)
+          .send({
+            password: '',
+            confirmPassword: '123456'
+          });
+        if (res) {
+          res.status.should.equal(400);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+        }
+      } catch (error) {
+        logger.info(error);
+      }
+    });
+
+
+    it('should return status code 400 if passwood is not thesame as confirmpassword', async () => {
+      try {
+        const res = await chai
+          .request(app)
+          .put(`/api/v1/forgotpassword/resetpassword/${userToken}`)
+          .send({
+            password: '222334444',
+            confirmPassword: '123456'
+          });
+        if (res) {
+          res.status.should.equal(400);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+        }
+      } catch (error) {
+        logger.info(error);
+      }
+    });
+
+    it('should return status code 400 if confirm password is undefined', async () => {
+      try {
+        const res = await chai
+          .request(app)
+          .put(`/api/v1/forgotpassword/resetpassword/${userToken}`)
+          .send({
+            password: '222334444',
+            confirmPassword: ''
+          });
+        if (res) {
+          res.status.should.equal(400);
+          res.body.should.be.a('object');
+          res.body.should.have.property('message');
+        }
+      } catch (error) {
+        logger.info(error);
+      }
+    });
+  });
+});
+
+describe('Test for registering a new user', () => {
+  it('should return 201 on sucessfully creating a new user', async () => {
+    const data = {
+      email: 'testin@test.com',
+      password: 'etydhfkjdkvl1',
+      username: 'test'
+    };
+    const res = await chai
+      .request(app)
+      .post('/api/v1/auth/signup')
+      .send(data);
+    res.should.be.a('object');
+    res.status.should.equal(200);
+  });
+
+  it('should return error if user enters an existing email', async () => {
+    const userDataWithAnExistingEmail = {
+      email: 'testin@test.com',
+      password: 'omotayo123',
+      username: 'Omotayo'
+    };
+
+    const res = await chai
+      .request(app)
+      .post('/api/v1/auth/signup')
+      .send(userDataWithAnExistingEmail);
+    res.status.should.equal(409);
+    res.body.should.be.a('object');
+    res.body.should.be.a('object');
+    res.body.should.have.property('message');
+    res.body.message.should.equal('This email has been taken');
   });
 });
