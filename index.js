@@ -14,7 +14,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
-app.use('/api/v1/auth', routes);
+app.use('/api/v1', routes);
 
 app.listen(PORT, () => {
   logger.info(`connected on port ${PORT}`);

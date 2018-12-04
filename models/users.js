@@ -13,6 +13,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'roles',
     });
+    Users.hasOne(models.profiles, {
+      foreignKey: 'userId',
+      as: 'profiles',
+    });
   };
   return Users;
 };
