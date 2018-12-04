@@ -82,5 +82,4 @@ class Response {
     return res.status(403).json(data);
   }
 }
-
 export default Response;
