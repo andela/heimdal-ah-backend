@@ -1,35 +1,34 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import UserModel from '../models';
-import Response from '../helpers/Response';
+import Response from '../helpers/statusResponse';
 import mailer from '../helpers/mailer';
 
 /** @description usersController class
  * @return {object} the response object
  * @public
-*/
+ */
 class UsersController {
   /** @description it sends a mail to a user that forgot his password
- * @param {string} req is the request parameter
- * @param {string} res is the response parameter
- * @return {object} the response object
- * @public
-*/
+   * @param {string} req is the request parameter
+   * @param {string} res is the response parameter
+   * @return {object} the response object
+   * @public
+   */
   static async forgotPassword(req, res) {
-    const { User } = UserModel;
+    const { Users } = UserModel;
 
-    const user = await User
-      .findOne({
-        where: {
-          email: req.body.email
-        }
-      });
+    const user = await Users.findOne({
+      where: {
+        email: req.body.email
+      }
+    });
     if (!user) {
       return res.notfound(res, { message: 'user not avalaible' });
     }
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
-      process.env.JWT_SECRET,
+      process.env.tokenSecret,
       {
         expiresIn: 86400
       }
@@ -52,17 +51,17 @@ class UsersController {
   }
 
   /** @description updates the existing password in the database
- * @param {object} req is the request parameter
- * @param {object} res is the response parameter
- * @return {object} the response object
- * @public
-*/
+   * @param {object} req is the request parameter
+   * @param {object} res is the response parameter
+   * @return {object} the response object
+   * @public
+   */
   static async resetPassword(req, res) {
-    const { User } = UserModel;
+    const { Users } = UserModel;
     const { id } = req.decoded;
     const hashedPassword = bcrypt.hashSync(req.body.password, 8);
     try {
-      const user = await User.findOne({
+      const user = await Users.findOne({
         where: { id }
       });
       if (!user) {
@@ -73,14 +72,19 @@ class UsersController {
           password: hashedPassword
         });
         if (updatedPassword) {
-          return Response.success(res, { message: 'passwprd update was succesful' });
+          return Response.success(res, {
+            message: 'password update was succesful'
+          });
         }
       } catch (error) {
-        return Response.badRequest(res, { message: 'password was not updated' });
+        return Response.badRequest(res, {
+          message: 'password was not updated'
+        });
       }
     } catch (error) {
-      res.status(400).send(error);
+      return res.status(400).send(error);
     }
+    return null;
   }
 }
 export default UsersController;

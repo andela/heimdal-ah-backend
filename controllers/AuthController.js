@@ -27,14 +27,14 @@ class AuthController {
 
     try {
       const user = await UserModelQuery.getUserByEmail(email);
-      // const user = await Users.findOne({
-      //   where: { email }
-      // });
       if (user) {
         const payload = {
           message: 'This email has been taken',
         };
         return statusResponse.conflict(res, payload);
+        // return res.status(400).json({
+        //   message: 'I hate this shit'
+        // });
       }
       try {
         const emailVerification = 'false';
@@ -62,11 +62,9 @@ class AuthController {
         // console.log(req.app.get('token'));
         return statusResponse.success(res, payload);
       } catch (error) {
-        // console.log(error);
         return statusResponse.internalServerError(res);
       }
     } catch (error) {
-      // console.log(error);
       return statusResponse.internalServerError(res);
     }
   }
