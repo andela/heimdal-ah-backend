@@ -2,9 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import nodeLogger from 'logger';
-import Chance from 'chance';
 import validator from 'express-validator';
-import Routes from './routes/index';
+import routes from './routes';
 
 const logger = nodeLogger.createLogger();
 const PORT = process.env.PORT || 4000;
@@ -15,11 +14,12 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
+app.use('/api/v1/auth', routes);
+
 app.listen(PORT, () => {
   logger.info(`connected on port ${PORT}`);
 });
 
-app.use('/api/v1', Routes);
 
 // Routes(app);
 

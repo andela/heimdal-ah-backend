@@ -1,10 +1,4 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable valid-jsdoc */
-import { check, validationResult, body } from 'express-validator/check';
-import UserModelQuery from '../lib/user';
-
-import db from '../models/index';
-const { User } = db;
+// import { check, validationResult, body } from 'express-validator/check';
 // this function validates the User signup function parameters
 // invalid user parameters includes:
 // existing user email
@@ -14,43 +8,40 @@ const { User } = db;
 // ctrl + alt + d
 // class UserValidation {
 /**
- * @apiParam  {String} [userName] username
- * @apiParam  {String} [email] Email
- * @apiParam  {String} [password] Password
- *
- * @class UserValidation middleware that validates the user signup details.
+ * Signup validation class
+ * classname should match file name and start with capital
  */
 class UserValidation {
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @param {object} next Move to the next middleware or function
+   * @return {object} User validation response to user
+   */
   static validateUserSignUp(req, res, next) {
-    UserValidation.checkUserEmail(req, res, next);
-    UserValidation.checkPassword(req, res, next);
-    UserValidation.checkUserName(req, res, next);
+    UserValidation.checkUserEmail(req);
+    UserValidation.checkPassword(req);
+    UserValidation.checkUserName(req);
     UserValidation.showError(req, res, next);
   }
 
   /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @memberof UserValidation
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @return {object} User validartion response to user
    */
-  static checkUserEmail(req, res, next) {
-    const { email } = req.body;
+  static checkUserEmail(req) {
     req.checkBody('email', 'email cannot be undefined').custom(val => val !== undefined);
     req.checkBody('email', 'please enter an email').notEmpty();
     req.checkBody('email', 'please enter a valid email').isEmail();
   }
 
   /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @memberof UserValidation
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @return {object} User validation response to user
    */
-  static checkPassword(req, res, next) {
-    const { password } = req.body;
+  static checkPassword(req) {
     req.checkBody('password', 'password cannot be undefined').custom(val => val !== undefined);
     req.checkBody('password', 'password cannot be empty').notEmpty();
     req.checkBody('password', 'password must be at least 8 characters').isLength({ min: 8 });
@@ -58,33 +49,32 @@ class UserValidation {
     req
       .checkBody('password', 'password must contain a letter and number')
       .matches(/^((?=.*\d))(?=.*[a-zA-Z])/);
-    
   }
 
-  static checkUserName(req, res, next) {
-    const { userName } = req.body;
-    5
-    req.checkBody('userName', 'username cannot be undefined').custom(val => val !== undefined);
-    req.checkBody('userName', 'please enter a Username, it cannot be empty').notEmpty();
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @return {object} User validation response to user
+   */
+  static checkUserName(req) {
+    req.checkBody('username', 'username cannot be undefined').custom(val => val !== undefined);
+    req.checkBody('username', 'please enter a Username, it cannot be empty').notEmpty();
     req
       .checkBody(
-        'userName',
+        'username',
         'please enter a valid username can contain a letter or mixture of both letter and number'
       )
       .isAlphanumeric();
     req
-      .checkBody('userName', 'please enter a valid username, cannot be more than 20 characters')
+      .checkBody('username', 'please enter a valid username, cannot be more than 20 characters')
       .isLength({ max: 20 });
   }
 
   /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
-   * @memberof UserValidation
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @param {object} next move to the next function or middleware
+   * @return {object} User validation response to user
    */
   static async showError(req, res, next) {
     try {
@@ -100,34 +90,7 @@ class UserValidation {
         });
         return res.status(422).json({ errors: { ...err } });
       }
-      next()
-    }
-    catch (error){
-      throw error;
-    }
-  }
-  /**
-   *
-   *
-   * @static
-   * @param {*} req
-   * @param {*} res
-   * @param {*} next
-   * @returns
-   * @memberof UserValidation
-   */
-  static async checkEmailExist(req, res, next) {
-    const { email } = req.body;
-    try {
-      const user = await UserModelQuery.getUserByEmail(email);
-      if(user) {
-        return res.status(409).json({
-          errors : {
-            message : 'This email has been taken'
-          }
-        });
-      }    
-      next()
+      return next();
     } catch (error) {
       throw error;
     }
