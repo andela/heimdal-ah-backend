@@ -39,3 +39,7 @@ node_modules
 
 # Vs code
 .vscode
+
+
+# Build
+build
