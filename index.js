@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import nodeLogger from 'logger';
-import profiles from './routes/index';
+import profiles from './routes/Index';
 
 const logger = nodeLogger.createLogger();
 const PORT = process.env.PORT || 4000;
