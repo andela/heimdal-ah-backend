@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import usersModel from '../models';
 import statusResponse from '../helpers/statusResponse';
 import UserModelQuery from '../lib/user';
+import config from '../config'
 
 /**
  * Signup validation class
@@ -27,9 +28,7 @@ class AuthController {
 
     try {
       const user = await UserModelQuery.getUserByEmail(email);
-      // const user = await Users.findOne({
-      //   where: { email }
-      // });
+      
       if (user) {
         const payload = {
           message: 'This email has been taken',
@@ -53,7 +52,8 @@ class AuthController {
           expiresIn: 86400
         });
         req.app.set('token', token);
-        delete userData.dataValues.password;
+        userData.dataValues.password = undefined;
+        // delete userData.dataValues.password;
         const payload = {
           message: 'user created succesfully',
           userData,
@@ -69,6 +69,39 @@ class AuthController {
       // console.log(error);
       return statusResponse.internalServerError(res);
     }
+  }
+  static async login(req, res){
+    const { email, password, username } = req.body;
+    const { Users, Roles } = usersModel;
+
+    const user = await UserModelQuery.getUserByEmail(email);
+    if (!user) {
+      const payload = {
+        message: 'email does not exist',
+      };
+      return statusResponse.conflict(res, payload);
+    }else if (!bcrypt.compareSync(password, user.dataValues.password)){
+      user.dataValues.password = undefined;
+      const payload = {
+        message: 'you have entered invalid credentials',
+        user,
+        token,
+      };
+      // console.log(req.app.get('token'));
+      return statusResponse.badRequest(res, payload);
+    } else {
+      const token = jwt.sign({ email }, config.secret, {
+        expiresIn: 86400,
+      });
+      const payload = {
+        message: 'user logged in succesfully',
+        user,
+        token,
+      };
+      // console.log(req.app.get('token'));
+      return statusResponse.success(res, payload);
+    }
+
   }
 }
 
