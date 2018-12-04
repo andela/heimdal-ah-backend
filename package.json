@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "pretest": "node_modules/.bin/sequelize db:migrate:undo:all && node_modules/.bin/sequelize db:migrate",
-    "test": "nyc mocha ./test/index.js --require @babel/register --exit --colors --timeout 10000",
+    "test": "nyc mocha ./test/index.js --require @babel/register --exit --colors --timeout 50000",
     "posttest": "node_modules/.bin/sequelize  db:migrate:undo:all",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start:dev": "nodemon index.js --exec babel-node -- ",

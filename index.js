@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/api/', routes);
+app.use('/api/v1', routes);
 
 // // Default to here when an invalid endpoint is entered
 app.use('/', (req, res) => res.status(200).json({

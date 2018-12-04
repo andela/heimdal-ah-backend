@@ -5,7 +5,8 @@ dotenv.config();
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const notificationSender = {
+const mailer = {
+  /*
   sendVerificationMail(data) {
     const { email, name, verificationLink } = data;
 
@@ -16,17 +17,28 @@ const notificationSender = {
       html: `
         <div>
           <h2>Hello ${name},</h2>
-          Please click here to verify your email address 
+          Please click here to verify your email address
           <a href="${verificationLink}">${verificationLink}</a>
         </div>
       `
     };
 
-    sgMail
-      .send(msg)
-      .then(() => console.log('inside notification sender'))
-      .catch(error => `Email was not sent, Reasons: ${error}`);
+    sgMail.send(msg);
+  },
+  */
+
+  sendCustomMail(emailAddress, emailContent) {
+    const { emailSubject, emailBody } = emailContent;
+
+    const msg = {
+      to: emailAddress,
+      from: 'Heimdal <hello@heimdal.com>',
+      subject: emailSubject,
+      html: emailBody
+    };
+
+    sgMail.send(msg);
   }
 };
 
-export default notificationSender;
+export default mailer;
