@@ -6,7 +6,6 @@ import bodyHelper from './bodyHelper';
 
 chai.use(chaiHttp);
 
-// const { expect } = chai;
 chai.should();
 
 describe('GET /', () => {
@@ -18,20 +17,54 @@ describe('GET /', () => {
   });
 });
 
-describe('POST /auth/signup', () => {
-  it('should return 201 for creating a user', async () => {
+// describe('POST /auth/signup', () => {
+//   it('should return 201 for creating a user', async () => {
+//     const res = await chai
+//       .request(app)
+//       .post('/api/v1/auth/signup')
+//       .send(bodyHelper.signUp.validUser);
+
+//     res.should.be.a('object');
+//     res.status.should.equal(201);
+//     bodyHelper.emailToken.validTokenInDb = res.body.emailToken;
+//   });
+// });
+
+describe('Test for registering a new user', () => {
+  it('should return 201 on sucessfully creating a new user', async () => {
+    const data = {
+      email: 'testin@test.com',
+      password: 'etydhfkjdkvl1',
+      username: 'test'
+    };
     const res = await chai
       .request(app)
       .post('/api/v1/auth/signup')
-      .send(bodyHelper.signUp.validUser);
-
+      .send(data);
+    // console.log('----->', res.body);
     res.should.be.a('object');
     res.status.should.equal(201);
     bodyHelper.emailToken.validTokenInDb = res.body.emailToken;
   });
+  it('should return error if user enters an existing email', async () => {
+    const userDataWithAnExistingEmail = {
+      email: 'testin@test.com',
+      password: 'omotayo123',
+      username: 'Omotayo'
+    };
+
+    const res = await chai
+      .request(app)
+      .post('/api/v1/auth/signup')
+      .send(userDataWithAnExistingEmail);
+    res.status.should.equal(409);
+    res.body.should.be.a('object');
+    res.body.should.have.property('message');
+    res.body.message.should.equal('This email has been taken');
+  });
 });
 
-describe('GET /verify-email/:emailToken', () => {
+describe('GET api/vi/users/verify-email/:emailToken', () => {
   it('should return 400 if the emailToken sent is invalid', async () => {
     const res = await chai
       .request(app)
@@ -44,7 +77,7 @@ describe('GET /verify-email/:emailToken', () => {
     const res = await chai
       .request(app)
       .get(`/api/v1/users/verify-email/${bodyHelper.emailToken.randomValidToken}`);
-
+    console.log('----->', res.body);
     res.should.be.a('object');
     res.status.should.equal(404);
   });
