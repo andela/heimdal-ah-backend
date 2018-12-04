@@ -23,11 +23,11 @@ export default (sequelize, DataTypes) => {
     },
   }, {});
 
-  /* Profiles.associate = (models) => {
+  Profiles.associate = (models) => {
     Profiles.belongsTo(models.Users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
-  }; */
+  };
   return Profiles;
 };

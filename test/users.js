@@ -1,8 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-// import dotenv from 'dotenv';
 import app from '../index';
-// import model from '../models';
 
 chai.use(chaiHttp);
 chai.should();
@@ -13,7 +11,7 @@ describe('Heimdal Test Suite', () => {
   describe(' POST profiles/:userId - Create new user profile', () => {
     it('should return status code 201 on creation of new user profile', async () => {
       const res = await chai.request(app)
-        .post('/api/profiles/1')
+        .post('/api/v1/profiles/1')
         .send({
           username: 'newUsers',
           biodata: 'I love graphics design',
@@ -32,7 +30,7 @@ describe('Heimdal Test Suite', () => {
 
     it('should return status code 400 if user id is not an integer', async () => {
       const res = await chai.request(app)
-        .post('/api/profiles/hdncdk')
+        .post('/api/v1/profiles/hdncdk')
         .send({
           username: 'newuser',
           biodata: 'I love graphics design',
@@ -55,7 +53,7 @@ describe('Heimdal Test Suite', () => {
   describe(' GET profiles/:username - View users profile', () => {
     it('should return status code 200 on getting a users profile', async () => {
       const res = await chai.request(app)
-        .get('/api/profiles/newUsers');
+        .get('/api/v1/profiles/newUsers');
       if (res) {
         res.status.should.equal(200);
         res.body.should.be.a('object');
@@ -67,7 +65,7 @@ describe('Heimdal Test Suite', () => {
 
     it('should return status code 404 if user is not found', async () => {
       const res = await chai.request(app)
-        .get('/api/profiles/nosuchuser');
+        .get('/api/v1/profiles/nosuchuser');
       if (res) {
         res.status.should.equal(404);
         res.body.should.be.a('object');
@@ -78,13 +76,15 @@ describe('Heimdal Test Suite', () => {
   });
 
   // ==== Update users profile ==== //
-
   describe(' PUT profiles/:username - Update users profile', () => {
     it('should return status code 401 if user token is invalid', async () => {
       const res = await chai.request(app)
-        .put('/api/profiles/newUsers')
+        .put('/api/v1/profiles/newuser')
         .send({
-          userToken: 'wrongtoken'
+          biodata: 'I love graphics design so much',
+          image: 'https://res.cloudinary.com/pato/image/upload/v1539986467/n9usp2sumwxxmgiaogbd.png',
+          address: 'Surulere, lagos',
+          dateofbirth: '09-10-1990',
         });
       res.status.should.equal(401);
       res.body.should.be.a('object');
@@ -95,13 +95,12 @@ describe('Heimdal Test Suite', () => {
 
     it('should return status code 200 on updating a users profile', async () => {
       const res = await chai.request(app)
-        .put('/api/profiles/newUsers')
+        .put('/api/v1/profiles/newUsers')
         .send({
           biodata: 'I love graphics design so much',
           image: 'https://res.cloudinary.com/pato/image/upload/v1539986467/n9usp2sumwxxmgiaogbd.png',
           address: 'Surulere, lagos',
           dateofbirth: '09-10-1990',
-          userToken: 'token'
         });
       if (res) {
         res.status.should.equal(200);

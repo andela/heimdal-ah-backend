@@ -1,3 +1,3 @@
-import users from './Users';
+import profiles from './profiles';
 
-export default users;
+export default profiles;

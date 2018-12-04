@@ -39,7 +39,7 @@ class Response {
    * @param {object} data
    * @returns {object} Error
    */
-  static badrequest(res, data) {
+  static badRequest(res, data) {
     return res.status(400).json(data);
   }
 

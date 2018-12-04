@@ -1,7 +1,6 @@
-// import jwtDecode from 'jwt-decode';
-// import jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 import model from '../models';
-import Response from '../helpers/Response';
+import Response from '../helpers/statusResponse';
 
 const { profiles } = model;
 
@@ -88,10 +87,9 @@ class ProfilesController {
    * @returns {object} Updated Users Profile
    */
   static async updateProfile(req, res) {
-    // To be used when users have registered and provided token to login
-    // const token = req.headers['x-access-token'];
-
-    if (req.body.userToken !== 'token') {
+    const userToken = req.app.get('token');
+    const decoded = jwtDecode(userToken).username;
+    if (decoded !== req.params.username) {
       Response.unauthorized(res, {
         errors: {
           body: [
