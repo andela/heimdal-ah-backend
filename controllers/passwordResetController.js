@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import UserModel from '../models';
-import passwordReset from '../helpers/ResetPassword';
+import Response from '../helpers/Response';
+import mailer from '../helpers/mailer';
 
 /** @description usersController class
  * @return {object} the response object
@@ -15,16 +16,16 @@ class UsersController {
  * @public
 */
   static async forgotPassword(req, res) {
-    const { Users } = UserModel;
+    const { User } = UserModel;
 
-    const user = await Users
+    const user = await User
       .findOne({
         where: {
           email: req.body.email
         }
       });
     if (!user) {
-      return res.send('user not avalaible');
+      return res.notfound(res, { message: 'user not avalaible' });
     }
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
@@ -33,12 +34,21 @@ class UsersController {
         expiresIn: 86400
       }
     );
-    const data = await passwordReset.passwordMail(req.body.email, token);
 
-    if (data !== 'success') {
-      return res.status(400).send('message was not sent');
+    const emailSubject = 'Please rerset your password';
+    const emailBody = `
+    <div>
+        <h1> please follow this link to update your password</h1>
+        ${token}
+    </div>`;
+    const emailContent = { emailSubject, emailBody };
+
+    const data = await mailer.sendCustomMail(req.body.email, emailContent);
+
+    if (data) {
+      return Response.badRequest(res, { message: 'message was not sent' });
     }
-    return res.status(200).send('message was sent successfully');
+    return Response.success(res, { message: 'Email was sent successfully' });
   }
 
   /** @description updates the existing password in the database
@@ -48,11 +58,11 @@ class UsersController {
  * @public
 */
   static async resetPassword(req, res) {
-    const { Users } = UserModel;
+    const { User } = UserModel;
     const { id } = req.decoded;
     const hashedPassword = bcrypt.hashSync(req.body.password, 8);
     try {
-      const user = await Users.findOne({
+      const user = await User.findOne({
         where: { id }
       });
       if (!user) {
@@ -62,14 +72,15 @@ class UsersController {
         const updatedPassword = await user.update({
           password: hashedPassword
         });
-        res.status(200).send('updated');
+        if (updatedPassword) {
+          return Response.success(res, { message: 'passwprd update was succesful' });
+        }
       } catch (error) {
-        res.status(400).send(error);
+        return Response.badRequest(res, { message: 'password was not updated' });
       }
     } catch (error) {
       res.status(400).send(error);
     }
-    return null;
   }
 }
 export default UsersController;

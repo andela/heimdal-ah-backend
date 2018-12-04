@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import userRoutes from './routes/Users';
+import userRoutes from './routes/users';
 
 const PORT = process.env.PORT || 4000;
 

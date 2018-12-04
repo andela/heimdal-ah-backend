@@ -14,6 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/register": "*",
+    "@sendgrid/mail": "^6.3.1",
     "babel-core": "^6.26.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",

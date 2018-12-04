@@ -11,19 +11,19 @@ chai.should();
 
 describe('Heimdal Test Suite', () => {
   describe(' POST /v1/api/forgotpassword', () => {
-    it('should return status code 404 when user is invalid', async () => {
+    it('should return status code 400 when email is invalid', async () => {
       try {
         const res = await chai
           .request(app)
           .post('/api/v1/forgotpassword')
           .send({
-            email: 'email@gmail.com'
+            email: 'emaigmail.com'
           });
         if (res) {
-          res.status.should.equal(404);
+          res.status.should.equal(400);
           res.body.should.be.a('object');
-          res.body.should.have.property('message');
-          res.body.message.should.equal('user not avalaible');
+          // nres.body.should.have.property('message');
+          // res.body.message.should.equal(''please input a valid email'');
         }
       } catch (error) {
         logger.info(error);
@@ -36,36 +36,16 @@ describe('Heimdal Test Suite', () => {
       try {
         const res = await chai
           .request(app)
-          .put('/api/v1/resetpassword/hgcjkgkgjhcjytfkyu')
+          .put('/api/v1/resetpassword/jhuyytcfcyf')
           .send({
             password: '123456',
             confirmPassword: '123456'
           });
         if (res) {
-          res.status.should.equal(404);
+          res.status.should.equal(401);
           res.body.should.be.a('object');
           res.body.should.have.property('message');
-          res.body.message.should.equal('user not avalaible');
-        }
-      } catch (error) {
-        logger.info(error);
-      }
-    });
-
-    it('should return status code 404 when user is invalid', async () => {
-      try {
-        const res = await chai
-          .request(app)
-          .put('/api/v1/resetpassword/hgcjkgkgjhcjytfkyu')
-          .send({
-            password: '123456',
-            confirmPassword: ''
-          });
-        if (res) {
-          res.status.should.equal(400);
-          res.body.should.be.a('object');
-          res.body.should.have.property('message');
-          res.body.message.should.equal('password and comfirmPassword are not equal');
+          res.body.message.should.equal('error decoding token');
         }
       } catch (error) {
         logger.info(error);
