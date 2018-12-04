@@ -14,10 +14,21 @@ describe('Test for registering a new user', () => {
       username: 'test'
     };
     const res = await chai.request(app)
-      .post('/api/v1/signup')
+      .post('/api/v1/auth/signup')
       .send(data);
-    console.log(res.body);
     res.should.be.a('object');
     res.status.should.equal(201);
+  });
+  it('should return 409 if user already exists', async () => {
+    const data = {
+      email: 'testin@test.com',
+      password: '123456',
+      username: 'test'
+    };
+    const res = await chai.request(app)
+      .post('/api/v1/auth/signup')
+      .send(data);
+    res.should.be.a('object');
+    res.status.should.equal(409);
   });
 });

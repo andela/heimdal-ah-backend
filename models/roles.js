@@ -1,5 +1,5 @@
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Roles = sequelize.define('Roles', {
     role: DataTypes.STRING
   }, {});
@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   Roles.associate = (models) => {
     // associations can be defined here
     Roles.belongsTo(models.Users, {
-      foreignKey: 'rolesId',
-      as: 'users',
+      foreign: 'userId',
+      onDelete: 'CASCADE',
     });
   };
   return Roles;

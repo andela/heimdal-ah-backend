@@ -8,8 +8,7 @@ export default {
       type: Sequelize.INTEGER
     },
     role: {
-      type: Sequelize.STRING,
-      allowNull: false
+      type: Sequelize.STRING
     },
     createdAt: {
       allowNull: false,
@@ -18,7 +17,16 @@ export default {
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
-    }
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'userId',
+      },
+    },
   }),
   // eslint-disable-next-line no-unused-vars
   down: (queryInterface, Sequelize) => queryInterface.dropTable('Roles')

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Users', {
@@ -7,18 +8,21 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    username: {
-      type: Sequelize.STRING,
-      allowNull: false
-    },
     email: {
       type: Sequelize.STRING,
-      isEmail: true,
-      allowNull: false
+      allowNull: false,
     },
-    emailverification: {
+    password: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
+    },
+    username: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    emailVerification: {
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     createdAt: {
       allowNull: false,
@@ -29,6 +33,5 @@ export default {
       type: Sequelize.DATE
     }
   }),
-  // eslint-disable-next-line no-unused-vars
   down: (queryInterface, Sequelize) => queryInterface.dropTable('Users')
 };
