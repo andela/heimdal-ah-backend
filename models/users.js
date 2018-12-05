@@ -11,7 +11,7 @@ export default (sequelize, DataTypes) => {
     // associations can be defined here
     Users.hasOne(models.roles, {
       foreignKey: 'userId',
-      as: 'roles',
+      as: 'roles'
     });
     Users.hasOne(models.profiles, {
     });

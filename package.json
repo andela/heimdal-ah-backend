@@ -4,7 +4,7 @@
     "description": "A Social platform for the creative at heart",
     "main": "index.js",
     "scripts": {
-        "pretest": "npm run db:undo:migrate & npm run db:migrate:test",
+        "pretest": "npm run db:undo:migrate && npm run db:migrate:test",
         "test": "cross-env NODE_ENV=test nyc mocha ./test --require @babel/register --exit --timeout 250000",
         "posttest": "npm run db:undo:migrate",
         "coverage": "nyc report --reporter=text-lcov | coveralls",

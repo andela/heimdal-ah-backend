@@ -14,7 +14,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
-app.use('/api/v1/auth', auth);
+app.use('/api/v1', auth);
 
 app.use('/api/v1/profiles', profiles);
 
