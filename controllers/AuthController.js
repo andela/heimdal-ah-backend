@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import usersModel from '../models';
 import statusResponse from '../helpers/statusResponse';
 import UserModelQuery from '../lib/user';
-import config from '../config';
+// import config from '../config';
 
 /**
  * Signup validation class
@@ -48,7 +48,7 @@ class AuthController {
           userId: userData.id
         });
         // .then((todo) => {
-        const token = jwt.sign({ email, username }, process.env.tokenSecret, {
+        const token = jwt.sign({ email, username }, process.env.TOKEN_SECRET, {
           expiresIn: 86400
         });
         req.app.set('token', token);
@@ -96,7 +96,7 @@ class AuthController {
       // console.log(req.app.get('token'));
       return statusResponse.badRequest(res, payload);
     }
-    const token = jwt.sign({ email }, config.secret, {
+    const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
       expiresIn: 86400,
     });
     delete user.dataValues.password;
