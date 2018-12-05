@@ -41,7 +41,6 @@ describe('Test for registering a new user', () => {
       .request(app)
       .post('/api/v1/auth/signup')
       .send(data);
-    // console.log('----->', res.body);
     res.should.be.a('object');
     res.status.should.equal(201);
     bodyHelper.emailToken.validTokenInDb = res.body.emailToken;
@@ -77,7 +76,6 @@ describe('GET api/vi/users/verify-email/:emailToken', () => {
     const res = await chai
       .request(app)
       .get(`/api/v1/users/verify-email/${bodyHelper.emailToken.randomValidToken}`);
-    console.log('----->', res.body);
     res.should.be.a('object');
     res.status.should.equal(404);
   });

@@ -17,6 +17,12 @@
     "clean": "rimraf ./build",
     "start": "npm run build && node ./build/index"
   },
+  "nyc": {
+    "exclude": [
+      "build",
+      "models"
+    ]
+  },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
