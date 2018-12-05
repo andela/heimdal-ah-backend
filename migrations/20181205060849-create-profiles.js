@@ -7,6 +7,14 @@ export function up(queryInterface, Sequelize) {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
+    },
     username: {
       type: Sequelize.STRING,
       allowNull: false,

@@ -20,6 +20,7 @@ class ProfilesController {
   static async createProfile(req, res) {
     try {
       const usersProfile = await profiles.create({
+        userId: req.params.userId,
         username: req.body.username,
         biodata: req.body.biodata,
         image: req.body.image,
@@ -87,8 +88,7 @@ class ProfilesController {
    * @returns {object} Updated Users Profile
    */
   static async updateProfile(req, res) {
-    const userToken = req.app.get('token');
-    const decoded = jwtDecode(userToken).username;
+    const decoded = jwtDecode(req.body.token).username;
     if (decoded !== req.params.username) {
       Response.unauthorized(res, {
         errors: {

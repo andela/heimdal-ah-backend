@@ -64,6 +64,15 @@ class Response {
   }
 
   /**
+    * @param {object} res
+    * @param {object} data
+    * @returns {object} json data
+    */
+  static conflict(res, data) {
+    return res.status(409).json(data);
+  }
+
+  /**
    * @description - forbidden credentials
    * @param {object} res
    * @param {object} data
