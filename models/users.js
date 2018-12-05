@@ -12,6 +12,7 @@ export default (sequelize, DataTypes) => {
     Users.hasOne(models.roles, {
       foreignKey: 'userId',
       as: 'roles',
+      onDelete: 'CASCADE',
     });
     Users.hasOne(models.profiles, {
       foreignKey: 'userId',
