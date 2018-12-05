@@ -16,6 +16,7 @@ export default (sequelize, DataTypes) => {
     Users.hasOne(models.profiles, {
       foreignKey: 'userId',
       as: 'profiles',
+      onDelete: 'CASCADE',
     });
   };
   return Users;
