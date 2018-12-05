@@ -28,7 +28,7 @@ class PasswordResetController {
     }
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
-      process.env.tokenSecret,
+      process.env.TOKEN_SECRET,
       {
         expiresIn: 86400
       }

@@ -49,7 +49,7 @@ class AuthController {
           userId: userData.id
         });
         // .then((todo) => {
-        const token = jwt.sign({ email, username }, process.env.tokenSecret, {
+        const token = jwt.sign({ email, username }, process.env.TOKEN_SECRET, {
           expiresIn: 86400
         });
         req.app.set('token', token);
