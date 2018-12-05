@@ -54,17 +54,6 @@ class Response {
   }
 
   /**
-   * @description - conflict response
-   * @param {object} res
-   * @param {object} data
-   * @returns {object} Conflict
-   */
-  static conflict(res, data) {
-    return res.status(409).json(data);
-  }
-
-
-  /**
    * @description - Unauthorized credentials
    * @param {object} res
    * @param {object} data
@@ -72,6 +61,15 @@ class Response {
    */
   static unauthorized(res, data) {
     return res.status(401).json(data);
+  }
+
+  /**
+    * @param {object} res
+    * @param {object} data
+    * @returns {object} json data
+    */
+  static conflict(res, data) {
+    return res.status(409).json(data);
   }
 
   /**

@@ -18,7 +18,7 @@ class AuthController {
   static async signUp(req, res) {
     // console.log('------->', req.body);
     const { email, password, username } = req.body;
-    const { Users, Roles } = usersModel;
+    const { users, roles } = usersModel;
 
     // validation check here
     const genSalt = bcrypt.genSaltSync(8);
@@ -27,6 +27,9 @@ class AuthController {
 
     try {
       const user = await UserModelQuery.getUserByEmail(email);
+      // const user = await Users.findOne({
+      //   where: { email }
+      // });
       if (user) {
         const payload = {
           message: 'This email has been taken',
@@ -35,16 +38,17 @@ class AuthController {
       }
       try {
         const emailVerification = 'false';
-        const userData = await Users.create({
+        const userData = await users.create({
           email,
           password: hashPassword,
           username,
           emailVerification
         });
-        await Roles.create({
+        await roles.create({
           role,
           userId: userData.id
         });
+        // .then((todo) => {
         const token = jwt.sign({ email, username }, process.env.tokenSecret, {
           expiresIn: 86400
         });
@@ -55,11 +59,14 @@ class AuthController {
           userData,
           token,
         };
+        // console.log(req.app.get('token'));
         return statusResponse.success(res, payload);
       } catch (error) {
+        // console.log(error);
         return statusResponse.internalServerError(res);
       }
     } catch (error) {
+      // console.log(error);
       return statusResponse.internalServerError(res);
     }
   }

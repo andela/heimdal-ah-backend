@@ -1,11 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import nodeLogger from 'logger';
-// import users from '../seeders/data'
 import app from '../index';
-// import model from '../models';
 
-const logger = nodeLogger.createLogger();
 chai.use(chaiHttp);
 chai.should();
 
@@ -138,14 +134,26 @@ describe('Test for registering a new user', () => {
       password: 'etydhfkjdkvl1',
       username: 'test'
     };
-    const res = await chai
-      .request(app)
+    const res = await chai.request(app)
       .post('/api/v1/auth/signup')
       .send(data);
-    res.should.be.a('object');
-    res.status.should.equal(200);
+    if (res) {
+      res.body.should.be.a('object');
+      res.status.should.equal(200);
+    }
   });
-
+  // it('should return 409 if user already exists', async () => {
+  //   const data = {
+  //     email: 'testin@test.com',
+  //     password: 'etydhfkjdkvl1',
+  //     username: 'test'
+  //   };
+  //   const res = await chai.request(app)
+  //     .post('/api/v1/auth/signup')
+  //     .send(data);
+  //   res.should.be.a('object');
+  //   res.status.should.equal(409);
+  // });
   it('should return error if user enters an existing email', async () => {
     const userDataWithAnExistingEmail = {
       email: 'testin@test.com',
@@ -153,8 +161,7 @@ describe('Test for registering a new user', () => {
       username: 'Omotayo'
     };
 
-    const res = await chai
-      .request(app)
+    const res = await chai.request(app)
       .post('/api/v1/auth/signup')
       .send(userDataWithAnExistingEmail);
     res.status.should.equal(409);

@@ -14,9 +14,26 @@
     "consistent-return": "error",
     "no-param-reassign": "warn",
     "comma-dangle": 0,
-    "curly": ["error", "multi-line"],
-    "import/no-unresolved": [2, { "commonjs": true }],
-    "no-shadow": ["error", { "allow": ["req", "res", "err"] }],
+    "curly": [
+      "error",
+      "multi-line"
+    ],
+    "import/no-unresolved": [
+      2,
+      {
+        "commonjs": true
+      }
+    ],
+    "no-shadow": [
+      "error",
+      {
+        "allow": [
+          "req",
+          "res",
+          "err"
+        ]
+      }
+    ],
     "valid-jsdoc": [
       "error",
       {
