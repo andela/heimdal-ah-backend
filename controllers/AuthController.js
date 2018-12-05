@@ -32,9 +32,6 @@ class AuthController {
           message: 'This email has been taken',
         };
         return statusResponse.conflict(res, payload);
-        // return res.status(400).json({
-        //   message: 'I hate this shit'
-        // });
       }
       try {
         const emailVerification = 'false';
@@ -48,7 +45,6 @@ class AuthController {
           role,
           userId: userData.id
         });
-        // .then((todo) => {
         const token = jwt.sign({ email, username }, process.env.tokenSecret, {
           expiresIn: 86400
         });
@@ -59,7 +55,6 @@ class AuthController {
           userData,
           token,
         };
-        // console.log(req.app.get('token'));
         return statusResponse.success(res, payload);
       } catch (error) {
         return statusResponse.internalServerError(res);
