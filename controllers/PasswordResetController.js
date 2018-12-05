@@ -24,7 +24,7 @@ class PasswordResetController {
       }
     });
     if (!user) {
-      return res.notfound(res, { message: 'user not avalaible' });
+      return Response.notfound(res, { message: 'user not avalaible' });
     }
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
@@ -65,7 +65,7 @@ class PasswordResetController {
         where: { id }
       });
       if (!user) {
-        return res.status(404).send({ message: 'user not avalaible' });
+        return Response.notfound(res, { message: 'user not avalaible' });
       }
       try {
         const updatedPassword = await users.update({

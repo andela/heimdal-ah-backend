@@ -64,10 +64,10 @@ class StatusResponse {
   }
 
   /**
-    * @param {object} res
-    * @param {object} data
-    * @returns {object} json data
-    */
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} json data
+   */
   static conflict(res, data) {
     return res.status(409).json(data);
   }

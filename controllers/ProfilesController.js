@@ -37,9 +37,7 @@ class ProfilesController {
       Response.internalServerError(res, {
         message: 'users profile not created succesfully, please try again',
         error: {
-          body: [
-            `Internal server error => ${error}`
-          ]
+          body: [`Internal server error => ${error}`]
         }
       });
     }
@@ -73,9 +71,7 @@ class ProfilesController {
       Response.internalServerError(res, {
         message: 'users profile not returned succesfully, please try again',
         error: {
-          body: [
-            `Internal server error => ${error}`
-          ]
+          body: [`Internal server error => ${error}`]
         }
       });
     }
@@ -92,9 +88,7 @@ class ProfilesController {
     if (decoded !== req.params.username) {
       Response.unauthorized(res, {
         errors: {
-          body: [
-            'You cannot edit another persons profile'
-          ]
+          body: ['You cannot edit another persons profile']
         }
       });
     }
@@ -123,9 +117,7 @@ class ProfilesController {
           Response.internalServerError(res, {
             message: 'users profile not returned succesfully, please try again',
             error: {
-              body: [
-                `Internal server error => ${error}`
-              ]
+              body: [`Internal server error => ${error}`]
             }
           });
         }
@@ -134,9 +126,7 @@ class ProfilesController {
       Response.internalServerError(res, {
         message: 'users profile not returned succesfully, please try again',
         error: {
-          body: [
-            `Internal server error => ${error}`
-          ]
+          body: [`Internal server error => ${error}`]
         }
       });
     }

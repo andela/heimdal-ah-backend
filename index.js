@@ -5,7 +5,6 @@ import nodeLogger from 'logger';
 import validator from 'express-validator';
 import { auth, profiles, user } from './routes';
 
-
 const logger = nodeLogger.createLogger();
 
 const PORT = process.env.PORT || 4000;
@@ -17,9 +16,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use('/api/v1/forgotpassword', user);
-app.use('/api/v1/auth', auth);
+app.use('/api/v1', auth);
 app.use('/api/v1/profiles', profiles);
-
 
 app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);
