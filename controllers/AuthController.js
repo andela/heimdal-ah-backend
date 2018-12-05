@@ -60,7 +60,7 @@ class AuthController {
           token,
         };
         // console.log(req.app.get('token'));
-        return statusResponse.success(res, payload);
+        return statusResponse.created(res, payload);
       } catch (error) {
         // console.log(error);
         return statusResponse.internalServerError(res);
