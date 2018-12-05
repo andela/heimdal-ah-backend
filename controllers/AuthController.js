@@ -52,8 +52,8 @@ class AuthController {
           expiresIn: 86400
         });
         req.app.set('token', token);
-        userData.dataValues.password = undefined;
-        // delete userData.dataValues.password;
+        // userData.dataValues.password = undefined;
+        delete userData.dataValues.password;
         const payload = {
           message: 'user created succesfully',
           userData,
@@ -86,7 +86,8 @@ class AuthController {
       };
       return statusResponse.conflict(res, payload);
     } if (!bcrypt.compareSync(password, user.dataValues.password)) {
-      user.dataValues.password = undefined;
+      // user.dataValues.password = undefined;
+      delete user.dataValues.password;
       const payload = {
         message: 'you have entered invalid credentials',
         user,
@@ -98,6 +99,7 @@ class AuthController {
     const token = jwt.sign({ email }, config.secret, {
       expiresIn: 86400,
     });
+    delete user.dataValues.password;
     const payload = {
       message: 'user logged in succesfully',
       user,
