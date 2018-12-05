@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/statusResponse';
+import statusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/user';
 
 /**

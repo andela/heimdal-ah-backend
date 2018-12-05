@@ -1,4 +1,4 @@
-import Response from '../helpers/statusResponse';
+import Response from '../helpers/StatusResponse';
 
 // This function checks for user id being an integer on [users profile creation]
 const checkUsersId = (req, res, next) => {

@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import model from '../models';
-import Response from '../helpers/statusResponse';
+import Response from '../helpers/StatusResponse';
 
 const { profiles } = model;
 

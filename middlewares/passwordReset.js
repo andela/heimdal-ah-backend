@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import emailvalidator from 'email-validator';
-import Response from '../helpers/statusResponse';
+import Response from '../helpers/StatusResponse';
 
 /** @description generates token for user
  * @param {object} req is the request parameter

@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import userController from '../controllers/passwordResetController';
+import userController from '../controllers/PasswordResetController';
 import { passwordReset, validEmail } from '../middlewares/passwordReset';
 
 const router = express.Router();

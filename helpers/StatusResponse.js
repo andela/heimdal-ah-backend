@@ -2,7 +2,7 @@
  * @description - This class is all about server response
  * @returns {class} Response
  */
-class Response {
+class StatusResponse {
   /**
    * @description - success response
    * @param {object} res
@@ -83,4 +83,4 @@ class Response {
   }
 }
 
-export default Response;
+export default StatusResponse;
