@@ -1,3 +1,4 @@
+/* eslint-disable lines-between-class-members */
 // import { check, validationResult, body } from 'express-validator/check';
 // this function validates the User signup function parameters
 // invalid user parameters includes:
@@ -22,6 +23,17 @@ class UserValidation {
     UserValidation.checkUserEmail(req);
     UserValidation.checkPassword(req);
     UserValidation.checkUserName(req);
+    UserValidation.showError(req, res, next);
+  }
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @param {object} next Move to the next middleware or function
+   * @return {object} User validation response to user
+   */
+  static validateUserLogin(req, res, next) {
+    UserValidation.checkUserEmail(req);
+    UserValidation.checkPassword(req);
     UserValidation.showError(req, res, next);
   }
 
