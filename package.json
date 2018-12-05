@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "pretest": "cross-env NODE_ENV=test  && sequelize db:migrate:undo:all && npm run db:migrate",
+    "pretest": "cross-env NODE_ENV=test && sequelize db:migrate:undo:all && npm run db:migrate",
     "posttest": "cross-env NODE_ENV=test && sequelize db:migrate:undo:all",
     "test": "cross-env NODE_ENV=test && nyc mocha ./test/index.js --require @babel/register --exit --timeout 250000",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
@@ -16,12 +16,6 @@
     "build": "npm run clean && babel ./ -d ./build --ignore node_modules",
     "clean": "rimraf ./build",
     "start": "npm run build && node ./build/index"
-  },
-  "nyc": {
-    "exclude": [
-      "build",
-      "models"
-    ]
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
