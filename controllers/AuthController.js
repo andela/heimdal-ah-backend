@@ -18,7 +18,7 @@ class AuthController {
   static async signUp(req, res) {
     // console.log('------->', req.body);
     const { email, password, username } = req.body;
-    const { Users, Roles } = usersModel;
+    const { users, roles } = usersModel;
 
     // validation check here
     const genSalt = bcrypt.genSaltSync(8);
@@ -38,13 +38,13 @@ class AuthController {
       }
       try {
         const emailVerification = 'false';
-        const userData = await Users.create({
+        const userData = await users.create({
           email,
           password: hashPassword,
           username,
           emailVerification
         });
-        await Roles.create({
+        await roles.create({
           role,
           userId: userData.id
         });

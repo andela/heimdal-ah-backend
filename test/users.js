@@ -21,8 +21,10 @@ describe('Test for registering a new user', () => {
     const res = await chai.request(app)
       .post('/api/v1/auth/signup')
       .send(data);
-    res.should.be.a('object');
-    res.status.should.equal(201);
+    if (res) {
+      res.body.should.be.a('object');
+      res.status.should.equal(200);
+    }
   });
   // it('should return 409 if user already exists', async () => {
   //   const data = {

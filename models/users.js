@@ -1,6 +1,6 @@
 
 export default (sequelize, DataTypes) => {
-  const Users = sequelize.define('Users', {
+  const Users = sequelize.define('users', {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     username: DataTypes.STRING,
@@ -9,9 +9,11 @@ export default (sequelize, DataTypes) => {
   // eslint-disable-next-line no-unused-vars
   Users.associate = (models) => {
     // associations can be defined here
-    Users.hasOne(models.Roles, {
+    Users.hasOne(models.roles, {
       foreignKey: 'userId',
       as: 'roles',
+    });
+    Users.hasOne(models.profiles, {
     });
   };
   return Users;

@@ -1,3 +1,4 @@
 import auth from './auth';
+import profiles from './profiles';
 
-export default auth;
+export { auth, profiles };

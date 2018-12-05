@@ -1,6 +1,6 @@
 
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Roles', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('roles', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -22,12 +22,12 @@ export default {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'Users',
+        model: 'users',
         key: 'id',
         as: 'userId',
       },
     },
   }),
   // eslint-disable-next-line no-unused-vars
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Roles')
+  down: (queryInterface, Sequelize) => queryInterface.dropTable('roles')
 };

@@ -1,90 +1,86 @@
-
 /**
- * Response Class
+ * @description - This class is all about server response
+ * @returns {class} Response
  */
 class Response {
   /**
-   * set status constructor
+   * @description - success response
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} Success
    */
-  constructor() {
-    this.status = 200;
-  }
-
-  /**
- * @param {object} res
- * @param {object} data
- * @returns {object} json data
- */
   static success(res, data) {
-    return res.status(201).json(data);
+    return res.status(200).json(data);
   }
 
   /**
- * @param {object} res
- * @param {object} data
- * @returns {object} json data
- */
+   * @description - Not found response
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} Not found
+   */
   static notfound(res, data) {
     return res.status(404).json(data);
   }
 
   /**
- * @param {object} res
- * @param {object} data
- * @returns {object} json data
- */
+   * @description - Internal server error response
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} Error
+   */
+  static internalServerError(res, data) {
+    return res.status(500).json(data);
+  }
+
+  /**
+   * @description - bad request
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} Error
+   */
+  static badRequest(res, data) {
+    return res.status(400).json(data);
+  }
+
+  /**
+   * @description - created response
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} Created
+   */
+  static created(res, data) {
+    return res.status(201).json(data);
+  }
+
+  /**
+   * @description - Unauthorized credentials
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} Unauthorized
+   */
+  static unauthorized(res, data) {
+    return res.status(401).json(data);
+  }
+
+  /**
+    * @param {object} res
+    * @param {object} data
+    * @returns {object} json data
+    */
   static conflict(res, data) {
     return res.status(409).json(data);
   }
 
   /**
- * @param {object} res
- * @param {object} data
- * @returns {object} json data
- */
-  static internalServerError(res) {
-    return res.status(500).json({ message: 'an error occoured' });
-  }
-
-  /**
- * @param {object} res
- * @param {object} data
- * @returns {object} json data
- */
-  static badRequest(res, data) {
-    return res.status(400).json(data);
+   * @description - forbidden credentials
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} forbidden
+   */
+  static forbidden(res, data) {
+    return res.status(403).json(data);
   }
 }
 
 export default Response;
-
-// const sendResponse20x = (response, statusCode, status, message, todo, token) => response
-//   .status(statusCode).send({
-//     status,
-//     data: {
-//       message,
-//       todo,
-//       token
-//     },
-//   });
-
-// const sendResponse40x = (response, statusCode, message, status) => response.status(statusCode)
-//   .send({
-//     status,
-//     data: {
-//       message,
-//     },
-//   });
-// const sendResponse20x = (response, statusCode, status, message, todo, token) => response
-//   .status(statusCode).send({
-//     status,
-//     data: {
-//       message,
-//       todo,
-//       token
-//     },
-//   });
-
-// export default {
-//   sendResponse40x, sendResponse20x
-// };

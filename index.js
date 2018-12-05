@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import nodeLogger from 'logger';
 import validator from 'express-validator';
-import routes from './routes';
+import { auth, profiles } from './routes/index';
 
 const logger = nodeLogger.createLogger();
 const PORT = process.env.PORT || 4000;
@@ -14,7 +14,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
-app.use('/api/v1/auth', routes);
+app.use('/api/v1/auth', auth);
+
+app.use('/api/v1/profiles', profiles);
 
 app.listen(PORT, () => {
   logger.info(`connected on port ${PORT}`);
