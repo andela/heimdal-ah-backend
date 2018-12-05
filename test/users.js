@@ -23,7 +23,7 @@ describe('Test for registering a new user', () => {
       .send(data);
     if (res) {
       res.body.should.be.a('object');
-      res.status.should.equal(200);
+      res.status.should.equal(201);
     }
   });
   // it('should return 409 if user already exists', async () => {
