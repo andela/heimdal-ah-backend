@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken';
 
 import models from '../models';
+import StatusResponse from '../helpers/StatusResponse';
 
-const { Users } = models;
+const { users } = models;
 
 /**
  * @description - This class handles the users
@@ -19,54 +20,45 @@ class UsersController {
     const decodedToken = jwt.decode(emailToken);
 
     if (!decodedToken) {
-      return res.status(400).send({
-        success: false,
-        msg: 'The verification link is invalid. Check your email and try again'
+      return StatusResponse.badRequest(res, {
+        message: 'The verification link is invalid. Check your email and try again'
       });
     }
 
     const { email } = decodedToken;
 
     try {
-      const user = await Users.findOne({
+      const user = await users.findOne({
         where: { email }
       });
 
       if (!user) {
-        return res.status(404).send({
-          success: false,
-          msg: 'No user found'
+        return StatusResponse.notfound(res, {
+          message: 'No user found'
         });
       }
 
-      try {
-        const updateUser = await Users.update(
-          {
-            emailVerification: true
-          },
-          { where: { email } }
-        );
-        if (!updateUser) {
-          return res.status(400).send({
-            success: false,
-            msg: 'Unable to update user'
-          });
-        }
-
-        return res.status(200).send({
-          success: true,
-          msg: 'Your email has been verified'
-        });
-      } catch (error) {
-        return res.status(500).json({
-          message: 'An internal error occured, try again',
-          error
+      const updateUser = await users.update(
+        {
+          emailVerification: true
+        },
+        { where: { email } }
+      );
+      if (!updateUser) {
+        return StatusResponse.badRequest(res, {
+          message: 'Unable to verify your password try again'
         });
       }
+
+      return StatusResponse.success(res, {
+        message: 'Your email has been verified'
+      });
     } catch (error) {
-      return res.status(500).json({
-        message: 'An internal error occured, try again',
-        error
+      return StatusResponse.internalServerError(res, {
+        message: 'users profile not returned succesfully, please try again',
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
       });
     }
   }

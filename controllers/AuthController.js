@@ -2,8 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/statusResponse';
+import statusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/user';
+// import config from '../config';
 
 import mailer from '../helpers/mailer';
 import helper from '../helpers/helper';
@@ -20,7 +21,7 @@ class AuthController {
    */
   static async signUp(req, res) {
     const { email, password, username } = req.body;
-    const { Users, Roles } = usersModel;
+    const { users, roles } = usersModel;
 
     // hash password here
     const genSalt = bcrypt.genSaltSync(8);
@@ -59,38 +60,75 @@ class AuthController {
       }
       try {
         const emailVerification = 'false';
-        const userData = await Users.create({
+        const userData = await users.create({
           email,
           username,
           emailVerification,
           password: hashPassword
         });
-
-        await Roles.create({
+        await roles.create({
           role,
           userId: userData.id
         });
-
-        const token = jwt.sign({ email, username }, process.env.tokenSecret, {
+        // .then((todo) => {
+        const token = jwt.sign({ email, username }, process.env.TOKEN_SECRET, {
           expiresIn: 86400
         });
-        req.app.set('token', token);
-        userData.dataValues.password = undefined;
-
+        // userData.dataValues.password = undefined;
+        delete userData.dataValues.password;
         const payload = {
           message: 'user created succesfully',
           userData,
           token,
           emailToken
         };
-
-        return statusResponse.success(res, payload);
+        // console.log(req.app.get('token'));
+        return statusResponse.created(res, payload);
       } catch (error) {
         return statusResponse.internalServerError(res);
       }
     } catch (error) {
       return statusResponse.internalServerError(res);
     }
+  }
+
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @return {object} login response to user
+   */
+  static async login(req, res) {
+    const { email, password } = req.body;
+
+    const user = await UserModelQuery.getUserByEmail(email);
+    if (!user) {
+      const payload = {
+        message: 'email does not exist'
+      };
+      return statusResponse.conflict(res, payload);
+    }
+    if (!bcrypt.compareSync(password, user.dataValues.password)) {
+      user.dataValues.password = undefined;
+      // delete user.dataValues.password;
+      const payload = {
+        message: 'you have entered invalid credentials',
+        user,
+        token: 'null'
+      };
+      // console.log(req.app.get('token'));
+      return statusResponse.badRequest(res, payload);
+    }
+    const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
+      expiresIn: 86400
+    });
+    delete user.dataValues.password;
+    const payload = {
+      message: 'user logged in succesfully',
+      user,
+      token
+    };
+    // console.log(req.app.get('token'));
+    return statusResponse.success(res, payload);
   }
 }
 
