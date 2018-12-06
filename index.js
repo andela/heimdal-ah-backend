@@ -30,7 +30,7 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/forgotpassword', user);
-passportAuth(app);
+passportAuth();
 
 app.use((req, res) => res.status(404).json('not found'));
 
