@@ -17,37 +17,38 @@ class PasswordResetController {
    */
   static async forgotPassword(req, res) {
     const { users } = UserModel;
-
-    const user = await users.findOne({
-      where: {
-        email: req.body.email
+    try {
+      const user = await users.findOne({
+        where: {
+          email: req.body.email
+        }
+      });
+      if (!user) {
+        return Response.notfound(res, { message: 'user not avalaible' });
       }
-    });
-    if (!user) {
-      return Response.notfound(res, { message: 'user not avalaible' });
-    }
-    const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: 86400
+      const token = jwt.sign(
+        { id: user.id, username: user.username, email: user.email },
+        process.env.TOKEN_SECRET,
+        {
+          expiresIn: 86400
+        }
+      );
+
+      const emailSubject = 'Please rerset your password';
+      const emailBody = `
+      <div>
+          <h1> please follow this link to update your password</h1>
+          ${token}
+      </div>`;
+      const emailContent = { emailSubject, emailBody };
+      const data = await mailer.sendCustomMail(req.body.email, emailContent);
+      if (data) {
+        return Response.badRequest(res, { message: 'message was not sent' });
       }
-    );
-
-    const emailSubject = 'Please rerset your password';
-    const emailBody = `
-    <div>
-        <h1> please follow this link to update your password</h1>
-        ${token}
-    </div>`;
-    const emailContent = { emailSubject, emailBody };
-
-    const data = await mailer.sendCustomMail(req.body.email, emailContent);
-
-    if (data) {
-      return Response.badRequest(res, { message: 'message was not sent' });
+      return Response.success(res, { message: 'Email was sent successfully' });
+    } catch (err) {
+      return Response.internalServerError(res, { message: 'Server error' });
     }
-    return Response.success(res, { message: 'Email was sent successfully' });
   }
 
   /** @description updates the existing password in the database
@@ -67,24 +68,26 @@ class PasswordResetController {
       if (!user) {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
-      try {
-        const updatedPassword = await users.update({
-          password: hashedPassword
-        });
-        if (updatedPassword) {
-          return Response.success(res, {
-            message: 'password update was succesful'
-          });
-        }
-      } catch (error) {
-        return Response.badRequest(res, {
-          message: 'password was not updated'
+      const updatedPassword = await users.update({
+        where: {
+          id
+        },
+        password: hashedPassword
+      });
+      if (updatedPassword) {
+        return Response.success(res, {
+          message: 'password update was succesful'
         });
       }
+
+      return Response.internalServerError(res, {
+        message: 'password was not updated'
+      });
     } catch (error) {
-      return res.status(400).send(error);
+      return Response.internalServerError(res, {
+        message: 'Server Error'
+      });
     }
-    return null;
   }
 }
 export default PasswordResetController;

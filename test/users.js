@@ -154,6 +154,7 @@ describe('Test for registering a new user', () => {
     res.status.should.equal(201);
     bodyHelper.emailToken.validTokenInDb = res.body.emailToken;
   });
+
   it('should return error if user enters an existing email', async () => {
     const userDataWithAnExistingEmail = {
       email: 'testin@test.com',
@@ -193,5 +194,23 @@ describe('GET api/vi/users/verify-email/:emailToken', () => {
       .get(`/api/v1/users/verify-email/${bodyHelper.emailToken.validTokenInDb}`);
     res.should.be.a('object');
     res.status.should.equal(200);
+  });
+});
+
+describe('Test for listing all users', () => {
+  it('Should return status 200 on success or 404 if returned array is empty', async () => {
+    const response = await chai.request(app).get('/api/v1/users/authors');
+    if (response.body.status === 404) {
+      response.status.should.equal(404);
+      response.body.should.have.a('object');
+      response.body.should.have.property('message');
+      response.body.message.should.equal('No author found');
+    } else {
+      response.status.should.equal(200);
+      response.body.should.have.a('object');
+      response.body.should.have.property('message');
+      response.body.should.have.property('users');
+      response.body.message.should.equal('List of authors');
+    }
   });
 });

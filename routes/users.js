@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post('/', validEmail, PasswordResetController.forgotPassword);
 router.put('/resetpassword/:token', passwordReset, PasswordResetController.resetPassword);
+router.get('/authors', UsersController.list);
 
 /**
  * Verify the users email

@@ -1,14 +1,53 @@
 import jwt from 'jsonwebtoken';
 
 import models from '../models';
-import StatusResponse from '../helpers/StatusResponse';
+import StatusResponse from '../helpers/statusResponse';
 
-const { users } = models;
+const { users, profiles, roles } = models;
 
 /**
- * @description - This class handles the users
- * */
+ * @description UsersController class
+ */
 class UsersController {
+  /**
+   * @description Fetch all the users
+   * @param {Object} req - HTTP Request
+   * @param {Object} res - HTTP Response
+   * @return {Object} Returned object
+   */
+  static async list(req, res) {
+    try {
+      const authors = await users.findAll({
+        include: [
+          profiles,
+          {
+            model: roles,
+            as: 'roles',
+            where: {
+              role: 'author'
+            }
+          }
+        ],
+        attributes: { exclude: ['password'] }
+      });
+      if (authors.length === 0) {
+        StatusResponse.notfound(res, {
+          message: 'No author found',
+          status: 404
+        });
+      } else {
+        StatusResponse.success(res, {
+          message: 'List of authors',
+          users: authors
+        });
+      }
+    } catch (error) {
+      StatusResponse.internalServerError(res, {
+        message: `Something went wrong..${error}`
+      });
+    }
+  }
+
   /**
    * @description  Method to verify a users email
    * @param {object} req
