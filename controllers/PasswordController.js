@@ -86,7 +86,7 @@ class PasswordResetController {
       });
       if (updatedPassword) {
         return Response.success(res, {
-          message: 'password update was succesfull'
+          message: 'password update was successful'
         });
       }
 
