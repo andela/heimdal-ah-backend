@@ -18,6 +18,11 @@ app.use(validator());
 app.use('/api/v1/forgotpassword', user);
 app.use('/api/v1', auth);
 app.use('/api/v1/profiles', profiles);
+app.use('/api/v1/users', user);
+
+app.get('/', (req, res) => res.status(200).send({
+  message: 'Welcome to the Author\'s haven',
+}));
 
 app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);
