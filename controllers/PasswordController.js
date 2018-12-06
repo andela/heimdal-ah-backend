@@ -46,7 +46,7 @@ class PasswordResetController {
       mailer.sendCustomMail(req.body.email, emailContent);
 
       user.update({
-        passwordReset: true
+        resettingPassword: true
       });
 
       return Response.success(res, { message: 'Email was sent successfully' });
@@ -74,7 +74,7 @@ class PasswordResetController {
       if (!user) {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
-      if (user.passwordReset === false) {
+      if (!user.resettingPassword) {
         return Response.badRequest(res, {
           message: 'this link has already been used to reset your password'
         });
@@ -82,7 +82,7 @@ class PasswordResetController {
       // update password
       const updatedPassword = await user.update({
         password: hashedPassword,
-        passwordReset: false
+        resettingPassword: false
       });
       if (updatedPassword) {
         return Response.success(res, {

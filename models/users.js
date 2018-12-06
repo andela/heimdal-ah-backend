@@ -4,7 +4,7 @@ export default (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     username: DataTypes.STRING,
     emailVerification: DataTypes.STRING,
-    passwordReset: DataTypes.BOOLEAN,
+    resettingPassword: DataTypes.BOOLEAN,
     facebookId: DataTypes.STRING,
     googleId: DataTypes.STRING,
     twitterId: DataTypes.STRING,

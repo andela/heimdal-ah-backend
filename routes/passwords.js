@@ -4,7 +4,7 @@ import { passwordReset, validEmail } from '../middlewares/passwordReset';
 
 const router = express.Router();
 
-router.post('/forgotpassword', validEmail, PasswordController.forgotPassword);
-router.put('/resetpassword/:token', passwordReset, PasswordController.resetPassword);
+router.post('/forgot', validEmail, PasswordController.forgotPassword);
+router.put('/reset/:token', passwordReset, PasswordController.resetPassword);
 
 export default router;

@@ -7,7 +7,7 @@ import {
   auth,
   profiles,
   user,
-  passwords,
+  password,
   twitterRouter
 } from './routes';
 
@@ -33,7 +33,7 @@ app.get('/', (req, res) => res.status(200).send({
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
-app.use('/api/v1/passwords', passwords);
+app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
 passportAuth();
 

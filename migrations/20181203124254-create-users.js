@@ -36,7 +36,7 @@ export default {
       type: Sequelize.STRING,
       allowNull: true,
     },
-    passwordReset: {
+    resettingPassword: {
       type: Sequelize.STRING,
       allowNull: false,
       defaultValue: false

@@ -25,11 +25,11 @@ before((done) => {
 });
 
 describe('password reset test', () => {
-  describe(' POST /v1/api/forgotpassword', () => {
+  describe(' POST /v1/api/forgot', () => {
     it('should return status code 400 when email is invalid', async () => {
       const res = await chai
         .request(app)
-        .post('/api/v1/passwords/forgotpassword')
+        .post('/api/v1/password/forgot')
         .send({
           email: 'emaigmail.com'
         });
@@ -40,7 +40,7 @@ describe('password reset test', () => {
     it('should retuen a 200 when users email is valid', async () => {
       const res = await chai
         .request(app)
-        .post('/api/v1/passwords/forgotpassword')
+        .post('/api/v1/password/forgot')
         .send({
           email: 'peopleweysabi@test.com'
         });
@@ -50,11 +50,11 @@ describe('password reset test', () => {
     });
   });
 
-  describe(' PUT /resetpassword/:token', () => {
+  describe(' PUT /reset/:token', () => {
     it('should return status code 404 when user is invalid', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/passwords/resetpassword/jhuyytcfcyf')
+        .put('/api/v1/password/reset/jhuyytcfcyf')
         .send({
           password: '123456',
           confirmPassword: '123456'
@@ -69,7 +69,7 @@ describe('password reset test', () => {
       try {
         const res = await chai
           .request(app)
-          .put(`/api/v1/passwords/resetpassword/${userToken}`)
+          .put(`/api/v1/password/reset/${userToken}`)
           .send({
             password: '123456',
             confirmPassword: '123456'
@@ -85,7 +85,7 @@ describe('password reset test', () => {
     it('should return status code 400 if password is not defined', async () => {
       const res = await chai
         .request(app)
-        .put(`/api/v1/passwords/resetpassword/${userToken}`)
+        .put(`/api/v1/password/reset/${userToken}`)
         .send({
           password: '',
           confirmPassword: '123456'
@@ -99,7 +99,7 @@ describe('password reset test', () => {
     it('should return status code 400 if passwood is not thesame as confirmpassword', async () => {
       const res = await chai
         .request(app)
-        .put(`/api/v1/passwords/resetpassword/${userToken}`)
+        .put(`/api/v1/password/reset/${userToken}`)
         .send({
           password: '222334444',
           confirmPassword: '123456'
@@ -113,7 +113,7 @@ describe('password reset test', () => {
     it('should return status code 400 if confirm password is undefined', async () => {
       const res = await chai
         .request(app)
-        .put(`/api/v1/passwords/resetpassword/${userToken}`)
+        .put(`/api/v1/password/reset/${userToken}`)
         .send({
           password: '222334444',
           confirmPassword: ''
