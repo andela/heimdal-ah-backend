@@ -70,24 +70,23 @@ class PasswordResetController {
       if (!user) {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
-      try {
-        const updatedPassword = await users.update({
-          password: hashedPassword
-        });
-        if (updatedPassword) {
-          return Response.success(res, {
-            message: 'password update was succesful'
-          });
-        }
-      } catch (error) {
-        return Response.badRequest(res, {
-          message: 'password was not updated'
+      const updatedPassword = await users.update({
+        password: hashedPassword
+      });
+      if (updatedPassword) {
+        return Response.success(res, {
+          message: 'password update was succesful'
         });
       }
+
+      return Response.internalServerError(res, {
+        message: 'password was not updated'
+      });
     } catch (error) {
-      return res.status(400).send(error);
+      return Response.internalServerError(res, {
+        message: 'Server Error'
+      });
     }
-    return null;
   }
 }
 export default PasswordResetController;
