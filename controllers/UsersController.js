@@ -1,4 +1,4 @@
-import status from '../helpers/StatusResponse';
+import Response from '../helpers/StatusResponse';
 import models from '../models';
 
 
@@ -16,7 +16,7 @@ class UsersController {
    */
   static async list(req, res) {
     try {
-      const authorsList = await users.findAll({
+      const authors = await users.findAll({
         include: [profiles, {
           model: roles,
           as: 'roles',
@@ -26,15 +26,20 @@ class UsersController {
         }],
         attributes: { exclude: ['password'] }
       });
-      if (authorsList) {
-        status.success(res, {
+      if (authors.length === 0) {
+        Response.notfound(res, {
+          message: 'No author found',
+          status: 404
+        });
+      } else {
+        Response.success(res, {
           message: 'List of authors',
-          authors: authorsList
+          users: authors
         });
       }
     } catch (error) {
-      status.internalServerError(res, {
-        message: 'Something went wrong.. Try again!'
+      Response.internalServerError(res, {
+        message: `Something went wrong..${error}`
       });
     }
   }
