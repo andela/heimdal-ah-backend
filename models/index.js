@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 import config from '../config/config';
 
 const basename = path.basename(__filename);
-const db = {};
+const db = {
+};
 
 dotenv.config();
 const NODE_ENV = process.env.NODE_ENV || 'development';
