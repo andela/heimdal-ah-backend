@@ -10,11 +10,11 @@ export default {
     },
     email: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     username: {
       type: Sequelize.STRING,
@@ -22,7 +22,19 @@ export default {
     },
     emailVerification: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
+    },
+    facebookId: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    googleId: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+    twitterId: {
+      type: Sequelize.STRING,
+      allowNull: true,
     },
     passwordReset: {
       type: Sequelize.STRING,
