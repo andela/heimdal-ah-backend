@@ -1,5 +1,5 @@
-import UsersController from './passwordResetController';
+import PasswordController from './PasswordController';
 
 export default {
-  UsersController,
+  PasswordController
 };

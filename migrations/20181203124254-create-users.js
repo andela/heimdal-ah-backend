@@ -24,6 +24,11 @@ export default {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    passwordReset: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: false
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

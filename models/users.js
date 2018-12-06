@@ -4,7 +4,8 @@ export default (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     username: DataTypes.STRING,
-    emailVerification: DataTypes.STRING
+    emailVerification: DataTypes.STRING,
+    passwordReset: DataTypes.BOOLEAN
   }, {});
   // eslint-disable-next-line no-unused-vars
   Users.associate = (models) => {
