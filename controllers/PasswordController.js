@@ -38,7 +38,7 @@ class PasswordResetController {
       const emailSubject = 'Please rerset your password';
       const emailBody = `
      <div>
-         <h1> please follow this link to update your password</h1>
+         <h1> please follow this link to update your password </h1>
          ${token}
      </div>`;
       // send email
@@ -65,6 +65,7 @@ class PasswordResetController {
     const { users } = UserModel;
     const { id } = req.decoded;
     const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+
     try {
       const user = await users.findOne({
         where: { id }
@@ -74,7 +75,9 @@ class PasswordResetController {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
       if (user.passwordReset === false) {
-        return Response.badRequest(res, { message: 'this link has already been used to reset your password' });
+        return Response.badRequest(res, {
+          message: 'this link has already been used to reset your password'
+        });
       }
       // update password
       const updatedPassword = await user.update({
