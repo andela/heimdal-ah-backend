@@ -3,6 +3,9 @@ export default (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     username: DataTypes.STRING,
+    facebookId: DataTypes.STRING,
+    googleId: DataTypes.STRING,
+    twitterId: DataTypes.STRING,
     emailVerification: DataTypes.STRING
   }, {});
   // eslint-disable-next-line no-unused-vars
