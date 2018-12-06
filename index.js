@@ -26,13 +26,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(validator());
 
+app.get('/', (req, res) => res.status(200).send({
+  message: 'Welcome to the Author\'s haven',
+}));
+
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/forgotpassword', user);
+app.use('/api/v1/users', user);
 passportAuth();
 
-app.use((req, res) => res.status(404).json('not found'));
+app.use((req, res) => res.status(404).json({ message: 'not found' }));
+
 
 app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);
