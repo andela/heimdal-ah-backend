@@ -35,7 +35,7 @@ app.use('/', (req, res) => res.status(200).json({
   message: 'Welcome to Authors Haven by Heimdal'
 }));
 
-// app.use((req, res) => res.status(404).json({ message: 'not found' }));
+app.use((req, res) => res.status(404).json({ message: 'not found' }));
 
 app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);
