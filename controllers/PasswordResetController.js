@@ -4,6 +4,8 @@ import UserModel from '../models';
 import Response from '../helpers/StatusResponse';
 import mailer from '../helpers/mailer';
 
+import logger from '../config/logger';
+
 /** @description usersController class
  * @return {object} the response object
  * @public
@@ -17,37 +19,39 @@ class PasswordResetController {
    */
   static async forgotPassword(req, res) {
     const { users } = UserModel;
-
-    const user = await users.findOne({
-      where: {
-        email: req.body.email
+    try {
+      const user = await users.findOne({
+        where: {
+          email: req.body.email
+        }
+      });
+      if (!user) {
+        return Response.notfound(res, { message: 'user not avalaible' });
       }
-    });
-    if (!user) {
-      return Response.notfound(res, { message: 'user not avalaible' });
-    }
-    const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: 86400
+      const token = jwt.sign(
+        { id: user.id, username: user.username, email: user.email },
+        process.env.TOKEN_SECRET,
+        {
+          expiresIn: 86400
+        }
+      );
+
+      const emailSubject = 'Please rerset your password';
+      const emailBody = `
+      <div>
+          <h1> please follow this link to update your password</h1>
+          ${token}
+      </div>`;
+      const emailContent = { emailSubject, emailBody };
+      const data = await mailer.sendCustomMail(req.body.email, emailContent);
+      if (data) {
+        return Response.badRequest(res, { message: 'message was not sent' });
       }
-    );
-
-    const emailSubject = 'Please rerset your password';
-    const emailBody = `
-    <div>
-        <h1> please follow this link to update your password</h1>
-        ${token}
-    </div>`;
-    const emailContent = { emailSubject, emailBody };
-
-    const data = await mailer.sendCustomMail(req.body.email, emailContent);
-
-    if (data) {
-      return Response.badRequest(res, { message: 'message was not sent' });
+      return Response.success(res, { message: 'Email was sent successfully' });
+    } catch (err) {
+      logger.error(err.message);
+      return Response.internalServerError();
     }
-    return Response.success(res, { message: 'Email was sent successfully' });
   }
 
   /** @description updates the existing password in the database

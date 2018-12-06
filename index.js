@@ -1,15 +1,12 @@
 import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
-import nodeLogger from 'logger';
 import validator from 'express-validator';
 import session from 'express-session';
 
 import { auth, profiles, user } from './routes';
-
+import logger from './config/logger';
 import passportAuth from './config/passportAuth';
-
-const logger = nodeLogger.createLogger();
 
 const PORT = process.env.PORT || 4000;
 
