@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import validator from 'express-validator';
-import session from 'express-session';
+// import session from 'express-session';
 
 import { auth, profiles, user } from './routes';
 import logger from './config/logger';
@@ -17,11 +17,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-}));
+// app.use(session({
+//   secret: process.env.SESSION_SECRET,
+//   resave: true,
+//   saveUninitialized: true,
+// }));
 
 
 app.use('/api/v1/auth', auth);
