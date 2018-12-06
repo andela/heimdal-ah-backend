@@ -34,7 +34,7 @@ describe('password reset test', () => {
       res.body.should.be.a('object');
     });
 
-    it('should retuen a 200 when users email is valid', async () => {
+    it('should return a 200 when users email is valid', async () => {
       const res = await chai
         .request(app)
         .post('/api/v1/password/forgot')
@@ -63,7 +63,6 @@ describe('password reset test', () => {
     });
 
     it('should return status code 200 when user token is valid', async () => {
-      console.log(userToken, '---------------------------------------');
       try {
         const res = await chai
           .request(app)
@@ -94,7 +93,7 @@ describe('password reset test', () => {
     });
 
 
-    it('should return status code 400 if passwood is not thesame as confirmpassword', async () => {
+    it('should return status code 400 if password is not thesame as confirmpassword', async () => {
       const res = await chai
         .request(app)
         .put(`/api/v1/password/reset/${userToken}`)
