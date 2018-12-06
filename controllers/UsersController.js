@@ -21,15 +21,14 @@ class UsersController {
           model: roles,
           as: 'roles',
           where: {
-            role: 'author'
+            role: 'user'
           }
         }],
         attributes: { exclude: ['password'] }
       });
       if (authors.length === 0) {
-        Response.notfound(res, {
+        Response.success(res, {
           message: 'No author found',
-          status: 404
         });
       } else {
         Response.success(res, {
