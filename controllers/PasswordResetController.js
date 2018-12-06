@@ -4,8 +4,6 @@ import UserModel from '../models';
 import Response from '../helpers/StatusResponse';
 import mailer from '../helpers/mailer';
 
-import logger from '../config/logger';
-
 /** @description usersController class
  * @return {object} the response object
  * @public
@@ -71,6 +69,9 @@ class PasswordResetController {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
       const updatedPassword = await users.update({
+        where: {
+          id
+        },
         password: hashedPassword
       });
       if (updatedPassword) {
