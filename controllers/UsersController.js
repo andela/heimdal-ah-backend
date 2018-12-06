@@ -1,5 +1,8 @@
-import User from '../models/users';
-import Profile from '../models/profiles';
+import stat from '../helpers/statusResponse';
+import models from '../models';
+
+
+const { users, profiles, roles } = models;
 
 /**
 * @description Users class
@@ -13,18 +16,26 @@ class UsersController {
    */
   static async list(req, res) {
     try {
-      const response = await User.findAll({
-        where: {
-          role: 'authors'
-        },
-        include: [{
-          model: Profile,
-          as: 'profile',
-        }]
+      const authorsList = await users.findAll({
+        include: [profiles, {
+          model: roles,
+          as: 'roles',
+          where: {
+            role: 'user'
+          }
+        }],
+        attributes: { exclude: ['password'] }
       });
-      res.status(200).send(response);
+      if (authorsList) {
+        stat.success(res, {
+          message: 'List of authors',
+          authors: authorsList
+        });
+      }
     } catch (error) {
-      res.status(400).send(error);
+      stat.internalServerError(res, {
+        message: error
+      });
     }
   }
 }

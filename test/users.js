@@ -57,11 +57,11 @@ describe('Test for registering a new user', () => {
 });
 
 
-describe('List users', () => {
+describe('Test for listing all users', () => {
   it('Should return status 200 on successful retreival', async () => {
     const response = await chai.request(app)
       .get('/api/v1/users/authors');
-
     response.status.should.equal(200);
+    response.body.message.should.equal('List of authors');
   });
 });
