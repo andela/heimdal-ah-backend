@@ -1,8 +1,4 @@
 const testHelper = {
-  /**
-   * @description - This class handles the users
-   * */
-
   existingEmail: undefined,
   userEmail: 'henry.izontimi@gmail.com',
   password: '12345',
