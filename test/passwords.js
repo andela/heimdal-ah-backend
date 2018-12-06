@@ -5,9 +5,10 @@ import app from '../index';
 chai.use(chaiHttp);
 chai.should();
 
-let userToken;
-before((done) => {
-  it('test user', async () => {
+
+describe('password reset test', () => {
+  let userToken;
+  before(async () => {
     const data = {
       email: 'peopleweysabi@test.com',
       password: 'etydhfkjdkvl1',
@@ -21,10 +22,6 @@ before((done) => {
     userToken = token;
   });
 
-  done();
-});
-
-describe('password reset test', () => {
   describe(' POST /v1/api/forgot', () => {
     it('should return status code 400 when email is invalid', async () => {
       const res = await chai
@@ -66,6 +63,7 @@ describe('password reset test', () => {
     });
 
     it('should return status code 200 when user token is valid', async () => {
+      console.log(userToken, '---------------------------------------');
       try {
         const res = await chai
           .request(app)
