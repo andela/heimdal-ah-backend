@@ -23,7 +23,7 @@ const socialMediaProfile = {
   photos: [{ value: 'a_very_funny_image' }],
 };
 
-describe('Heimdal Test Suite', () => {
+describe('Social Authentication Test', () => {
   describe('Social medial callbacks', () => {
     it('should call socialMediaDone', async () => {
       const result = await facebookCallback(null, null, null, socialMediaProfile, socialMediaDone);

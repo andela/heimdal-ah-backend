@@ -25,5 +25,4 @@ twitterRouter.get(
   passport.authenticate('twitter')
 );
 
-
 export default twitterRouter;

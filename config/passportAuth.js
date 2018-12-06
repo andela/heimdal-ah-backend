@@ -1,10 +1,7 @@
 import passport from 'passport';
 import { googleStrategy, facebookStrategy, twitterStrategy } from './strategies';
 
-const passportAuth = (app) => {
-  app.use(passport.initialize());
-  app.use(passport.session());
-
+const passportAuth = () => {
   passport.serializeUser((user, done) => {
     done(null, user);
   });

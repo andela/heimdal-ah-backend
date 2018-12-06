@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import validator from 'express-validator';
-// import session from 'express-session';
+import passport from 'passport';
 
 import {
   auth,
@@ -18,17 +18,13 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
+
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(validator());
-
-// app.use(session({
-//   secret: process.env.SESSION_SECRET,
-//   resave: true,
-//   saveUninitialized: true,
-// }));
-
 
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth_twitter', twitterRouter);
