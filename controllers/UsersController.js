@@ -1,11 +1,11 @@
-import stat from '../helpers/statusResponse';
+import status from '../helpers/StatusResponse';
 import models from '../models';
 
 
 const { users, profiles, roles } = models;
 
 /**
-* @description Users class
+* @description UsersController class
 */
 class UsersController {
   /**
@@ -27,14 +27,14 @@ class UsersController {
         attributes: { exclude: ['password'] }
       });
       if (authorsList) {
-        stat.success(res, {
+        status.success(res, {
           message: 'List of authors',
           authors: authorsList
         });
       }
     } catch (error) {
-      stat.internalServerError(res, {
-        message: error
+      status.internalServerError(res, {
+        message: 'Something went wrong.. Try again!'
       });
     }
   }

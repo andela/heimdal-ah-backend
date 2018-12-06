@@ -7,6 +7,7 @@ const router = express.Router();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-router.post('/signup', UserValidation.validateUserSignUp, authController.signUp);
+router.post('/auth/signup', UserValidation.validateUserSignUp, authController.signUp);
+router.post('/auth/login', UserValidation.validateUserLogin, authController.login);
 
 export default router;

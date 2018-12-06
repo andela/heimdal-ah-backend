@@ -2,8 +2,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/statusResponse';
+import statusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/user';
+// import config from '../config';
 
 /**
  * Signup validation class
@@ -27,12 +28,10 @@ class AuthController {
 
     try {
       const user = await UserModelQuery.getUserByEmail(email);
-      // const user = await Users.findOne({
-      //   where: { email }
-      // });
+
       if (user) {
         const payload = {
-          message: 'This email has been taken',
+          message: 'This email has been taken'
         };
         return statusResponse.conflict(res, payload);
       }
@@ -49,18 +48,19 @@ class AuthController {
           userId: userData.id
         });
         // .then((todo) => {
-        const token = jwt.sign({ email, username }, process.env.tokenSecret, {
+        const token = jwt.sign({ email, username }, process.env.TOKEN_SECRET, {
           expiresIn: 86400
         });
         req.app.set('token', token);
+        // userData.dataValues.password = undefined;
         delete userData.dataValues.password;
         const payload = {
           message: 'user created succesfully',
           userData,
-          token,
+          token
         };
         // console.log(req.app.get('token'));
-        return statusResponse.success(res, payload);
+        return statusResponse.created(res, payload);
       } catch (error) {
         // console.log(error);
         return statusResponse.internalServerError(res);
@@ -69,6 +69,45 @@ class AuthController {
       // console.log(error);
       return statusResponse.internalServerError(res);
     }
+  }
+
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @return {object} login response to user
+   */
+  static async login(req, res) {
+    const { email, password } = req.body;
+
+    const user = await UserModelQuery.getUserByEmail(email);
+    if (!user) {
+      const payload = {
+        message: 'email does not exist'
+      };
+      return statusResponse.conflict(res, payload);
+    }
+    if (!bcrypt.compareSync(password, user.dataValues.password)) {
+      // user.dataValues.password = undefined;
+      delete user.dataValues.password;
+      const payload = {
+        message: 'you have entered invalid credentials',
+        user,
+        token: 'null'
+      };
+      // console.log(req.app.get('token'));
+      return statusResponse.badRequest(res, payload);
+    }
+    const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
+      expiresIn: 86400
+    });
+    delete user.dataValues.password;
+    const payload = {
+      message: 'user logged in succesfully',
+      user,
+      token
+    };
+    // console.log(req.app.get('token'));
+    return statusResponse.success(res, payload);
   }
 }
 

@@ -1,5 +1,5 @@
 import auth from './auth';
+import user from './users';
 import profiles from './profiles';
-import users from './users';
 
-export { auth, profiles, users };
+export { auth, profiles, user };
