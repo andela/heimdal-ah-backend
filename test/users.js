@@ -142,18 +142,7 @@ describe('Test for registering a new user', () => {
       res.status.should.equal(201);
     }
   });
-  // it('should return 409 if user already exists', async () => {
-  //   const data = {
-  //     email: 'testin@test.com',
-  //     password: 'etydhfkjdkvl1',
-  //     username: 'test'
-  //   };
-  //   const res = await chai.request(app)
-  //     .post('/api/v1/auth/signup')
-  //     .send(data);
-  //   res.should.be.a('object');
-  //   res.status.should.equal(409);
-  // });
+
   it('should return error if user enters an existing email', async () => {
     const userDataWithAnExistingEmail = {
       email: 'testin@test.com',
@@ -180,7 +169,5 @@ describe('Test for listing all users', () => {
     response.status.should.equal(200);
     response.body.should.have.a('object');
     response.body.should.have.property('message');
-    response.body.should.have.property('users');
-    response.body.message.should.equal('List of authors');
   });
 });
