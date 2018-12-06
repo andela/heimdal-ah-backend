@@ -1,16 +1,16 @@
-import TestHelper from './TestHelper';
+import testHelper from './testHelper';
 
 const bodyHelper = {
   emailToken: {
     validTokenInDb: undefined,
-    randomValidToken: TestHelper.randomValidToken,
-    invalidToken: TestHelper.invalidToken
+    randomValidToken: testHelper.randomValidToken,
+    invalidToken: testHelper.invalidToken
   },
   signUp: {
     validUser: {
       username: 'Henry',
-      email: TestHelper.userEmail,
-      password: TestHelper.password
+      email: testHelper.userEmail,
+      password: testHelper.password
     }
   }
 };

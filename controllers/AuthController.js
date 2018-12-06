@@ -2,9 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/StatusResponse';
+import statusResponse from '../helpers/statusResponse';
 import UserModelQuery from '../lib/user';
-// import config from '../config';
 
 import mailer from '../helpers/mailer';
 import helper from '../helpers/helper';
@@ -23,17 +22,14 @@ class AuthController {
     const { email, password, username } = req.body;
     const { users, roles } = usersModel;
 
-    // hash password here
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
     const role = 'user';
 
     const emailToken = helper.generateEmailToken(email);
 
-    // generate the email verification link
     const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
 
-    // Construct the email content here {emailSubject and emailBody}
     const emailSubject = 'Verify your email on Authors Haven';
 
     const emailBody = `
@@ -46,7 +42,6 @@ class AuthController {
 
     const emailContent = { emailSubject, emailBody };
 
-    // Send Verification mail as custom mail
     mailer.sendCustomMail(email, emailContent);
 
     try {
@@ -70,11 +65,9 @@ class AuthController {
           role,
           userId: userData.id
         });
-        // .then((todo) => {
         const token = jwt.sign({ email, username }, process.env.TOKEN_SECRET, {
           expiresIn: 86400
         });
-        // userData.dataValues.password = undefined;
         delete userData.dataValues.password;
         const payload = {
           message: 'user created succesfully',
@@ -82,7 +75,6 @@ class AuthController {
           token,
           emailToken
         };
-        // console.log(req.app.get('token'));
         return statusResponse.created(res, payload);
       } catch (error) {
         return statusResponse.internalServerError(res);
@@ -109,13 +101,11 @@ class AuthController {
     }
     if (!bcrypt.compareSync(password, user.dataValues.password)) {
       user.dataValues.password = undefined;
-      // delete user.dataValues.password;
       const payload = {
         message: 'you have entered invalid credentials',
         user,
         token: 'null'
       };
-      // console.log(req.app.get('token'));
       return statusResponse.badRequest(res, payload);
     }
     const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
@@ -127,7 +117,6 @@ class AuthController {
       user,
       token
     };
-    // console.log(req.app.get('token'));
     return statusResponse.success(res, payload);
   }
 }
