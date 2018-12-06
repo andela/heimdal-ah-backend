@@ -1,4 +1,3 @@
-
 export default (sequelize, DataTypes) => {
   const Users = sequelize.define('users', {
     email: DataTypes.STRING,
