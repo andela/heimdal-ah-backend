@@ -21,7 +21,7 @@ class UsersController {
           model: roles,
           as: 'roles',
           where: {
-            role: 'user'
+            role: 'author'
           }
         }],
         attributes: { exclude: ['password'] }
