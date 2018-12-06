@@ -52,15 +52,15 @@ router.get(
   getTokenController
 );
 
-router.get(
-  '/twitter/callback',
-  passport.authenticate('twitter'),
-  getTokenController
-);
+// router.get(
+//   '/twitter/callback',
+//   passport.authenticate('twitter'),
+//   getTokenController
+// );
 
-router.get(
-  '/twitter',
-  passport.authenticate('twitter')
-);
+// router.get(
+//   '/twitter',
+//   passport.authenticate('twitter')
+// );
 
 export default router;

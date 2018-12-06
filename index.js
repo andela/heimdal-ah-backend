@@ -4,7 +4,13 @@ import bodyParser from 'body-parser';
 import validator from 'express-validator';
 // import session from 'express-session';
 
-import { auth, profiles, user } from './routes';
+import {
+  auth,
+  profiles,
+  user,
+  twitterRouter,
+} from './routes';
+
 import logger from './config/logger';
 import passportAuth from './config/passportAuth';
 
@@ -25,9 +31,10 @@ app.use(validator());
 
 
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/forgotpassword', user);
-// passportAuth(app);
+passportAuth(app);
 
 app.use((req, res) => res.status(404).json('not found'));
 

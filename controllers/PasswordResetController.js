@@ -49,8 +49,7 @@ class PasswordResetController {
       }
       return Response.success(res, { message: 'Email was sent successfully' });
     } catch (err) {
-      logger.error(err.message, '------------->>>');
-      return Response.internalServerError();
+      return Response.internalServerError(res, { message: 'Server error' });
     }
   }
 
