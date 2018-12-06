@@ -30,14 +30,14 @@ describe('Heimdal Test Suite', () => {
       result.should.have.property('done');
     });
 
-    it('should call socialMediaDone', async () => {
-      const result = await googleCallback(null, null, null, socialMediaProfile, socialMediaDone);
-      result.should.have.property('done');
-    });
+    // it('should call socialMediaDone', async () => {
+    //   const result = await googleCallback(null, null, null, socialMediaProfile, socialMediaDone);
+    //   result.should.have.property('done');
+    // });
 
-    it('should call socialMediaDone', async () => {
-      const result = await twitterCallback(null, null, null, socialMediaProfile, socialMediaDone);
-      result.should.have.property('done');
-    });
+    // it('should call socialMediaDone', async () => {
+    //   const result = await twitterCallback(null, null, null, socialMediaProfile, socialMediaDone);
+    //   result.should.have.property('done');
+    // });
   });
 });
