@@ -31,9 +31,8 @@ class UsersController {
         attributes: { exclude: ['password'] }
       });
       if (authors.length === 0) {
-        StatusResponse.notfound(res, {
-          message: 'No author found',
-          status: 404
+        StatusResponse.success(res, {
+          message: 'No author found'
         });
       } else {
         StatusResponse.success(res, {
