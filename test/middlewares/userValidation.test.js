@@ -45,6 +45,7 @@ describe('User signup validation (middleware) unit tests', () => {
     res.body.errors.should.have.property('username');
     res.body.errors.username.msg.should.equal('please enter a valid username can contain a letter or mixture of both letter and number');
   });
+
   it('should return error if user enters a username that is too long', async () => {
     const userDataWithLongUserName = {
       email: chance.email(),

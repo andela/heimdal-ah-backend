@@ -56,7 +56,7 @@ class ProfilesController {
           username: req.params.username
         }
       });
-      if (usersProfile === null) {
+      if (!usersProfile) {
         Response.notfound(res, {
           message: 'Users profile not found',
           profile: usersProfile

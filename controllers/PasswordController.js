@@ -26,6 +26,7 @@ class PasswordResetController {
       if (!user) {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
+      // create token
       const token = jwt.sign(
         { id: user.id, username: user.username, email: user.email },
         process.env.TOKEN_SECRET,
@@ -36,15 +37,18 @@ class PasswordResetController {
 
       const emailSubject = 'Please rerset your password';
       const emailBody = `
-      <div>
-          <h1> please follow this link to update your password</h1>
-          ${token}
-      </div>`;
+     <div>
+         <h1> please follow this link to update your password </h1>
+         ${token}
+     </div>`;
+      // send email
       const emailContent = { emailSubject, emailBody };
-      const data = await mailer.sendCustomMail(req.body.email, emailContent);
-      if (data) {
-        return Response.badRequest(res, { message: 'message was not sent' });
-      }
+      mailer.sendCustomMail(req.body.email, emailContent);
+
+      user.update({
+        resettingPassword: true
+      });
+
       return Response.success(res, { message: 'Email was sent successfully' });
     } catch (err) {
       return Response.internalServerError(res, { message: 'Server error' });
@@ -61,22 +65,28 @@ class PasswordResetController {
     const { users } = UserModel;
     const { id } = req.decoded;
     const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+
     try {
       const user = await users.findOne({
         where: { id }
       });
+
       if (!user) {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
-      const updatedPassword = await users.update({
-        where: {
-          id
-        },
-        password: hashedPassword
+      if (!user.resettingPassword) {
+        return Response.badRequest(res, {
+          message: 'this link has already been used to reset your password'
+        });
+      }
+      // update password
+      const updatedPassword = await user.update({
+        password: hashedPassword,
+        resettingPassword: false
       });
       if (updatedPassword) {
         return Response.success(res, {
-          message: 'password update was succesful'
+          message: 'password update was successful'
         });
       }
 
