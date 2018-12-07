@@ -2,9 +2,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/StatusResponse';
+import statusResponse from '../helpers/statusResponse';
 import UserModelQuery from '../lib/user';
-// import config from '../config';
+
+import mailer from '../helpers/mailer';
+import helper from '../helpers/helper';
 
 /**
  * Signup validation class
@@ -17,14 +19,30 @@ class AuthController {
    * @return {object} signUpCtrl response to user
    */
   static async signUp(req, res) {
-    // console.log('------->', req.body);
     const { email, password, username } = req.body;
     const { users, roles } = usersModel;
 
-    // validation check here
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
     const role = 'user';
+
+    const emailToken = helper.generateEmailToken(email);
+
+    const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
+
+    const emailSubject = 'Verify your email on Authors Haven';
+
+    const emailBody = `
+      <div>
+        <h2 style="color: blue">Hello ${username}, Thanks for signing up on heimdal</h2>
+        Please click here to verify your email address, this link expires in two days.
+        <a href="${link}">${link}</a>
+      </div>
+    `;
+
+    const emailContent = { emailSubject, emailBody };
+
+    mailer.sendCustomMail(email, emailContent);
 
     try {
       const user = await UserModelQuery.getUserByEmail(email);
@@ -39,34 +57,29 @@ class AuthController {
         const emailVerification = 'false';
         const userData = await users.create({
           email,
-          password: hashPassword,
           username,
-          emailVerification
+          emailVerification,
+          password: hashPassword
         });
         await roles.create({
           role,
           userId: userData.id
         });
-        // .then((todo) => {
         const token = jwt.sign({ email, username }, process.env.TOKEN_SECRET, {
           expiresIn: 86400
         });
-        req.app.set('token', token);
-        // userData.dataValues.password = undefined;
         delete userData.dataValues.password;
         const payload = {
           message: 'user created succesfully',
           userData,
-          token
+          token,
+          emailToken
         };
-        // console.log(req.app.get('token'));
         return statusResponse.created(res, payload);
       } catch (error) {
-        // console.log(error);
         return statusResponse.internalServerError(res);
       }
     } catch (error) {
-      // console.log(error);
       return statusResponse.internalServerError(res);
     }
   }
@@ -87,14 +100,12 @@ class AuthController {
       return statusResponse.conflict(res, payload);
     }
     if (!bcrypt.compareSync(password, user.dataValues.password)) {
-      // user.dataValues.password = undefined;
-      delete user.dataValues.password;
+      user.dataValues.password = undefined;
       const payload = {
         message: 'you have entered invalid credentials',
         user,
         token: 'null'
       };
-      // console.log(req.app.get('token'));
       return statusResponse.badRequest(res, payload);
     }
     const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
@@ -106,7 +117,6 @@ class AuthController {
       user,
       token
     };
-    // console.log(req.app.get('token'));
     return statusResponse.success(res, payload);
   }
 }
