@@ -2,7 +2,7 @@
  * @description - This class is all about server response
  * @returns {class} Response
  */
-class Response {
+class StatusResponse {
   /**
    * @description - success response
    * @param {object} res
@@ -64,10 +64,10 @@ class Response {
   }
 
   /**
-    * @param {object} res
-    * @param {object} data
-    * @returns {object} json data
-    */
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} json data
+   */
   static conflict(res, data) {
     return res.status(409).json(data);
   }
@@ -82,4 +82,5 @@ class Response {
     return res.status(403).json(data);
   }
 }
-export default Response;
+
+export default StatusResponse;

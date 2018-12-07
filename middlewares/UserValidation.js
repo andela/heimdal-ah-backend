@@ -1,13 +1,3 @@
-/* eslint-disable lines-between-class-members */
-// import { check, validationResult, body } from 'express-validator/check';
-// this function validates the User signup function parameters
-// invalid user parameters includes:
-// existing user email
-// invalid email
-// password of length less than 8
-// password not being alphanumeric
-// ctrl + alt + d
-// class UserValidation {
 /**
  * Signup validation class
  * classname should match file name and start with capital
@@ -25,6 +15,7 @@ class UserValidation {
     UserValidation.checkUserName(req);
     UserValidation.showError(req, res, next);
   }
+
   /**
    * @param {object} req Takes signup request
    * @param {object} res Response to request

@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/statusResponse';
+import statusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/user';
 // import config from '../config';
 
@@ -31,7 +31,7 @@ class AuthController {
 
       if (user) {
         const payload = {
-          message: 'This email has been taken',
+          message: 'This email has been taken'
         };
         return statusResponse.conflict(res, payload);
       }
@@ -57,7 +57,7 @@ class AuthController {
         const payload = {
           message: 'user created succesfully',
           userData,
-          token,
+          token
         };
         // console.log(req.app.get('token'));
         return statusResponse.created(res, payload);
@@ -82,10 +82,11 @@ class AuthController {
     const user = await UserModelQuery.getUserByEmail(email);
     if (!user) {
       const payload = {
-        message: 'email does not exist',
+        message: 'email does not exist'
       };
       return statusResponse.conflict(res, payload);
-    } if (!bcrypt.compareSync(password, user.dataValues.password)) {
+    }
+    if (!bcrypt.compareSync(password, user.dataValues.password)) {
       // user.dataValues.password = undefined;
       delete user.dataValues.password;
       const payload = {
@@ -97,15 +98,15 @@ class AuthController {
       return statusResponse.badRequest(res, payload);
     }
     const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
-      expiresIn: 86400,
+      expiresIn: 86400
     });
     delete user.dataValues.password;
     const payload = {
       message: 'user logged in succesfully',
       user,
-      token,
+      token
     };
-      // console.log(req.app.get('token'));
+    // console.log(req.app.get('token'));
     return statusResponse.success(res, payload);
   }
 }
