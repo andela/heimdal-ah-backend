@@ -1,12 +1,13 @@
-import Response from '../helpers/StatusResponse';
-import models from '../models';
+import jwt from 'jsonwebtoken';
 
+import models from '../models';
+import StatusResponse from '../helpers/statusResponse';
 
 const { users, profiles, roles } = models;
 
 /**
-* @description UsersController class
-*/
+ * @description UsersController class
+ */
 class UsersController {
   /**
    * @description Fetch all the users
@@ -17,29 +18,85 @@ class UsersController {
   static async list(req, res) {
     try {
       const authors = await users.findAll({
-        include: [profiles, {
-          model: roles,
-          as: 'roles',
-          where: {
-            role: 'author'
+        include: [
+          profiles,
+          {
+            model: roles,
+            as: 'roles',
+            where: {
+              role: 'author'
+            }
           }
-        }],
+        ],
         attributes: { exclude: ['password'] }
       });
       if (authors.length === 0) {
-        Response.notfound(res, {
-          message: 'No author found',
-          status: 404
+        StatusResponse.success(res, {
+          message: 'No author found'
         });
       } else {
-        Response.success(res, {
+        StatusResponse.success(res, {
           message: 'List of authors',
           users: authors
         });
       }
     } catch (error) {
-      Response.internalServerError(res, {
+      StatusResponse.internalServerError(res, {
         message: `Something went wrong..${error}`
+      });
+    }
+  }
+
+  /**
+   * @description  Method to verify a users email
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} The reponse object
+   */
+  static async verifyEmail(req, res) {
+    const { emailToken } = req.params;
+    const decodedToken = jwt.decode(emailToken);
+
+    if (!decodedToken) {
+      return StatusResponse.badRequest(res, {
+        message: 'The verification link is invalid. Check your email and try again'
+      });
+    }
+
+    const { email } = decodedToken;
+
+    try {
+      const user = await users.findOne({
+        where: { email }
+      });
+
+      if (!user) {
+        return StatusResponse.notfound(res, {
+          message: 'No user found'
+        });
+      }
+
+      const updateUser = await users.update(
+        {
+          emailVerification: true
+        },
+        { where: { email } }
+      );
+      if (!updateUser) {
+        return StatusResponse.badRequest(res, {
+          message: 'Unable to verify your password try again'
+        });
+      }
+
+      return StatusResponse.success(res, {
+        message: 'Your email has been verified'
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: 'users profile not returned succesfully, please try again',
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
       });
     }
   }

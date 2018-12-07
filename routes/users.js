@@ -1,15 +1,19 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import UserController from '../controllers/UsersController';
-import userController from '../controllers/PasswordResetController';
+
+import PasswordController from '../controllers/PasswordController';
 import { passwordReset, validEmail } from '../middlewares/passwordReset';
 
-const router = express.Router();
-router.get('/authors', UserController.list);
-router.post('/', validEmail, userController.forgotPassword);
-router.put('/resetpassword/:token', passwordReset, userController.resetPassword);
+import UsersController from '../controllers/UsersController';
 
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: false }));
+const router = express.Router();
+
+router.post('/', validEmail, PasswordController.forgotPassword);
+router.put('/resetpassword/:token', passwordReset, PasswordController.resetPassword);
+router.get('/authors', UsersController.list);
+
+/**
+ * Verify the users email
+ */
+router.get('/verify-email/:emailToken', UsersController.verifyEmail);
 
 export default router;
