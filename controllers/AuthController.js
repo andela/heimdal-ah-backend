@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/statusResponse';
-import UserModelQuery from '../lib/user';
+import statusResponse from '../helpers/StatusResponse';
+import UserModelQuery from '../lib/UserModelQuery';
 
 import mailer from '../helpers/mailer';
 import helper from '../helpers/helper';

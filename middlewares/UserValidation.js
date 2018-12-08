@@ -1,3 +1,5 @@
+import UserModelQuery from '../lib/UserModelQuery';
+import Response from '../helpers/StatusResponse';
 /**
  * Signup validation class
  * classname should match file name and start with capital
@@ -48,7 +50,7 @@ class UserValidation {
     // req.checkBody('password', 'password cannot be undefined').custom(val => val !== undefined);
     req.checkBody('password', 'password cannot be empty').notEmpty();
     req.checkBody('password', 'password must be at least 8 characters').isLength({ min: 8 });
-    req.checkBody('password', 'password must not contain space').matches(/^\S*$/);
+    // req.checkBody('password', 'password must not contain space').matches(/^\S*$/);
     req
       .checkBody('password', 'password must contain a letter and number')
       .matches(/^((?=.*\d))(?=.*[a-zA-Z])/);
@@ -91,11 +93,40 @@ class UserValidation {
             };
           }
         });
-        return res.status(422).json({ errors: { ...err } });
+        return Response.badRequest(res, { errors: { ...err } });
       }
       return next();
     } catch (error) {
-      throw error;
+      const payload = {
+        message: 'Something went wrong', error
+      };
+      return Response.internalServerError(res, payload);
+    }
+  }
+
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @param {object} next move to the next function or middleware
+   * @param {string} email the user email must be a string
+   * @return {object} User validation response to user
+   */
+  static async checkEmailExist(req, res, next) {
+    const { email } = req.body;
+    try {
+      const user = await UserModelQuery.getUserByEmail(email);
+      if (user) {
+        const payload = {
+          message: 'This email has been taken'
+        };
+        return Response.conflict(res, payload);
+      }
+      return next();
+    } catch (error) {
+      const payload = {
+        message: 'Something went wrong', error
+      };
+      return Response.internalServerError(res, payload);
     }
   }
 }

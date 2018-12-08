@@ -6,10 +6,11 @@ import AuthController from '../controllers/AuthController';
 import getTokenController from '../controllers/getTokenController';
 import UserValidation from '../middlewares/UserValidation';
 
+const { validateUserLogin, validateUserSignUp, checkEmailExist } = UserValidation;
 const router = express.Router();
 
-router.post('/signup', UserValidation.validateUserSignUp, AuthController.signUp);
-router.post('/login', UserValidation.validateUserLogin, AuthController.login);
+router.post('/signup', validateUserSignUp, checkEmailExist, AuthController.signUp);
+router.post('/login', validateUserLogin, AuthController.login);
 
 router.get('/google/callback', passport.authenticate('google'), getTokenController);
 
