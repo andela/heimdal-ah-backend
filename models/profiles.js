@@ -1,30 +1,14 @@
-export default (sequelize, DataTypes) => {
+
+module.exports = (sequelize, DataTypes) => {
   const Profiles = sequelize.define('profiles', {
-
-    username: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
-    },
-    biodata: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    image: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    address: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    dateofbirth: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    username: DataTypes.STRING,
+    biodata: DataTypes.STRING,
+    image: DataTypes.STRING,
+    address: DataTypes.STRING,
+    dateofbirth: DataTypes.STRING
   }, {});
-
   Profiles.associate = (models) => {
+    // associations can be defined here
     Profiles.belongsTo(models.users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
