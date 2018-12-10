@@ -22,11 +22,12 @@ class AuthController {
 
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
-    const roleName = 'user';
 
     const emailToken = helper.generateEmailToken(email);
 
-    const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
+    const link = `http://${
+      req.headers.host
+    }/api/v1/users/verify-email/${emailToken}`;
 
     const emailSubject = 'Verify your email on Authors Haven';
 
@@ -51,30 +52,34 @@ class AuthController {
         };
         return StatusResponse.conflict(res, payload);
       }
-      const emailVerification = 'false';
-      const roleData = await roles.create({
-        name: roleName,
-      });
 
-      const userData = await users.create({
-        email,
-        username,
-        emailVerification,
-        password: hashPassword,
-        roleId: roleData.id
-      });
-      const userId = userData.id;
-      const token = getToken(userId, username);
-      // delete userData.dataValues.password;
+      const roleData = await roles.create(
+        {
+          users: {
+            email,
+            username,
+            password: hashPassword
+          },
+        },
+        { include: [{ model: users, as: 'users' }] },
+      );
+
+      const newUser = roleData.users[0];
+      newUser.password = undefined;
+      const token = getToken(newUser.id, username);
       const payload = {
         message: 'user created succesfully',
-        userData,
+        user: newUser,
         token,
         emailToken
       };
       return StatusResponse.created(res, payload);
     } catch (error) {
-      return StatusResponse.internalServerError(res);
+      return StatusResponse.internalServerError(res, {
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      });
     }
   }
 
@@ -92,15 +97,13 @@ class AuthController {
         const payload = {
           message: 'email does not exist'
         };
-        return StatusResponse.conflict(res, payload);
+        return StatusResponse.notfound(res, payload);
       }
       if (!bcrypt.compareSync(password, user.dataValues.password)) {
-        // user.dataValues.password = undefined;
         const payload = {
           message: 'you have entered invalid credentials',
-          token: 'null'
         };
-        return StatusResponse.badRequest(res, payload);
+        return StatusResponse.notfound(res, payload);
       }
       const { username, id } = user;
       const token = getToken(id, username);
@@ -112,7 +115,11 @@ class AuthController {
       };
       return StatusResponse.success(res, payload);
     } catch (error) {
-      return StatusResponse.internalServerError(res);
+      return StatusResponse.internalServerError(res, {
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      });
     }
   }
 }

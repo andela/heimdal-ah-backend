@@ -23,10 +23,11 @@ export default {
       type: Sequelize.STRING
     },
     twitterId: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
     },
     emailVerification: {
-      type: Sequelize.STRING
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
     },
     createdAt: {
       allowNull: false,

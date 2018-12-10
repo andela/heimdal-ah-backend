@@ -1,4 +1,3 @@
-
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('roles', {
     id: {
@@ -8,7 +7,8 @@ export default {
       type: Sequelize.INTEGER
     },
     name: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      defaultValue: 'user',
     },
     createdAt: {
       allowNull: false,
