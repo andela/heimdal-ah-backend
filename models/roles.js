@@ -1,14 +1,16 @@
 
 export default (sequelize, DataTypes) => {
   const Roles = sequelize.define('roles', {
-    role: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'user',
+    }
   }, {});
-  // eslint-disable-next-line no-unused-vars
   Roles.associate = (models) => {
     // associations can be defined here
-    Roles.belongsTo(models.users, {
-      foreign: 'userId',
-      onDelete: 'CASCADE',
+    Roles.hasMany(models.users, {
+
     });
   };
   return Roles;

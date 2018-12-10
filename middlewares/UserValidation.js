@@ -36,7 +36,6 @@ class UserValidation {
    * @return {object} User validartion response to user
    */
   static checkUserEmail(req) {
-    // req.checkBody('email', 'email cannot be undefined').custom(val => val !== undefined);
     req.checkBody('email', 'please enter an email').notEmpty();
     req.checkBody('email', 'please enter a valid email').isEmail();
   }
@@ -47,7 +46,6 @@ class UserValidation {
    * @return {object} User validation response to user
    */
   static checkPassword(req) {
-    // req.checkBody('password', 'password cannot be undefined').custom(val => val !== undefined);
     req.checkBody('password', 'password cannot be empty').notEmpty();
     req.checkBody('password', 'password must be at least 8 characters').isLength({ min: 8 });
     // req.checkBody('password', 'password must not contain space').matches(/^\S*$/);
@@ -62,7 +60,6 @@ class UserValidation {
    * @return {object} User validation response to user
    */
   static checkUserName(req) {
-    // req.checkBody('username', 'username cannot be undefined').custom(val => val !== undefined);
     req.checkBody('username', 'please enter a Username, it cannot be empty').notEmpty();
     req
       .checkBody(
