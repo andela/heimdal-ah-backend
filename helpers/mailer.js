@@ -1,6 +1,5 @@
 import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
-import helper from './helper';
 
 dotenv.config();
 
