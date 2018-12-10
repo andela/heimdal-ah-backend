@@ -63,10 +63,9 @@ class AuthController {
         password: hashPassword,
         roleId: roleData.id
       });
-      // console.log(userData);
       const userId = userData.id;
       const token = getToken(userId, username);
-      delete userData.dataValues.password;
+      // delete userData.dataValues.password;
       const payload = {
         message: 'user created succesfully',
         userData,
@@ -75,7 +74,6 @@ class AuthController {
       };
       return StatusResponse.created(res, payload);
     } catch (error) {
-      // console.log('---->', error);
       return StatusResponse.internalServerError(res);
     }
   }
@@ -114,7 +112,6 @@ class AuthController {
       };
       return StatusResponse.success(res, payload);
     } catch (error) {
-      // console.log(error);
       return StatusResponse.internalServerError(res);
     }
   }

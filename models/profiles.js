@@ -1,11 +1,22 @@
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Profiles = sequelize.define('profiles', {
-    username: DataTypes.STRING,
-    biodata: DataTypes.STRING,
-    image: DataTypes.STRING,
-    address: DataTypes.STRING,
-    dateofbirth: DataTypes.STRING
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    biodata: {
+      type: DataTypes.STRING,
+    },
+    image: {
+      type: DataTypes.STRING,
+    },
+    address: {
+      type: DataTypes.STRING,
+    },
+    dateofbirth: {
+      type: DataTypes.STRING,
+    }
   }, {});
   Profiles.associate = (models) => {
     // associations can be defined here

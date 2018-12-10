@@ -1,11 +1,15 @@
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Roles = sequelize.define('roles', {
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'user',
+    }
   }, {});
   Roles.associate = (models) => {
     // associations can be defined here
-    Roles.hasOne(models.users, {
+    Roles.hasMany(models.users, {
 
     });
   };
