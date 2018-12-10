@@ -1,14 +1,18 @@
 export default (sequelize, DataTypes) => {
-  const Users = sequelize.define('users', {
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    username: DataTypes.STRING,
-    emailVerification: DataTypes.STRING,
-    resettingPassword: DataTypes.BOOLEAN,
-    facebookId: DataTypes.STRING,
-    googleId: DataTypes.STRING,
-    twitterId: DataTypes.STRING,
-  }, {});
+  const Users = sequelize.define(
+    'users',
+    {
+      email: DataTypes.STRING,
+      password: DataTypes.STRING,
+      username: DataTypes.STRING,
+      emailVerification: DataTypes.BOOLEAN,
+      resettingPassword: DataTypes.BOOLEAN,
+      facebookId: DataTypes.STRING,
+      googleId: DataTypes.STRING,
+      twitterId: DataTypes.STRING
+    },
+    {}
+  );
   // eslint-disable-next-line no-unused-vars
   Users.associate = (models) => {
     // associations can be defined here
@@ -16,8 +20,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'roles'
     });
-    Users.hasOne(models.profiles, {
-    });
+    Users.hasOne(models.profiles, {});
   };
   return Users;
 };

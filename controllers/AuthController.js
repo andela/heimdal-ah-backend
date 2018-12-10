@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/statusResponse';
+import statusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/user';
 
 import mailer from '../helpers/mailer';
@@ -30,20 +30,6 @@ class AuthController {
 
     const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
 
-    const emailSubject = 'Verify your email on Authors Haven';
-
-    const emailBody = `
-      <div>
-        <h2 style="color: blue">Hello ${username}, Thanks for signing up on heimdal</h2>
-        Please click here to verify your email address, this link expires in two days.
-        <a href="${link}">${link}</a>
-      </div>
-    `;
-
-    const emailContent = { emailSubject, emailBody };
-
-    mailer.sendCustomMail(email, emailContent);
-
     try {
       const user = await UserModelQuery.getUserByEmail(email);
 
@@ -54,6 +40,8 @@ class AuthController {
         return statusResponse.conflict(res, payload);
       }
       try {
+        mailer.sendVerificationMail(email, username, link);
+
         const emailVerification = 'false';
         const userData = await users.create({
           email,
