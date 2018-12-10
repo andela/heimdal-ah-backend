@@ -39,9 +39,9 @@ const mailer = {
 
     const emailBody = `
       <div>
-        <h2 style="color: grey">Hello ${username}, Thanks for signing up on heimdal</h2>
-        Please click here to verify your email address, this link expires in two days.
-        <a href="${link}">${link}</a>
+        <h2 style="color: grey">Hello ${username}, Thanks for signing up on Heimdal</h2>
+        Please click <a style="color: blue" href="${link}">here</a> to verify your email address, this link expires in two days.
+        Alternatively you can copy out the link below and paste in your browser <a href="${link}">${link}</a>
       </div>
     `;
 
