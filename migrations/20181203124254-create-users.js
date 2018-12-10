@@ -10,31 +10,32 @@ export default {
     },
     email: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     username: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
     },
     emailVerification: {
       type: Sequelize.STRING,
       allowNull: true,
+      defaultValue: false
     },
     facebookId: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     googleId: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     twitterId: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     resettingPassword: {
       type: Sequelize.STRING,

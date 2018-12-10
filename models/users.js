@@ -5,7 +5,10 @@ export default (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       username: DataTypes.STRING,
-      emailVerification: DataTypes.BOOLEAN,
+      emailVerification: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       resettingPassword: DataTypes.BOOLEAN,
       facebookId: DataTypes.STRING,
       googleId: DataTypes.STRING,
