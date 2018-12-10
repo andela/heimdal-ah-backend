@@ -23,15 +23,6 @@ const mailer = {
       html: emailBody
     };
 
-    // sgMail.send(msg, (error, result) => {
-    //   if (error) {
-    //     // Do something with the error
-    //     return false;
-    //   }
-    //   // Celebrate
-    //   return true;
-    // });
-
     sgMail
       .send(msg)
       .then(() => true)
