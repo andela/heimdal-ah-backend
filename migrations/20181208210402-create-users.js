@@ -1,4 +1,3 @@
-
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('users', {
     id: {
@@ -23,12 +22,13 @@ export default {
       type: Sequelize.STRING
     },
     twitterId: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING
     },
     emailVerification: {
       type: Sequelize.BOOLEAN,
-      defaultValue: false,
+      defaultValue: false
     },
+    resettingPassword: Sequelize.BOOLEAN,
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
@@ -42,9 +42,9 @@ export default {
       onDelete: 'CASCADE',
       references: {
         model: 'roles',
-        key: 'id',
-      },
-    },
+        key: 'id'
+      }
+    }
   }),
   // eslint-disable-next-line no-unused-vars
   down: (queryInterface, Sequelize) => queryInterface.dropTable('users')
