@@ -8,106 +8,22 @@ chai.use(chaiHttp);
 chai.should();
 
 describe('Comment Validation and Creation', () => {
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoidG9sdSIsImlhdCI6MTU0NDUxNzU4MSwiZXhwIjoxNTQ0NjAzOTgxfQ.IAMY8E62t3YTxiJOUjRsoj0EHjVpueeKwuZ1-X7ueUs';
   const slug = 'this-is-the-article';
   const postCommentUrl = `/api/v1/articles/${slug}/comments`;
-  it('should return an error if the user adding the comment value is empty', async () => {
-    const userDataWithEmptyUserName = {
-      articleId: chance.natural({ min: 1, max: 20 }),
-      userId: '',
-      content: chance.sentence({ words: 50 })
-    };
-    const res = await chai.request(app)
-      .post(postCommentUrl)
-      .send(userDataWithEmptyUserName);
-    res.status.should.equal(400);
-    res.body.should.be.a('object');
-    res.body.should.have.property('errors');
-    res.body.errors.should.be.a('object');
-    res.body.errors.should.have.property('userId');
-    res.body.errors.userId.msg.should.equal('User Id cannot be empty');
-  });
-
-  it('should return an error if the article value is empty', async () => {
-    const userDataWithEmptyUserName = {
-      articleId: '',
-      userId: chance.natural({ min: 1, max: 20 }),
-      content: chance.sentence({ words: 50 })
-    };
-    const res = await chai.request(app)
-      .post(postCommentUrl)
-      .send(userDataWithEmptyUserName);
-
-    res.status.should.equal(400);
-    res.body.should.be.a('object');
-    res.body.should.have.property('errors');
-    res.body.errors.should.be.a('object');
-    res.body.errors.should.have.property('articleId');
-    res.body.errors.articleId.msg.should.equal('Please enter an Article Id');
-  });
-
   it('should return an error if the content value is empty', async () => {
-    const userDataWithEmptyUserName = {
-      articleId: chance.natural({ min: 1, max: 20 }),
-      userId: chance.natural({ min: 1, max: 20 }),
+    const contentDataWithEmpty = {
       content: ''
     };
     const res = await chai.request(app)
       .post(postCommentUrl)
-      .send(userDataWithEmptyUserName);
-
+      .set('access-token', token)
+      .send(contentDataWithEmpty);
     res.status.should.equal(400);
     res.body.should.be.a('object');
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
     res.body.errors.should.have.property('content');
-    res.body.errors.content.msg.should.equal('Content cannot be empty');
-  });
-
-  it('should return an error if the user does not exist in the database', async () => {
-    const userDataWithEmptyUserName = {
-      articleId: chance.natural({ min: 1, max: 20 }),
-      userId: chance.natural({ min: 1, max: 20 }),
-      content: chance.sentence({ words: 50 })
-    };
-    const res = await chai.request(app)
-      .post(postCommentUrl)
-      .send(userDataWithEmptyUserName);
-
-    res.status.should.equal(400);
-    res.body.should.be.a('object');
-    res.body.should.have.property('errors');
-    res.body.errors.should.be.a('object');
-    res.body.errors.should.have.property('');
-    res.body.msg.should.equal('Please add the article Id ');
-  });
-
-  it('should return an error if the article does not exist in the database', async () => {
-    const userDataWithEmptyUserName = {
-      articleId: '',
-      userId: chance.natural({ min: 1, max: 20 }),
-      content: chance.sentence({ words: 50 })
-    };
-    const res = await chai.request(app)
-      .post(postCommentUrl)
-      .send(userDataWithEmptyUserName);
-
-    res.status.should.equal(400);
-    res.body.should.be.a('object');
-    res.body.should.have.property('errors');
-    res.body.errors.should.be.a('object');
-    res.body.errors.should.have.property('');
-    res.body.msg.should.equal('Please add the article Id ');
-  });
-
-  it('should return a success if comment is created successfully', async () => {
-    const userDataWithAnExistingEmail = {
-      articleId: 1,
-      userId: chance.natural({ min: 1, max: 20 }),
-      content: chance.sentence({ words: 50 })
-    };
-    const res = await chai.request(app)
-      .post('/api/v1/auth/signup')
-      .send(userDataWithAnExistingEmail);
-    res.status.should.equal(201);
+    res.body.errors.content.msg.should.equal('Please enter the comment content');
   });
 });

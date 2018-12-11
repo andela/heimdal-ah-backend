@@ -1,4 +1,4 @@
-import Response from '../helpers/StatusResponse';
+import StatusResponse from '../helpers/StatusResponse';
 /**
  * Validate all comment fields
  *classname should match file name and start with capital
@@ -6,20 +6,68 @@ import Response from '../helpers/StatusResponse';
  */
 class CommentValidation {
   /**
-   * @param {object} req Takes signup request
+   * @param {object} req Takes comment request
    * @param {object} res Response to request
    * @param {object} next Move to the next middleware or function
    * @return {object} Comment validation response to user
    */
-  static async validateAllParams(req, res, next) {
-    req.checkBody('articleId', 'Please enter an Article Id').notEmpty();
-    req.checkBody('articleId', 'Article Id Must be an Integer').isInt();
+  static validateComment(req, res, next) {
+    CommentValidation.checkCommentContent(req);
+    CommentValidation.checkArticleSlug(req);
+    CommentValidation.showError(req, res, next);
+  }
 
-    req.checkBody('userId', 'User Id cannot be empty').notEmpty();
-    req.checkBody('userId', 'User Id must be an Integer').isInt();
+  /**
+   * @param {object} req Takes comment request
+   * @param {object} res Response to request
+   * @return {object} Comment validation response to user
+   */
+  static checkCommentContent(req) {
+    req.checkBody('content', 'Please enter the comment content').notEmpty();
+    req.checkBody('content', 'Content Length cannot be more than 200 characters').isLength({ min: 200 });
+  }
 
-    req.checkBody('content', 'Content cannot be empty').notEmpty();
-    req.checkBody('content', 'Content cannot be more than 200 characters').isLength({ max: 100 });
+  /**
+   * @param {object} req Takes comment request
+   * @param {object} res Response to request
+   * @param {object} next Move to the next function
+   * @return {object} User validation response to user
+   */
+  static checkCommentId(req, res, next) {
+    req.checkParams('id', 'Please enter a comment Id').notEmpty();
+    req.checkParams('id', 'Comment Id must be an Integer').isInt();
+    const errors = req.validationErrors();
+    const err = [];
+    if (errors) {
+      errors.forEach(({ param, msg }) => {
+        if (err[param] === undefined) {
+          err[param] = {
+            msg
+          };
+        }
+      });
+      return StatusResponse.badRequest(res, { errors: { ...err } });
+    }
+    return next();
+  }
+
+  /**
+   * @param {object} req Takes comment request
+   * @param {object} res Response to request
+   * @param {object} next Move to the next function
+   * @return {object} User validation response to user
+   */
+  static checkArticleSlug(req) {
+    req.checkParams('slug', 'Please enter an Article Slug').notEmpty();
+  }
+
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @param {object} next move to the next function or middleware
+   * @return {object} User validation response to user
+   */
+  static async showError(req, res, next) {
     try {
       const errors = await req.validationErrors();
       const err = [];
@@ -31,15 +79,16 @@ class CommentValidation {
             };
           }
         });
-        return Response.badRequest(res, { errors: { ...err } });
+        return StatusResponse.badRequest(res, { errors: { ...err } });
       }
       return next();
     } catch (error) {
       const payload = {
         message: 'Something went wrong', error
       };
-      return Response.internalServerError(res, payload);
+      return StatusResponse.internalServerError(res, payload);
     }
   }
 }
+
 export default CommentValidation;

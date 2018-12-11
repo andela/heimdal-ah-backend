@@ -10,13 +10,13 @@ export default {
       type: Sequelize.TEXT,
       allowNull: false
     },
-    articleId: {
-      type: Sequelize.INTEGER,
+    articleSlug: {
+      type: Sequelize.STRING,
       onDelete: 'CASCADE',
       references: {
         model: 'articles',
-        key: 'id',
-        as: 'articleId',
+        key: 'slug',
+        as: 'articleSlug'
       },
       allowNull: false
     },
@@ -26,7 +26,7 @@ export default {
       references: {
         model: 'users',
         key: 'id',
-        as: 'userId',
+        as: 'userId'
       },
       allowNull: false
     },
@@ -40,7 +40,7 @@ export default {
       references: {
         model: 'comments',
         key: 'id',
-        as: 'commentId',
+        as: 'commentId'
       },
       allowNull: true
     },

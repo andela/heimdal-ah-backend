@@ -6,8 +6,30 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
+    slug: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      unique: true
+    },
     title: {
-      type: Sequelize.STRING
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    description: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    body: {
+      type: Sequelize.TEXT,
+      allowNull: false
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
     },
     createdAt: {
       allowNull: false,

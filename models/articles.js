@@ -1,12 +1,27 @@
 export default (sequelize, DataTypes) => {
   const Articles = sequelize.define('articles', {
-    title: DataTypes.STRING
+    slug: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    body: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
   }, {});
   Articles.associate = (models) => {
-    // associations can be defined here
-    Articles.hasMany(models.comments, {
-      foreignKey: 'articleId',
-      as: 'comments',
+    Articles.belongsTo(models.users, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
     });
   };
   return Articles;
