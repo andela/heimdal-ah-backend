@@ -7,8 +7,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  ArticleTag.associate = (/* models */) => {
+  ArticleTag.associate = (models) => {
     // associations can be defined here
+    ArticleTag.belongsTo(models.Article, {
+      foreignKey: 'articleId'
+    });
+    ArticleTag.belongsTo(models.Tag, {
+      foreignKey: 'tagId'
+    });
   };
   return ArticleTag;
 };

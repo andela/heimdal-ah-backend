@@ -15,14 +15,43 @@ class ArticlesController {
    */
   static async createArticle(req, res) {
     const { tags } = req.body;
-    console.log(req.body);
-    if (!tags) {
-      return res.json({ message: 'Tag is required' });
+
+    try {
+      const article = await Article.create(req.body);
+      if (!article) {
+        return res.json({ message: 'Could not create article' });
+      }
+      if (tags) {
+        tags.map(async (thisTag) => {
+          const [tagList] = await Tag.findOrCreate({
+            where: { tagName: thisTag }
+            // defaults: { tagName: thisTag }
+          });
+          await article.addTags(tagList);
+        });
+      }
+
+      const createdArticle = await Article.findOne({
+        where: { id: article.id },
+        include: { model: Tag, as: 'tags' }
+      });
+
+      if (!createdArticle) {
+        return res.json({ message: 'Not found' });
+      }
+      return res.json({ article: createdArticle, tagList: tags });
+    } catch (error) {
+      return res.json(error);
     }
+
+    /*
     const createTags = tags.map(thisTag => Tag.findOrCreate({
       where: { tagName: thisTag },
       defaults: { tagName: thisTag }
     }).spread((thisTag, created) => thisTag));
+    // return Article.create(req.body).then((articles) => {
+    //   articles.setTags([33, 44]);
+    // });
 
     return Article.create(req.body)
       .then(article => Promise.all(createTags)
@@ -34,6 +63,7 @@ class ArticlesController {
       }))
       .then(articleWithAssociation => res.json(articleWithAssociation))
       .catch(err => res.json({ err }));
+      */
   }
 }
 
