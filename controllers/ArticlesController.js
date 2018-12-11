@@ -167,13 +167,11 @@ class ArticlesController {
         });
       }
 
-      await articles.destroy(
-        {
-          where: {
-            slug: req.params.slug
-          }
+      await articles.destroy({
+        where: {
+          slug: req.params.slug
         }
-      );
+      });
 
       return StatusResponse.noContent(res, {
         message: 'Article deleted successfully'
