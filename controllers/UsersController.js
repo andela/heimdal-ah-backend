@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import models from '../models';
-import StatusResponse from '../helpers/statusResponse';
+import StatusResponse from '../helpers/StatusResponse';
 
 const { users, profiles, roles } = models;
 
@@ -24,7 +24,7 @@ class UsersController {
             model: roles,
             as: 'roles',
             where: {
-              role: 'author'
+              name: 'author'
             }
           }
         ],

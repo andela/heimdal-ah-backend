@@ -1,10 +1,8 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-
 import usersModel from '../models';
-import statusResponse from '../helpers/StatusResponse';
+import StatusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/user';
-
+import getToken from '../helpers/getToken';
 import mailer from '../helpers/mailer';
 import helper from '../helpers/helper';
 
@@ -24,7 +22,6 @@ class AuthController {
 
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
-    const role = 'user';
 
     const emailToken = helper.generateEmailToken(email);
 
@@ -37,38 +34,38 @@ class AuthController {
         const payload = {
           message: 'This email has been taken'
         };
-        return statusResponse.conflict(res, payload);
+        return StatusResponse.conflict(res, payload);
       }
-      try {
-        mailer.sendVerificationMail(email, username, link);
 
-        const emailVerification = 'false';
-        const userData = await users.create({
-          email,
-          username,
-          emailVerification,
-          password: hashPassword
-        });
-        await roles.create({
-          role,
-          userId: userData.id
-        });
-        const token = jwt.sign({ email, username }, process.env.TOKEN_SECRET, {
-          expiresIn: 86400
-        });
-        delete userData.dataValues.password;
-        const payload = {
-          message: 'user created succesfully',
-          userData,
-          token,
-          emailToken
-        };
-        return statusResponse.created(res, payload);
-      } catch (error) {
-        return statusResponse.internalServerError(res);
-      }
+      mailer.sendVerificationMail(email, username, link);
+
+      const roleData = await roles.create(
+        {
+          users: {
+            email,
+            username,
+            password: hashPassword
+          }
+        },
+        { include: [{ model: users, as: 'users' }] }
+      );
+
+      const newUser = roleData.users[0];
+      newUser.password = undefined;
+      const token = getToken(newUser.id, username);
+      const payload = {
+        message: 'user created succesfully',
+        user: newUser,
+        token,
+        emailToken
+      };
+      return StatusResponse.created(res, payload);
     } catch (error) {
-      return statusResponse.internalServerError(res);
+      return StatusResponse.internalServerError(res, {
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      });
     }
   }
 
@@ -80,32 +77,36 @@ class AuthController {
   static async login(req, res) {
     const { email, password } = req.body;
 
-    const user = await UserModelQuery.getUserByEmail(email);
-    if (!user) {
-      const payload = {
-        message: 'email does not exist'
-      };
-      return statusResponse.conflict(res, payload);
-    }
-    if (!bcrypt.compareSync(password, user.dataValues.password)) {
+    try {
+      const user = await UserModelQuery.getUserByEmail(email);
+      if (!user) {
+        const payload = {
+          message: 'email does not exist'
+        };
+        return StatusResponse.notfound(res, payload);
+      }
+      if (!bcrypt.compareSync(password, user.dataValues.password)) {
+        const payload = {
+          message: 'you have entered invalid credentials'
+        };
+        return StatusResponse.notfound(res, payload);
+      }
+      const { username, id } = user;
+      const token = getToken(id, username);
       user.dataValues.password = undefined;
       const payload = {
-        message: 'you have entered invalid credentials',
+        message: 'user logged in succesfully',
         user,
-        token: 'null'
+        token
       };
-      return statusResponse.badRequest(res, payload);
+      return StatusResponse.success(res, payload);
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      });
     }
-    const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
-      expiresIn: 86400
-    });
-    delete user.dataValues.password;
-    const payload = {
-      message: 'user logged in succesfully',
-      user,
-      token
-    };
-    return statusResponse.success(res, payload);
   }
 }
 
