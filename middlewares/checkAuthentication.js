@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import statusResponse from '../helpers/StatusResponse';
+import StatusResponse from '../helpers/StatusResponse';
 
 dotenv.config();
 
@@ -12,7 +12,7 @@ const checkAuthentication = (req, res, next) => {
   jwt.verify(token, process.env.TOKEN_SECRET, (err) => {
     // If there is no token, forbid the user from accessing the routes
     if (!token) {
-      statusResponse.badRequest(res, {
+      StatusResponse.badRequest(res, {
         message: 'You did not provide any token, please enter token, then retry',
         errors: {
           body: ['Invalid input']
@@ -20,7 +20,7 @@ const checkAuthentication = (req, res, next) => {
       });
     } else if (err) {
       // Wrong token
-      statusResponse.unauthorized(res, {
+      StatusResponse.unauthorized(res, {
         errors: {
           body: ['User token not authenticated, wrong token']
         }

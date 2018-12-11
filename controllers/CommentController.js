@@ -38,11 +38,12 @@ class CommentController {
           };
           StatusResponse.created(res, payload);
         }
+      } else {
+        const payload = {
+          message: 'Article does not Exist in the database'
+        };
+        StatusResponse.notfound(res, payload);
       }
-      const payload = {
-        message: 'Article does not Exist in the database'
-      };
-      StatusResponse.notfound(res, payload);
     } catch (error) {
       const payload = {
         message: 'Cannot succesfully create a Comment',
@@ -84,11 +85,12 @@ class CommentController {
           comment
         };
         StatusResponse.success(res, payload);
+      } else {
+        const payload = {
+          message: 'Article does not Exist in the database'
+        };
+        StatusResponse.notfound(res, payload);
       }
-      const payload = {
-        message: 'Article does not Exist in the database'
-      };
-      StatusResponse.notfound(res, payload);
     } catch (error) {
       const payload = {
         message: 'Cannot succesfully list out Comments',
@@ -121,11 +123,12 @@ class CommentController {
           message: 'Successfully deleted'
         };
         StatusResponse.success(res, payload);
+      } else {
+        const payload = {
+          message: 'No Comment exist'
+        };
+        StatusResponse.notfound(res, payload);
       }
-      const payload = {
-        message: 'No Comment exist'
-      };
-      StatusResponse.notfound(res, payload);
     } catch (error) {
       const payload = {
         message: 'Cannot succesfully delete a Comment',

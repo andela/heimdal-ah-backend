@@ -30,7 +30,6 @@ describe('User Authentication Test', () => {
         .request(app)
         .post('/api/v1/auth/signup')
         .send(data);
-      // console.log(res.body);
       res.should.be.a('object');
       res.status.should.equal(201);
       bodyHelper.emailToken.validTokenInDb = res.body.emailToken;

@@ -8,23 +8,25 @@ class CommentValidation {
   /**
    * @param {object} req Takes comment request
    * @param {object} res Response to request
-   * @param {object} next Move to the next middleware or function
+   * @param {object} next Move to the next function
    * @return {object} Comment validation response to user
    */
-  static validateComment(req, res, next) {
-    CommentValidation.checkCommentContent(req);
-    CommentValidation.checkArticleSlug(req);
-    CommentValidation.showError(req, res, next);
-  }
-
-  /**
-   * @param {object} req Takes comment request
-   * @param {object} res Response to request
-   * @return {object} Comment validation response to user
-   */
-  static checkCommentContent(req) {
+  static checkCommentContent(req, res, next) {
     req.checkBody('content', 'Please enter the comment content').notEmpty();
-    req.checkBody('content', 'Content Length cannot be more than 200 characters').isLength({ min: 200 });
+    req.checkBody('content', 'Content Length cannot be more than 200 characters').isLength({ max: 200 });
+    const errors = req.validationErrors();
+    const err = [];
+    if (errors) {
+      errors.forEach(({ param, msg }) => {
+        if (err[param] === undefined) {
+          err[param] = {
+            msg
+          };
+        }
+      });
+      return StatusResponse.badRequest(res, { errors: { ...err } });
+    }
+    return next();
   }
 
   /**
@@ -49,16 +51,6 @@ class CommentValidation {
       return StatusResponse.badRequest(res, { errors: { ...err } });
     }
     return next();
-  }
-
-  /**
-   * @param {object} req Takes comment request
-   * @param {object} res Response to request
-   * @param {object} next Move to the next function
-   * @return {object} User validation response to user
-   */
-  static checkArticleSlug(req) {
-    req.checkParams('slug', 'Please enter an Article Slug').notEmpty();
   }
 
   /**
