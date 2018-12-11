@@ -119,7 +119,6 @@ class UserValidation {
       }
       return next();
     } catch (error) {
-      console.log('===>', error);
       const payload = {
         message: 'Something went wrong', error
       };
