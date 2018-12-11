@@ -8,6 +8,6 @@ const router = express.Router();
 router.post('/', checkAuthentication, ArticlesValidation.validateInput, ArticlesController.create);
 router.get('/', checkAuthentication, ArticlesController.fetchArticles);
 router.get('/:slug', checkAuthentication, ArticlesController.getArticle);
-router.put('/:slug', checkAuthentication, ArticlesValidation.validateInput, ArticlesController.editArticle);
+router.put('/:slug', checkAuthentication, ArticlesController.editArticle);
 router.delete('/:slug', checkAuthentication, ArticlesController.deleteArticle);
 export default router;

@@ -92,7 +92,7 @@ describe('Test for articles controller', () => {
     it('should return 404 if article to be edited is not found', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/nfnfjfhg-djdh-djdj')
+        .put('/api/v1/articles/hello-world-new-article-46i05')
         .set('access-token', userToken)
         .send({
           title: 'This is a title',
