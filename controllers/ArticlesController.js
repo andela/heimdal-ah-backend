@@ -22,7 +22,8 @@ class ArticlesController {
         title: req.body.title,
         description: req.body.description,
         slug: articleSlug,
-        body: req.body.body
+        body: req.body.body,
+        image: req.body.image
       });
       if (newArticle) {
         StatusResponse.created(res, {

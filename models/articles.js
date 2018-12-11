@@ -13,6 +13,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    image: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     body: {
       type: DataTypes.TEXT,
       allowNull: false,

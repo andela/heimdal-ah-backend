@@ -43,7 +43,8 @@ describe('Test for articles controller', () => {
         .send({
           title: 'This is a title',
           description: 'This is a description',
-          body: ' his is a powerful article'
+          body: ' his is a powerful article',
+          image: 'www.image'
         });
       res.status.should.equal(201);
       res.body.should.have.a('object');
