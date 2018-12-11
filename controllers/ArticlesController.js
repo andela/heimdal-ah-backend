@@ -1,8 +1,7 @@
-import jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import slug from '../helpers/generateSlug';
-import ArticleQueryModel from '../lib/ArticleQueryModel';
 
 const { articles } = model;
 /**
@@ -19,7 +18,7 @@ class ArticlesController {
     try {
       const articleSlug = slug(req.body.title);
       const newArticle = await articles.create({
-        userId: req.params.userId,
+        userId: req.userId,
         title: req.body.title,
         description: req.body.description,
         slug: articleSlug,
@@ -75,7 +74,7 @@ class ArticlesController {
       const fetchArticle = await articles.findOne({
         where: {
           slug: req.params.slug
-        },
+        }
       });
       if (!fetchArticle) {
         StatusResponse.notfound(res, {
@@ -101,46 +100,86 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async editArticle(req, res) {
-    const token = req.body.token || req.query.token || req.headers['access-token'];
-    const verifiedToken = jwtDecode.verify(token, process.env.TOKEN_SECRET);
-    const { userId } = verifiedToken;
-    console.log(userId);
-
-
-    // const decoded = jwtDecode(req.body.token).username;
-    // if (decoded !== req.params.username) {
-    //   StatusResponse.unauthorized(res, {
-    //     errors: {
-    //       body: ['You cannot edit another persons article']
-    //     }
-    //   });
-    // }
-
-    const article = await ArticleQueryModel.getArticleBySlug(slug);
-    if (article) {
-      StatusResponse.notfound(res, {
-        message: 'Could not find article'
-      });
-    }
-    const data = {
-      title: req.body.title,
-      description: req.body.description,
-      body: req.body.body
-    };
     try {
-      const update = await articles.update({
-        data,
+      const article = await articles.findOne({
         where: {
           slug: req.params.slug
-        }
+        },
       });
-      if (update) {
-        StatusResponse.notfound(res, {
-          message: 'Article updated successfully'
+      if (!article) {
+        return StatusResponse.notfound(res, {
+          message: 'Could not find article'
         });
       }
+      if (article.userId !== req.userId) {
+        return StatusResponse.unauthenticated(res, {
+          message: 'You cannot edit another persons article'
+        });
+      }
+      const data = {
+        title: req.body.title || article.title,
+        description: req.body.description || article.description,
+        body: req.body.body || article.body
+      };
+      const updatedArticle = await articles.update(
+        data,
+        {
+          where: {
+            slug: req.params.slug
+          },
+          returning: true,
+          plain: true
+        }
+      );
+
+      return StatusResponse.success(res, {
+        message: 'Article updated successfully',
+        article: updatedArticle
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - delete article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async deleteArticle(req, res) {
+    try {
+      const article = await articles.findOne({
+        where: {
+          slug: req.params.slug
+        },
+      });
+      if (!article) {
+        return StatusResponse.notfound(res, {
+          message: 'Could not find article'
+        });
+      }
+      if (article.userId !== req.userId) {
+        StatusResponse.unauthenticated(res, {
+          message: 'You cannot delete another persons article'
+        });
+      }
+
+      await articles.destroy(
+        {
+          where: {
+            slug: req.params.slug
+          }
+        }
+      );
+
+      return StatusResponse.noContent(res, {
+        message: 'Article deleted successfully'
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }

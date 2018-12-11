@@ -81,6 +81,26 @@ class StatusResponse {
   static forbidden(res, data) {
     return res.status(403).json(data);
   }
+
+  /**
+   * @description - no content
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} forbidden
+   */
+  static noContent(res, data) {
+    return res.status(204).json(data);
+  }
+
+  /**
+   * @description - unathenticated
+   * @param {object} res
+   * @param {object} data
+   * @returns {object} forbidden
+   */
+  static unauthenticated(res, data) {
+    return res.status(403).json(data);
+  }
 }
 
 export default StatusResponse;

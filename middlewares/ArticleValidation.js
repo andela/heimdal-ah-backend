@@ -10,13 +10,9 @@ class ArticleValidation {
    * @param {object} next
    * @returns {object} Returned object
    */
-  static async validateAllParams(req, res, next) {
+  static async validateInput(req, res, next) {
     req.checkBody('title', 'title cannot be empty').notEmpty();
     req.checkBody('description', 'description cannot be empty').notEmpty();
-
-    req.checkParams('userId', 'User Id cannot be empty').notEmpty();
-    req.checkParams('userId', 'User Id must be an Integer').isInt();
-
     req.checkBody('body', 'body cannot be empty').notEmpty();
 
     try {
