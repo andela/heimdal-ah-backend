@@ -24,7 +24,7 @@ class UsersController {
             model: roles,
             as: 'roles',
             where: {
-              role: 'author'
+              name: 'author'
             }
           }
         ],

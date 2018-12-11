@@ -1,26 +1,47 @@
+
 export default (sequelize, DataTypes) => {
   const Users = sequelize.define('users', {
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    username: DataTypes.STRING,
-    emailVerification: DataTypes.STRING,
-    resettingPassword: DataTypes.BOOLEAN,
-    facebookId: DataTypes.STRING,
-    googleId: DataTypes.STRING,
-    twitterId: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    facebookId: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    googleId: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    twitterId: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    emailVerification: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {});
-  // eslint-disable-next-line no-unused-vars
   Users.associate = (models) => {
     // associations can be defined here
-    Users.hasOne(models.roles, {
-      foreignKey: 'userId',
-      as: 'roles'
+    Users.belongsTo(models.roles, {
+      foreignKey: 'roleId',
+      onDelete: 'CASCADE',
+      as: 'roles',
     });
     Users.hasOne(models.profiles, {
+
     });
     Users.hasMany(models.articles, {
-      foreignKey: 'userId',
-      as: 'articles'
     });
   };
   return Users;

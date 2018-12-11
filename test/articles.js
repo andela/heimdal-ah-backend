@@ -3,7 +3,6 @@ import chaiHttp from 'chai-http';
 import jwtDecode from 'jwt-decode';
 
 import app from '../index';
-// import bodyHelper from './bodyHelper';
 
 chai.use(chaiHttp);
 
@@ -21,11 +20,7 @@ describe('Test for articles controller', () => {
       .post('/api/v1/auth/signup')
       .send(data);
     const { token } = res.body;
-    // console.log('==============');
-    // console.log(token);
     id = jwtDecode(token).userId;
-    // console.log('==============');
-    // console.log(id);
   });
 
   before(async () => {
@@ -38,8 +33,6 @@ describe('Test for articles controller', () => {
       .request(app)
       .post(`/api/v1/articles/${id}`)
       .send(data);
-      // console.log('==============');
-      // console.log(res.body);
     const { slug } = res.body.article;
     slugString = slug;
   });
@@ -88,8 +81,8 @@ describe('Test for articles controller', () => {
         .get(`/api/v1/articles/${slugString}`);
       res.status.should.equal(200);
       res.body.should.have.a('object');
-      res.body.should.have('message');
-      res.body.message.should.equal('Success');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('success');
     });
   });
 
@@ -105,27 +98,27 @@ describe('Test for articles controller', () => {
     });
   });
 
-  // describe('Test for updating an article PUT/ api/v1/articles:slug', () => {
-  //   it('should return 404 if article to be edited is not found', async () => {
-  //     const res = await chai
-  //       .request(app)
-  //       .get(`/api/v1/articles/${slug}`);
-  //     res.status.should.equal(400);
-  //     res.body.should.have.a('object');
-  //     res.body.error.body[0].should.equal('Article does not exist');
-  //   });
+  describe('Test for updating an article PUT/ api/v1/articles:slug', () => {
+    it('should return 404 if article to be edited is not found', async () => {
+      const res = await chai
+        .request(app)
+        .get('/api/v1/articles/nfnfjfhg-djdh-djdj');
+      res.status.should.equal(404);
+      res.body.should.have.a('object');
+      res.body.message.should.equal('Could not find article');
+    });
 
-  //   it('should return 202 on successful update of article', async () => {
-  //     const res = await chai
-  //       .request(app)
-  //       .put('/api/v1/articles')
-  //       .send({});
-  //     res.status.should.equal(202);
-  //     res.body.should.have.a('object');
-  //     res.body.should.have('message');
-  //     res.body.message.should.equal('Article updated successfully');
-  //   });
-  // });
+    it('should return 202 on successful update of article', async () => {
+      const res = await chai
+        .request(app)
+        .put('/api/v1/articles')
+        .send({});
+      res.status.should.equal(202);
+      res.body.should.have.a('object');
+      res.body.should.have('message');
+      res.body.message.should.equal('Article updated successfully');
+    });
+  });
 
   // describe('Test for deleting articles DELETE/ api/v1/articles:slug', () => {
   //   it('should return 404 if article to be deleted is not found', async () => {

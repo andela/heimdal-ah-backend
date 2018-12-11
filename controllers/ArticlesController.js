@@ -2,6 +2,7 @@ import jwtDecode from 'jwt-decode';
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import slug from '../helpers/generateSlug';
+import ArticleQueryModel from '../lib/ArticleQueryModel';
 
 const { articles } = model;
 /**
@@ -100,14 +101,21 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async editArticle(req, res) {
-    const decoded = jwtDecode(req.body.token).username;
-    if (decoded !== req.params.username) {
-      StatusResponse.unauthorized(res, {
-        errors: {
-          body: ['You cannot edit another persons article']
-        }
-      });
-    }
+    const token = req.body.token || req.query.token || req.headers['access-token'];
+    const verifiedToken = jwtDecode.verify(token, process.env.TOKEN_SECRET);
+    const { userId } = verifiedToken;
+    console.log(userId);
+
+
+    // const decoded = jwtDecode(req.body.token).username;
+    // if (decoded !== req.params.username) {
+    //   StatusResponse.unauthorized(res, {
+    //     errors: {
+    //       body: ['You cannot edit another persons article']
+    //     }
+    //   });
+    // }
+
     const article = await ArticleQueryModel.getArticleBySlug(slug);
     if (article) {
       StatusResponse.notfound(res, {
