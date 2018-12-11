@@ -48,7 +48,6 @@ class UserValidation {
   static checkPassword(req) {
     req.checkBody('password', 'password cannot be empty').notEmpty();
     req.checkBody('password', 'password must be at least 8 characters').isLength({ min: 8 });
-    // req.checkBody('password', 'password must not contain space').matches(/^\S*$/);
     req
       .checkBody('password', 'password must contain a letter and number')
       .matches(/^((?=.*\d))(?=.*[a-zA-Z])/);

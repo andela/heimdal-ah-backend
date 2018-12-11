@@ -12,9 +12,10 @@
     "db:migrate": "node_modules/.bin/sequelize db:migrate",
     "db:migrate:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate",
     "lint:fix": "eslint --fix ./ --ext .js --color",
-    "build": "npm run clean && babel ./ -d ./build --ignore node_modules",
-    "clean": "rimraf ./build",
-    "start": "npm run build && node ./build/index"
+    "start": "npm run clean && npm run build && node dist/index.js",
+    "build": "npm run clean && babel . --ignore node_modules,test,coverage,dist -d dist/ && cp swagger.json dist/",
+    "prestart": "npm run build",
+    "clean": "rimraf ./build"
   },
   "nyc": {
     "exclude": [
