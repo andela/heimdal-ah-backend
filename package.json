@@ -59,7 +59,8 @@
     "pg-hstore": "^2.3.2",
     "rimraf": "^2.6.2",
     "sequelize": "^4.41.2",
-    "sequelize-cli": "^5.4.0"
+    "sequelize-cli": "^5.4.0",
+    "slugify": "^1.3.4"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

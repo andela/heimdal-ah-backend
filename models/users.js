@@ -18,6 +18,10 @@ export default (sequelize, DataTypes) => {
     });
     Users.hasOne(models.profiles, {
     });
+    Users.hasMany(models.articles, {
+      foreignKey: 'userId',
+      as: 'articles'
+    });
   };
   return Users;
 };

@@ -10,3 +10,4 @@ import './comments.test';
 import './middlewares/userValidation.test';
 import './users';
 import './passwords';
+import './articles';

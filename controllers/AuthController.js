@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import usersModel from '../models';
-import statusResponse from '../helpers/statusResponse';
+import StatusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/user';
 
 import mailer from '../helpers/mailer';
@@ -51,7 +51,7 @@ class AuthController {
         const payload = {
           message: 'This email has been taken'
         };
-        return statusResponse.conflict(res, payload);
+        return StatusResponse.conflict(res, payload);
       }
       try {
         const emailVerification = 'false';
@@ -75,12 +75,12 @@ class AuthController {
           token,
           emailToken
         };
-        return statusResponse.created(res, payload);
+        return StatusResponse.created(res, payload);
       } catch (error) {
-        return statusResponse.internalServerError(res);
+        return StatusResponse.internalServerError(res);
       }
     } catch (error) {
-      return statusResponse.internalServerError(res);
+      return StatusResponse.internalServerError(res);
     }
   }
 
@@ -97,7 +97,7 @@ class AuthController {
       const payload = {
         message: 'email does not exist'
       };
-      return statusResponse.conflict(res, payload);
+      return StatusResponse.conflict(res, payload);
     }
     if (!bcrypt.compareSync(password, user.dataValues.password)) {
       user.dataValues.password = undefined;
@@ -106,7 +106,7 @@ class AuthController {
         user,
         token: 'null'
       };
-      return statusResponse.badRequest(res, payload);
+      return StatusResponse.badRequest(res, payload);
     }
     const token = jwt.sign({ email }, process.env.TOKEN_SECRET, {
       expiresIn: 86400
@@ -117,7 +117,7 @@ class AuthController {
       user,
       token
     };
-    return statusResponse.success(res, payload);
+    return StatusResponse.success(res, payload);
   }
 }
 
