@@ -45,6 +45,7 @@ export default (sequelize, DataTypes) => {
     Users.hasMany(models.articles, {
     });
     Users.hasOne(models.profiles, {});
+    Users.hasMany(models.ratings);
   };
   return Users;
 };

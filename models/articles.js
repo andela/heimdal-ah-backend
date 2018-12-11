@@ -23,6 +23,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
+    Articles.hasMany(models.ratings);
   };
   return Articles;
 };

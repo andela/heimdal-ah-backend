@@ -4,6 +4,7 @@ import profiles from './profiles';
 import password from './passwords';
 import twitterRouter from './twitterRouter';
 import article from './articles';
+import ratings from './ratings';
 
 export {
   auth,
@@ -12,4 +13,5 @@ export {
   password,
   twitterRouter,
   article,
+  ratings
 };
