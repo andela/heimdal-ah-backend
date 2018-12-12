@@ -1,4 +1,3 @@
-
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('users', {
     id: {
@@ -15,7 +14,7 @@ export default {
     },
     emailVerification: {
       type: Sequelize.BOOLEAN,
-      defaultValue: false,
+      defaultValue: false
     },
     resettingPassword: {
       type: Sequelize.BOOLEAN,
@@ -34,9 +33,9 @@ export default {
       onDelete: 'CASCADE',
       references: {
         model: 'roles',
-        key: 'id',
-      },
-    },
+        key: 'id'
+      }
+    }
   }),
   // eslint-disable-next-line no-unused-vars
   down: (queryInterface, Sequelize) => queryInterface.dropTable('users')

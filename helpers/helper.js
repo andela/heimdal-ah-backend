@@ -13,8 +13,7 @@ const Helper = {
       {
         email
       },
-      process.env.EMAIL_SECRET,
-      { expiresIn: '3d' }
+      process.env.EMAIL_SECRET
     );
     return token;
   }

@@ -27,23 +27,7 @@ class AuthController {
 
     const emailToken = helper.generateEmailToken(email);
 
-    const link = `http://${
-      req.headers.host
-    }/api/v1/users/verify-email/${emailToken}`;
-
-    const emailSubject = 'Verify your email on Authors Haven';
-
-    const emailBody = `
-      <div>
-        <h2 style="color: blue">Hello ${username}, Thanks for signing up on heimdal</h2>
-        Please click here to verify your email address, this link expires in two days.
-        <a href="${link}">${link}</a>
-      </div>
-    `;
-
-    const emailContent = { emailSubject, emailBody };
-
-    mailer.sendCustomMail(email, emailContent);
+    const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
 
     try {
       let user = await UserModelQuery.getUserByEmail(email);
@@ -65,6 +49,8 @@ class AuthController {
         };
         return StatusResponse.conflict(res, payload);
       }
+
+      mailer.sendVerificationMail(email, username, link);
 
       const { id: roleId } = await roles.find({ where: { name: 'user' } });
       const newUser = await users.create(
@@ -113,7 +99,7 @@ class AuthController {
       }
       if (!bcrypt.compareSync(password, user.dataValues.password)) {
         const payload = {
-          message: 'you have entered invalid credentials',
+          message: 'you have entered invalid credentials'
         };
         return StatusResponse.notfound(res, payload);
       }
