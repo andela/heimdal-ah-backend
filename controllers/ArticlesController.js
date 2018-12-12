@@ -1,6 +1,7 @@
 import models from '../models';
-// import StatusResponse from '../helpers/StatusResponse';
+import StatusResponse from '../helpers/StatusResponse';
 import articleHelper from '../helpers/articleHelper';
+// import articlesMiddleware from '../middlewares/articlesMiddleware';
 
 const { Article, Tag } = models;
 
@@ -17,10 +18,10 @@ class ArticlesController {
   static async createArticle(req, res) {
     const { body, tags } = req.body;
 
+    // articlesMiddleware.countTags(tags);
+
     // const wordCount = textBody => textBody.split(' ').length;
     const readingTime = articleHelper.calcReadingTime(body);
-
-    console.log('R::', readingTime);
 
     req.body.readingTime = readingTime;
 
@@ -33,7 +34,6 @@ class ArticlesController {
         tags.map(async (thisTag) => {
           const [tagList] = await Tag.findOrCreate({
             where: { tagName: thisTag }
-            // defaults: { tagName: thisTag }
           });
           await article.addTags(tagList);
         });
@@ -45,11 +45,16 @@ class ArticlesController {
       });
 
       if (!createdArticle) {
-        return res.json({ message: 'Not found' });
+        const payload = { message: 'article not found' };
+        return StatusResponse.notfound(res, payload);
       }
-      return res.json({ article: createdArticle, tagList: tags });
+      const payload = { article: createdArticle, tagList: tags };
+      return StatusResponse.success(res, payload);
+      // return res.json({ article: createdArticle, tagList: tags });
     } catch (error) {
-      return res.json(error);
+      const payload = { message: 'An error occured, try again' };
+      return StatusResponse.internalServerError(res, payload);
+      // return res.json(error);
     }
 
     /*
