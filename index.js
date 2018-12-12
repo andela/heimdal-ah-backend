@@ -30,10 +30,6 @@ app.use('/api/v1/bookmarks', bookmarks);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered
-app.use('/', (req, res) => res.status(200).json({
-  success: true,
-  message: 'Welcome to Authors Haven by Heimdal'
-}));
 
 app.use((req, res) => res.status(404).json({ message: 'not found' }));
 
