@@ -1,5 +1,6 @@
 import models from '../models';
-import StatusResponse from '../helpers/StatusResponse';
+// import StatusResponse from '../helpers/StatusResponse';
+import articleHelper from '../helpers/articleHelper';
 
 const { Article, Tag } = models;
 
@@ -14,7 +15,14 @@ class ArticlesController {
    * @return {Object} Returned object
    */
   static async createArticle(req, res) {
-    const { tags } = req.body;
+    const { body, tags } = req.body;
+
+    // const wordCount = textBody => textBody.split(' ').length;
+    const readingTime = articleHelper.calcReadingTime(body);
+
+    console.log('R::', readingTime);
+
+    req.body.readingTime = readingTime;
 
     try {
       const article = await Article.create(req.body);
