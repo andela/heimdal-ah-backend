@@ -35,5 +35,5 @@ export default {
       type: Sequelize.DATE
     }
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('bookmarks')
+  down: queryInterface => queryInterface.dropTable('bookmarks')
 };

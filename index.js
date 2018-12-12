@@ -10,7 +10,7 @@ import {
 import logger from './config/logger';
 import passportAuth from './config/passportAuth';
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 const app = express();
 
