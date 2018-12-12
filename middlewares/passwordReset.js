@@ -30,6 +30,7 @@ const passwordReset = (req, res, next) => {
     return Response.badRequest(res, { message: 'password and comfirmPassword are not the same' });
   }
   req.decoded = decoded;
+
   return next();
 };
 /** @description generates token for user

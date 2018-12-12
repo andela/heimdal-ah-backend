@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import UserModel from '../models';
 import Response from '../helpers/StatusResponse';
 import mailer from '../helpers/mailer';
+import UserModelQuery from '../lib/UserModelQuery';
 
 /** @description usersController class
  * @return {object} the response object
@@ -16,19 +17,15 @@ class PasswordResetController {
    * @public
    */
   static async forgotPassword(req, res) {
-    const { users } = UserModel;
     try {
-      const user = await users.findOne({
-        where: {
-          email: req.body.email
-        }
-      });
+      const user = await UserModelQuery.getUserByEmail(req.body.email);
       if (!user) {
         return Response.notfound(res, { message: 'user not avalaible' });
       }
+      const { id, email, profile: { username } } = user;
       // create token
       const token = jwt.sign(
-        { id: user.id, username: user.username, email: user.email },
+        { id, email, username },
         process.env.TOKEN_SECRET,
         {
           expiresIn: 86400
