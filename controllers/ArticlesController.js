@@ -10,12 +10,12 @@ const { Article, Tag } = models;
  */
 class ArticlesController {
   /**
-   * @description Fetch all the users
+   * @description Create an article
    * @param {Object} req - HTTP Request
    * @param {Object} res - HTTP Response
    * @return {Object} Returned object
    */
-  static async createArticle(req, res) {
+  static async create(req, res) {
     const { body, tags } = req.body;
 
     // articlesMiddleware.countTags(tags);
