@@ -10,13 +10,13 @@ export default {
       type: Sequelize.TEXT,
       allowNull: false
     },
-    articleSlug: {
-      type: Sequelize.STRING,
+    articleId: {
+      type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
         model: 'articles',
-        key: 'slug',
-        as: 'articleSlug'
+        key: 'id',
+        as: 'articleId'
       },
       allowNull: false
     },
@@ -31,6 +31,10 @@ export default {
       allowNull: false
     },
     isAnUpdate: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    isArchived: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     },

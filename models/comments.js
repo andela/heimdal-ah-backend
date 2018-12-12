@@ -6,18 +6,21 @@ export default (sequelize, DataTypes) => {
     },
     isAnUpdate: {
       type: DataTypes.BOOLEAN,
-      allowNull: false,
       defaultValue: false
     },
     commentId: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    isArchived: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {});
   Comments.associate = (models) => {
     // associations can be defined here
     Comments.belongsTo(models.articles, {
-      foreignKey: 'articleSlug',
+      foreignKey: 'articleId',
       onDelete: 'CASCADE',
     });
     Comments.belongsTo(models.users, {

@@ -1,4 +1,5 @@
 import StatusResponse from '../helpers/StatusResponse';
+import ArticleQueryModel from '../lib/ArticleQueryModel';
 /**
  * Validate all comment fields
  *classname should match file name and start with capital
@@ -13,7 +14,7 @@ class CommentValidation {
    */
   static checkCommentContent(req, res, next) {
     req.checkBody('content', 'Please enter the comment content').notEmpty();
-    req.checkBody('content', 'Content Length cannot be more than 200 characters').isLength({ max: 200 });
+    req.checkBody('content', 'Content Length cannot be more than 1500 characters').isLength({ max: 1500 });
     const errors = req.validationErrors();
     const err = [];
     if (errors) {
@@ -36,8 +37,8 @@ class CommentValidation {
    * @return {object} User validation response to user
    */
   static checkCommentId(req, res, next) {
-    req.checkParams('id', 'Please enter a comment Id').notEmpty();
-    req.checkParams('id', 'Comment Id must be an Integer').isInt();
+    req.checkParams('articleId', 'Article Id must be an Integer').isInt();
+    req.checkParams('commentId', 'Comment Id must be an Integer').isInt();
     const errors = req.validationErrors();
     const err = [];
     if (errors) {
@@ -54,29 +55,51 @@ class CommentValidation {
   }
 
   /**
-   * @param {object} req Takes signup request
+   * @param {object} req Takes comment request
    * @param {object} res Response to request
-   * @param {object} next move to the next function or middleware
+   * @param {object} next Move to the next function
    * @return {object} User validation response to user
    */
-  static async showError(req, res, next) {
+  static checkArticleId(req, res, next) {
+    req.checkParams('id', 'Article Id must be an Integer').isInt();
+    const errors = req.validationErrors();
+    const err = [];
+    if (errors) {
+      errors.forEach(({ param, msg }) => {
+        if (err[param] === undefined) {
+          err[param] = {
+            msg
+          };
+        }
+      });
+      return StatusResponse.badRequest(res, { errors: { ...err } });
+    }
+    return next();
+  }
+
+  /**
+   * @param {object} req Takes comment request
+   * @param {object} res Response to request
+   * @param {object} next Move to the next function
+   * @return {object} User validation response to user
+   */
+  static async checkCommentParams(req, res, next) {
+    const { commentId } = req.params;
     try {
-      const errors = await req.validationErrors();
-      const err = [];
-      if (errors) {
-        errors.forEach(({ param, msg }) => {
-          if (err[param] === undefined) {
-            err[param] = {
-              msg
-            };
-          }
-        });
-        return StatusResponse.badRequest(res, { errors: { ...err } });
+      const checkComment = await ArticleQueryModel.getCommentById(commentId);
+      if (!checkComment) {
+        const payload = {
+          message: 'No Comment exist'
+        };
+        return StatusResponse.notfound(res, payload);
       }
       return next();
     } catch (error) {
       const payload = {
-        message: 'Something went wrong', error
+        message: 'Cannot Query the Comment Database',
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
       };
       return StatusResponse.internalServerError(res, payload);
     }
