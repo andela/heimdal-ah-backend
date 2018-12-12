@@ -4,13 +4,13 @@ import bodyParser from 'body-parser';
 import validator from 'express-validator';
 import passport from 'passport';
 import {
-  auth, profiles, user, password, twitterRouter
+  auth, profiles, user, password, twitterRouter, bookmarks
 } from './routes';
 
 import logger from './config/logger';
 import passportAuth from './config/passportAuth';
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
@@ -26,6 +26,7 @@ app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
+app.use('/api/v1/bookmarks', bookmarks);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered

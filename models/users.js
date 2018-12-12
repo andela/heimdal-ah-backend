@@ -43,6 +43,11 @@ export default (sequelize, DataTypes) => {
       as: 'roles'
     });
     Users.hasOne(models.profiles, {});
+    Users.hasMany(models.articles, {});
+    Users.hasMany(models.bookmarks, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
+    });
   };
   return Users;
 };
