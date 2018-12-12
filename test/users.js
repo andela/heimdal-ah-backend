@@ -12,10 +12,10 @@ chai.should();
 
 describe('User Authentication Test', () => {
   describe('GET /', () => {
-    it('should return 200 for visiting a random endpoint on the app', async () => {
+    it('should return 404 for visiting a random endpoint on the app', async () => {
       const res = await chai.request(app).get('/');
       res.should.be.a('object');
-      res.status.should.equal(200);
+      res.status.should.equal(404);
     });
   });
 

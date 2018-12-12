@@ -12,23 +12,14 @@ export default {
     password: {
       type: Sequelize.STRING
     },
-    username: {
-      type: Sequelize.STRING
-    },
-    facebookId: {
-      type: Sequelize.STRING
-    },
-    googleId: {
-      type: Sequelize.STRING
-    },
-    twitterId: {
-      type: Sequelize.STRING
-    },
     emailVerification: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     },
-    resettingPassword: Sequelize.BOOLEAN,
+    resettingPassword: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
