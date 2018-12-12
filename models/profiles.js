@@ -1,39 +1,57 @@
-
-export default (sequelize, DataTypes) => {
-  const Profiles = sequelize.define('profiles', {
+/* eslint-disable require-jsdoc */
+export function up(queryInterface, Sequelize) {
+  return queryInterface.createTable('profiles', {
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: Sequelize.INTEGER
+    },
+    firstName: {
+      type: Sequelize.STRING,
+    },
+    lastName: {
+      type: Sequelize.STRING,
+    },
     username: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
       allowNull: false,
       unique: true
     },
-    firstName: {
-      type: DataTypes.STRING,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-    },
     biodata: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
     },
     image: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
     },
     location: {
-      type: DataTypes.STRING,
+      type: Sequelize.STRING,
     },
     twitterUsername: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
     facebookUsername: {
-      type: DataTypes.STRING
+      type: Sequelize.STRING
     },
-  }, {});
-  Profiles.associate = (models) => {
-    // associations can be defined here
-    Profiles.belongsTo(models.users, {
-      foreignKey: 'userId',
-      onDelete: 'CASCADE',
-    });
-  };
-  return Profiles;
-};
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE,
+    },
+  });
+}
+// eslint-disable-next-line no-unused-vars
+export function down(queryInterface, Sequelize) {
+  return queryInterface.dropTable('profiles');
+}

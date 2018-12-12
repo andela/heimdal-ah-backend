@@ -22,7 +22,6 @@ describe('Comment Validation and Creation', () => {
       username: chance.last(),
     };
     user = await User.create(userInfo);
-    
     const data = {
       title: 'This is a new title',
       description: 'This is a new description',

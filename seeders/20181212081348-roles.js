@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 export default {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('roles', [{
     name: 'admin',
@@ -14,13 +13,11 @@ export default {
     createdAt: new Date(),
     updatedAt: new Date(),
   }], {}),
-
   down: (queryInterface, Sequelize) => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
-
-      Example:
+       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
   }

@@ -1,4 +1,3 @@
-
 export default (sequelize, DataTypes) => {
   const Roles = sequelize.define('roles', {
     name: {

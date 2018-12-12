@@ -33,8 +33,6 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'profile'
     });
-    Users.hasMany(models.comments, {
-    });
     Users.hasOne(models.profiles, {});
   };
   return Users;
