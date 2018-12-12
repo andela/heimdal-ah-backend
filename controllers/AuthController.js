@@ -6,6 +6,8 @@ import getToken from '../helpers/getToken';
 import mailer from '../helpers/mailer';
 import helper from '../helpers/helper';
 
+// const Op = Sequelize;
+
 /**
  * Signup validation class
  * classname should match file name and start with capital
@@ -18,7 +20,7 @@ class AuthController {
    */
   static async signUp(req, res) {
     const { email, password, username } = req.body;
-    const { users, roles } = usersModel;
+    const { users, roles, profiles } = usersModel;
 
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
@@ -44,7 +46,7 @@ class AuthController {
     mailer.sendCustomMail(email, emailContent);
 
     try {
-      const user = await UserModelQuery.getUserByEmail(email);
+      let user = await UserModelQuery.getUserByEmail(email);
 
       if (user) {
         const payload = {
@@ -53,26 +55,36 @@ class AuthController {
         return StatusResponse.conflict(res, payload);
       }
 
-      const roleData = await roles.create(
+      user = await profiles.findOne({
+        where: { username }
+      });
+
+      if (user) {
+        const payload = {
+          message: 'This username has been taken'
+        };
+        return StatusResponse.conflict(res, payload);
+      }
+
+      const { id: roleId } = await roles.find({ where: { name: 'user' } });
+      const newUser = await users.create(
         {
-          users: {
-            email,
-            username,
-            password: hashPassword
-          },
+          email,
+          roleId,
+          password: hashPassword,
+          profile: { username }
         },
-        { include: [{ model: users, as: 'users' }] },
+        { include: [{ model: profiles, as: 'profile' }] }
       );
 
-      const newUser = roleData.users[0];
-      newUser.password = undefined;
-      const token = getToken(newUser.id, username);
+      const token = getToken(newUser.id, newUser.username);
+
       const payload = {
         message: 'user created succesfully',
-        user: newUser,
         token,
         emailToken
       };
+
       return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -105,12 +117,11 @@ class AuthController {
         };
         return StatusResponse.notfound(res, payload);
       }
-      const { username, id } = user;
+      const { id, profile: { username } } = user;
       const token = getToken(id, username);
       user.dataValues.password = undefined;
       const payload = {
         message: 'user logged in succesfully',
-        user,
         token
       };
       return StatusResponse.success(res, payload);
@@ -121,6 +132,21 @@ class AuthController {
         }
       });
     }
+  }
+
+  /**
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @return {object} login response to user
+   */
+  static socialAuth(req, res) {
+    const { id, profile: { username } } = req.user;
+    const token = getToken({ id, username });
+    const payload = {
+      message: 'user logged in succesfully',
+      token
+    };
+    return StatusResponse.success(res, payload);
   }
 }
 
