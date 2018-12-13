@@ -3,8 +3,9 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import validator from 'express-validator';
 import passport from 'passport';
+
 import {
-  auth, profiles, user, password, twitterRouter, article, ratings
+  auth, profiles, user, password, twitterRouter, article, comment, ratings
 } from './routes';
 
 import logger from './config/logger';
@@ -26,15 +27,12 @@ app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
+app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles', article);
 app.use('/api/v1/ratings', ratings);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered
-app.use('/', (req, res) => res.status(200).json({
-  success: true,
-  message: 'Welcome to Authors Haven by Heimdal'
-}));
 
 app.use('/*', (req, res) => res.status(404).json({ message: 'not found' }));
 

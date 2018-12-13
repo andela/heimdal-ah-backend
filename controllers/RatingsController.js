@@ -1,4 +1,3 @@
-import jwtDecode from 'jwt-decode';
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 
@@ -17,24 +16,55 @@ class RatingsController {
    * @param {object} res
    * @returns {object} Users Ratings on an article
    */
-  static async createRatings(req, res) {
-    const token = req.body.token || req.query.token || req.headers['access-token'];
-    const id = jwtDecode(token).userId;
+  static async create(req, res) {
     try {
       const usersRatings = await ratings.create({
-        userId: id,
-        articleId: req.params.articleId,
+        userId: req.userId,
+        identifier: req.params.identifier,
         stars: req.body.stars
       });
-      if (usersRatings) {
-        StatusResponse.created(res, {
-          message: 'Users ratings on this article recorded succesfully',
-          ratings: usersRatings
+      StatusResponse.created(res, {
+        message: 'Users ratings on this article recorded succesfully',
+        ratings: usersRatings
+      });
+    } catch (error) {
+      StatusResponse.internalServerError(res, {
+        message: 'users ratings not recorded succesfully, please try again',
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      });
+    }
+  }
+
+  /**
+   * @description - This method takes care of retrieving ratings on an article by all users
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Ratings on an article
+   */
+  static async retrieve(req, res) {
+    try {
+      console.log(req.params.identifier)
+      const returnedRatings = await ratings.findAll({
+        where: {
+          identifier: req.params.identifier
+        }
+      });
+      if (Object.keys(returnedRatings).length >= 1) {
+        StatusResponse.success(res, {
+          message: 'Ratings on this article returned succesfully',
+          ratings: returnedRatings
+        });
+      } else {
+        StatusResponse.notfound(res, {
+          message: 'No Ratings found for this article',
+          ratings: null
         });
       }
     } catch (error) {
       StatusResponse.internalServerError(res, {
-        message: 'users ratings not recorded succesfully, please try again',
+        message: 'Ratings not returned succesfully, please try again',
         error: {
           body: [`Internal server error => ${error}`]
         }

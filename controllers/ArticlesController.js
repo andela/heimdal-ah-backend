@@ -1,13 +1,16 @@
-import jwtDecode from 'jwt-decode';
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import slug from '../helpers/generateSlug';
-import ArticleQueryModel from '../lib/ArticleQueryModel';
+import {
+  checkIdentifier,
+  pageInfo,
+  checkTitle,
+  checkUser
+} from '../helpers/articleHelper';
 
 const { articles } = model;
 /**
-* @description ArticlesController class
-*/
+ * @description ArticlesController class
+ */
 class ArticlesController {
   /**
    * @description - create articles
@@ -16,23 +19,29 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async create(req, res) {
+    const { userId } = res.locals.user;
     try {
-      const articleSlug = slug(req.body.title);
+      const articleTitle = await articles.findOne({
+        where: {
+          title: req.body.title
+        }
+      });
+      const articleSlug = checkTitle(req.body.title, articleTitle);
       const newArticle = await articles.create({
-        userId: req.params.userId,
+        userId,
         title: req.body.title,
         description: req.body.description,
         slug: articleSlug,
-        body: req.body.body
+        body: req.body.body,
+        image: req.body.image
       });
-      if (newArticle) {
-        StatusResponse.created(res, {
-          message: 'Article successfully created',
-          article: newArticle
-        });
-      }
+
+      return StatusResponse.created(res, {
+        message: 'Article successfully created',
+        article: newArticle
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }
@@ -44,21 +53,29 @@ class ArticlesController {
    * @param {object} res
    * @returns {object} Returned object
    */
-  static async fetchArticles(req, res) {
+  static async list(req, res) {
+    const {
+      size, page = 1, order = 'ASC', orderBy = 'createdAt'
+    } = req.query;
+
     try {
-      const fetchArticles = await articles.findAll();
+      const { limit, offset } = pageInfo(page, size);
+      const fetchArticles = await articles.findAndCountAll({
+        limit,
+        offset,
+        order: [[orderBy, order]]
+      });
       if (fetchArticles.length === 0) {
-        StatusResponse.success(res, {
+        return StatusResponse.success(res, {
           message: 'No article found'
         });
-      } else {
-        StatusResponse.success(res, {
-          message: 'List of articles',
-          articles: fetchArticles
-        });
       }
+      return StatusResponse.success(res, {
+        message: 'List of articles',
+        articles: fetchArticles
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }
@@ -70,25 +87,19 @@ class ArticlesController {
    * @param {object} res
    * @returns {object} Returned object
    */
-  static async getArticle(req, res) {
+  static async get(req, res) {
+    const paramsSlug = checkIdentifier(req.params.identifier);
+
     try {
       const fetchArticle = await articles.findOne({
-        where: {
-          slug: req.params.slug
-        },
+        where: { ...paramsSlug }
       });
-      if (!fetchArticle) {
-        StatusResponse.notfound(res, {
-          message: 'Could not find article'
-        });
-      } else {
-        StatusResponse.success(res, {
-          message: 'success',
-          article: fetchArticle
-        });
-      }
+      return StatusResponse.success(res, {
+        message: 'success',
+        article: fetchArticle
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }
@@ -100,47 +111,71 @@ class ArticlesController {
    * @param {object} res
    * @returns {object} Returned object
    */
-  static async editArticle(req, res) {
-    const token = req.body.token || req.query.token || req.headers['access-token'];
-    const verifiedToken = jwtDecode.verify(token, process.env.TOKEN_SECRET);
-    const { userId } = verifiedToken;
-    console.log(userId);
-
-
-    // const decoded = jwtDecode(req.body.token).username;
-    // if (decoded !== req.params.username) {
-    //   StatusResponse.unauthorized(res, {
-    //     errors: {
-    //       body: ['You cannot edit another persons article']
-    //     }
-    //   });
-    // }
-
-    const article = await ArticleQueryModel.getArticleBySlug(slug);
-    if (article) {
-      StatusResponse.notfound(res, {
-        message: 'Could not find article'
-      });
-    }
-    const data = {
-      title: req.body.title,
-      description: req.body.description,
-      body: req.body.body
-    };
+  static async update(req, res) {
+    const { userId } = res.locals.user;
+    const paramsSlug = checkIdentifier(req.params.identifier);
     try {
-      const update = await articles.update({
-        data,
+      const article = await articles.findOne({
         where: {
-          slug: req.params.slug
-        }
+          ...paramsSlug
+        },
       });
-      if (update) {
-        StatusResponse.notfound(res, {
-          message: 'Article updated successfully'
+      if (!checkUser(article, userId)) {
+        return StatusResponse.forbidden(res, {
+          message: 'Request denied'
         });
       }
+
+      const data = Object.keys(req.body);
+      const updatedArticle = await articles.update(req.body, {
+        where: { ...paramsSlug },
+        fields: data,
+        returning: true,
+        plain: true
+      });
+
+      return StatusResponse.success(res, {
+        message: 'Article updated successfully',
+        article: updatedArticle
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - delete article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async archive(req, res) {
+    const { userId } = res.locals.user;
+    const paramsSlug = checkIdentifier(req.params.identifier);
+    try {
+      const article = await articles.findOne({
+        where: {
+          ...paramsSlug
+        },
+      });
+      if (!checkUser(article, userId)) {
+        return StatusResponse.forbidden(res, {
+          message: 'Request denied'
+        });
+      }
+      const data = { isArchived: true };
+      await articles.update(data, {
+        where: { ...paramsSlug },
+        returning: true,
+        plain: true
+      });
+      return StatusResponse.success(res, {
+        message: 'Article archived successfully'
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }

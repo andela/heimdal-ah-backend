@@ -14,21 +14,27 @@ const checkAuthentication = (req, res, next) => {
         body: ['Invalid input']
       }
     });
+  } else {
+    // Decode token
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        // Wrong token
+        return StatusResponse.unauthorized(res, {
+          errors: {
+            body: ['User token not authenticated, wrong token']
+          }
+        });
+      }
+      req.userId = decoded.userId;
+      req.username = decoded.username;
+      res.locals.user = {
+        userId: req.userId,
+        username: req.username
+      };
+
+      // Call the next middleware
+      return next();
+    });
   }
-  // Decode token
-  jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      // Wrong token
-      StatusResponse.unauthorized(res, {
-        errors: {
-          body: ['User token not authenticated, wrong token']
-        }
-      });
-    }
-    req.userId = decoded.userId;
-    req.username = decoded.username;
-    // Call the next middleware
-    return next();
-  });
 };
 export default checkAuthentication;

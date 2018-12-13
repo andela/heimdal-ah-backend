@@ -3,7 +3,7 @@ import session from 'express-session';
 import dotenv from 'dotenv';
 
 import passport from 'passport';
-import getTokenController from '../controllers/getTokenController';
+import AuthController from '../controllers/AuthController';
 
 const twitterRouter = express.Router();
 dotenv.config();
@@ -17,7 +17,7 @@ twitterRouter.use(session({
 twitterRouter.get(
   '/twitter/callback',
   passport.authenticate('twitter'),
-  getTokenController
+  AuthController.socialAuth
 );
 
 twitterRouter.get(

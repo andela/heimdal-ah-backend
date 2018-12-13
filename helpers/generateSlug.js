@@ -2,7 +2,7 @@
 import slugify from 'slugify';
 
 const generateSlug = str => (
-  `${slugify(str, '-')}-${(Math.floor(Math.random() * Math.pow(25, 6))).toString(36)}`
+  `${slugify(str, '-')}`
 );
 
 export default generateSlug;

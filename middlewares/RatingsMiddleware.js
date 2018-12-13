@@ -2,9 +2,8 @@ import StatusResponse from '../helpers/StatusResponse';
 
 // This function checks for an article id being an integer on [articles rating]
 const checkArticlesId = (req, res, next) => {
-  const { articleId } = req.params;
-
-  if (!Number.isInteger(+articleId)) {
+  const { identifier } = req.params;
+  if (!Number.isInteger(+identifier)) {
     res.status(400).json({
       errors: {
         body: ['Articles Id must be an integer']
@@ -16,10 +15,8 @@ const checkArticlesId = (req, res, next) => {
 
 // This function checks for a user entering valid ratings input [articles rating]
 const validRatingsInput = (req, res, next) => {
-  if (
-    !req.body.stars
-  ) {
-    StatusResponse.badRequest(res, {
+  if (!req.body.stars || req.body.stars < 1 || req.body.stars > 6) {
+    return StatusResponse.badRequest(res, {
       errors: {
         body: ['Invalid input']
       }
