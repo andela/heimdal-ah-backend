@@ -11,7 +11,7 @@ describe('Test for articles controller', () => {
   before(async () => {
     const userData = {
       email: 'publisherb@heimdal.com',
-      password: 'omotayo123',
+      password: '12345678heimdal',
     };
     const userResponse = await chai
       .request(app)

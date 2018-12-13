@@ -30,8 +30,6 @@ class BookmarksController {
     if (!title) {
       title = bookmarkTitle;
     }
-
-
     try {
       const bookmark = await bookmarks.create({
         title,
