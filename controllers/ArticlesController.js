@@ -18,65 +18,34 @@ class ArticlesController {
   static async create(req, res) {
     const { body, tags } = req.body;
 
-    // articlesMiddleware.countTags(tags);
-
-    // const wordCount = textBody => textBody.split(' ').length;
     const readingTime = articleHelper.calcReadingTime(body);
-
     req.body.readingTime = readingTime;
 
     try {
       const article = await Article.create(req.body);
       if (!article) {
-        return res.json({ message: 'Could not create article' });
+        const payload = { message: 'Could not create article' };
+        return StatusResponse.notfound(res, payload);
       }
       if (tags) {
-        tags.map(async (thisTag) => {
-          const [tagList] = await Tag.findOrCreate({
-            where: { tagName: thisTag }
-          });
-          await article.addTags(tagList);
-        });
+        await articleHelper.addArticleTags(tags, article);
       }
 
       const createdArticle = await Article.findOne({
         where: { id: article.id },
-        include: { model: Tag, as: 'tags' }
+        include: { model: Tag, as: 'tags', attributes: ['tagName'] }
       });
 
       if (!createdArticle) {
         const payload = { message: 'article not found' };
         return StatusResponse.notfound(res, payload);
       }
-      const payload = { article: createdArticle, tagList: tags };
+      const payload = { article: createdArticle };
       return StatusResponse.success(res, payload);
-      // return res.json({ article: createdArticle, tagList: tags });
     } catch (error) {
       const payload = { message: 'An error occured, try again' };
       return StatusResponse.internalServerError(res, payload);
-      // return res.json(error);
     }
-
-    /*
-    const createTags = tags.map(thisTag => Tag.findOrCreate({
-      where: { tagName: thisTag },
-      defaults: { tagName: thisTag }
-    }).spread((thisTag, created) => thisTag));
-    // return Article.create(req.body).then((articles) => {
-    //   articles.setTags([33, 44]);
-    // });
-
-    return Article.create(req.body)
-      .then(article => Promise.all(createTags)
-        .then(storedTags => article.addTags(storedTags))
-        .then(() => article))
-      .then(article => Article.findOne({
-        where: { id: article.id },
-        include: { model: Tag, as: 'tags', attributes: ['tagName'] }
-      }))
-      .then(articleWithAssociation => res.json(articleWithAssociation))
-      .catch(err => res.json({ err }));
-      */
   }
 }
 
