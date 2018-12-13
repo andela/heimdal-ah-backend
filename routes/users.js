@@ -1,8 +1,6 @@
 import express from 'express';
-
 import PasswordController from '../controllers/PasswordController';
 import { passwordReset, validEmail } from '../middlewares/passwordReset';
-
 import UsersController from '../controllers/UsersController';
 
 const router = express.Router();

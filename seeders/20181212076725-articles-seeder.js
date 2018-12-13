@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-vars */
+import chance from 'chance';
+import slugify from 'slugify';
+
 export default {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('articles', [{
     slug: 'this-is-a-post-title-l78hgybf',
@@ -17,6 +20,7 @@ export default {
     userId: 2,
     createdAt: new Date(),
     updatedAt: new Date(),
+
   },
   {
     slug: 'this-is-third-post-title-u87ddsa',
@@ -26,12 +30,35 @@ export default {
     userId: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
+
+  },
+  {
+    slug: 'this-is-third-pot-title-u87dda',
+    title: 'This is the third post title',
+    description: 'Third descriptive title',
+    body: 'Content from article creation',
+    userId: 4,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+
+  },
+  {
+    slug: 'this-is-trd-post-title-u87ddsa',
+    title: 'This is the thir post title',
+    description: 'Third descriptive title',
+    body: 'Content from article creation',
+    userId: 5,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+
   }], {}),
+
   down: (queryInterface, Sequelize) => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
-       Example:
+
+      Example:
       return queryInterface.bulkDelete('People', null, {});
     */
   }

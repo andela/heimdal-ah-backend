@@ -31,7 +31,15 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 4,
+    roleId: 2,
+  },
+  {
+    email: 'publisherb@heimdal.com',
+    password: '$2a$08$GZ7U.h/mX.Ny1Ma5E8fAaewXJbRWDn0u2xjRZzatXP3A14DnckdzS',
+    emailVerification: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    roleId: 3,
   }], {}),
 
   down: (queryInterface, Sequelize) => {

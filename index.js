@@ -5,7 +5,7 @@ import validator from 'express-validator';
 import passport from 'passport';
 
 import {
-  auth, profiles, user, password, twitterRouter, comment
+  auth, profiles, user, password, twitterRouter, article, comment
 } from './routes';
 
 import logger from './config/logger';
@@ -28,11 +28,12 @@ app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
 app.use('/api/v1/articles', comment);
+app.use('/api/v1/articles', article);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered
 
-app.use((req, res) => res.status(404).json({ message: 'not found' }));
+app.use('/*', (req, res) => res.status(404).json({ message: 'not found' }));
 
 app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);

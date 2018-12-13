@@ -19,7 +19,7 @@ class CommentValidation {
     const err = [];
     if (errors) {
       errors.forEach(({ param, msg }) => {
-        if (err[param] === undefined) {
+        if (!err[param]) {
           err[param] = {
             msg
           };
@@ -43,7 +43,7 @@ class CommentValidation {
     const err = [];
     if (errors) {
       errors.forEach(({ param, msg }) => {
-        if (err[param] === undefined) {
+        if (!err[param]) {
           err[param] = {
             msg
           };
@@ -64,9 +64,10 @@ class CommentValidation {
     req.checkParams('id', 'Article Id must be an Integer').isInt();
     const errors = req.validationErrors();
     const err = [];
+
     if (errors) {
       errors.forEach(({ param, msg }) => {
-        if (err[param] === undefined) {
+        if (!err[param]) {
           err[param] = {
             msg
           };

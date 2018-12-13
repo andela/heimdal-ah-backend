@@ -20,7 +20,7 @@ const checkAuthentication = (req, res, next) => {
   return jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) {
       // Wrong token
-      return StatusResponse.forbidden(res, {
+      return StatusResponse.unauthorized(res, {
         errors: {
           body: ['User token not authenticated, wrong token']
         }
@@ -30,8 +30,8 @@ const checkAuthentication = (req, res, next) => {
     req.userId = decoded.userId;
     req.username = decoded.username;
     res.locals.user = {
-      userId: req.userId,
-      username: req.username
+      userId: decoded.userId,
+      username: decoded.username
     };
     // Call the next middleware
     return next();

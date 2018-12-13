@@ -4,14 +4,16 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run db:undo:migrate && npm run db:migrate:test && npm run db:seed:test",
+    "pretest": "npm run db:undo:migrate:test && npm run db:migrate:test && npm run db:seed:test",
     "test": "cross-env NODE_ENV=test nyc mocha ./test --require @babel/register --exit --timeout 250000",
-    "posttest": "npm run db:migrate:test",
+    "posttest": "npm run db:undo:migrate:test",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "start:dev": "npm run db:undo:migrate && npm run db:migrate && npm run db:seed && nodemon index.js --exec babel-node -- ",
-    "db:undo:migrate": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo:all",
+    "db:undo:migrate": "node_modules/.bin/sequelize db:migrate:undo:all",
+    "db:undo:migrate:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo:all",
     "db:migrate": "node_modules/.bin/sequelize db:migrate",
     "db:migrate:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate",
+    "db:seed:undo": "node_modules/.bin/sequelize db:seed:undo:all",
     "db:seed": "node_modules/.bin/sequelize db:seed:all",
     "db:seed:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:seed:all",
     "lint:fix": "eslint --fix ./ --ext .js --color",
@@ -42,7 +44,7 @@
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "chance": "^1.0.16",
+    "chance": "^1.0.18",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "email-validator": "^2.0.4",
@@ -63,7 +65,8 @@
     "pg-hstore": "^2.3.2",
     "rimraf": "^2.6.2",
     "sequelize": "^4.41.2",
-    "sequelize-cli": "^5.4.0"
+    "sequelize-cli": "^5.4.0",
+    "slugify": "^1.3.4"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
