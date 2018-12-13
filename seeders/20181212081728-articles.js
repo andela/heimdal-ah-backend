@@ -17,7 +17,6 @@ export default {
     userId: 2,
     createdAt: new Date(),
     updatedAt: new Date(),
-
   },
   {
     slug: 'this-is-third-post-title-u87ddsa',
@@ -27,15 +26,12 @@ export default {
     userId: 3,
     createdAt: new Date(),
     updatedAt: new Date(),
-
   }], {}),
-
   down: (queryInterface, Sequelize) => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
-
-      Example:
+       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
   }
