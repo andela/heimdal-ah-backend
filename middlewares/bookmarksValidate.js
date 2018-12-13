@@ -3,7 +3,7 @@ import StatusResponse from '../helpers/StatusResponse';
 
 const bookmarksValidate = async (req, res, next) => {
   const { articleId } = req.params;
-  const { userId } = req.decoded;
+  const { userId } = res.locals.user;
 
   if (!userId) {
     return StatusResponse.badRequest(res, { message: 'Please User is not logged in' });

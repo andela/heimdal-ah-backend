@@ -20,7 +20,7 @@ class BookmarksController {
     let { title } = req.body;
 
     if (!title) {
-      title = `untitled ${articleId}`;
+      title = `article ${articleId}`;
     }
 
     try {

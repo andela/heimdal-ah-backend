@@ -27,6 +27,10 @@ const checkAuthentication = (req, res, next) => {
       });
     }
 
+    if (!decoded) {
+      return StatusResponse.forbidden(res, { message: 'Please user is not avalaible' });
+    }
+
     req.userId = decoded.userId;
     req.username = decoded.username;
     res.locals.user = {

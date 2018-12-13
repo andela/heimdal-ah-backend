@@ -1,34 +1,29 @@
 import express from 'express';
 import BookmarksController from '../controllers/BookmarksController';
 import bookmarkValidate from '../middlewares/bookmarksValidate';
-import tokenDecoded from '../middlewares/tokenDecoded';
-// import checkAuthentication from '../middlewares/checkAuthentication';
+import checkAuthentication from '../middlewares/checkAuthentication';
 
 const router = express.Router();
 
 router.get(
   '/',
-  // checkAuthentication,
-  tokenDecoded,
+  checkAuthentication,
   BookmarksController.getAll
 );
 router.post(
   '/:articleId',
-  // checkAuthentication,
-  tokenDecoded,
+  checkAuthentication,
   bookmarkValidate,
   BookmarksController.create
 );
 router.get(
   '/search',
-  // checkAuthentication,
-  tokenDecoded,
+  checkAuthentication,
   BookmarksController.search
 );
 router.delete(
   '/:bookmarkId',
-  // checkAuthentication,
-  tokenDecoded,
+  checkAuthentication,
   BookmarksController.delete
 );
 
