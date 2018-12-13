@@ -15,7 +15,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
     Ratings.belongsTo(models.articles, {
-      foreignKey: 'identifier',
+      foreignKey: 'articleId',
       onDelete: 'CASCADE',
     });
   };

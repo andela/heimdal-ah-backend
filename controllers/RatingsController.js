@@ -20,7 +20,7 @@ class RatingsController {
     try {
       const usersRatings = await ratings.create({
         userId: req.userId,
-        identifier: req.params.identifier,
+        articleId: req.params.articleId,
         stars: req.body.stars
       });
       StatusResponse.created(res, {
@@ -45,13 +45,13 @@ class RatingsController {
    */
   static async retrieve(req, res) {
     try {
-      console.log(req.params.identifier)
-      const returnedRatings = await ratings.findAll({
+      const returnedRatings = await ratings.findAndCountAll({
         where: {
-          identifier: req.params.identifier
-        }
+          articleId: req.params.articleId
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt', 'id', 'articleId'] }
       });
-      if (Object.keys(returnedRatings).length >= 1) {
+      if (returnedRatings.count >= 1) {
         StatusResponse.success(res, {
           message: 'Ratings on this article returned succesfully',
           ratings: returnedRatings

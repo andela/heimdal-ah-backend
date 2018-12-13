@@ -10,7 +10,6 @@ const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJu
 // let articlesId;
 
 describe('Heimdal Test Suite', () => {
-
   // ==== Give a rating to an article ==== //
   describe(' POST /ratings/articles/:articleId - Give a rating to an article', () => {
     it('should return status code 201 on user rating an article', async () => {

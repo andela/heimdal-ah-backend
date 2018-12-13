@@ -110,7 +110,6 @@ class AuthController {
       };
       return StatusResponse.success(res, payload);
     } catch (error) {
-      console.log(error);
       return StatusResponse.internalServerError(res, {
         error: {
           body: [`Internal server error => ${error}`]
