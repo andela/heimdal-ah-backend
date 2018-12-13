@@ -15,7 +15,7 @@ class BookmarksController {
    * @public
    */
   static async create(req, res) {
-    const { userId } = req.decoded;
+    const { userId } = res.locals.user;
     const { articleId } = req.params;
     let { title } = req.body;
 
@@ -48,7 +48,7 @@ class BookmarksController {
    */
   static async search(req, res) {
     const { title } = req.body;
-    const { userId } = req.decoded;
+    const { userId } = res.locals.user;
 
     if (!title) {
       return StatusResponse.badRequest(res, { message: 'please insert a title' });
@@ -61,8 +61,9 @@ class BookmarksController {
       },
       include: [{
         model: articles,
-        as: 'article'
-      }]
+        as: 'article',
+        attributes: { exclude: ['createdAt', 'updatedAt', 'slug'] }
+      }],
     });
     if (!bookmark) {
       return StatusResponse.notfound(res, { message: 'no bookmark found' });
@@ -77,7 +78,7 @@ class BookmarksController {
    * @public
    */
   static async getAll(req, res) {
-    const { userId } = req.decoded;
+    const { userId } = res.locals.user;
 
     const bookmark = await bookmarks.findAll({
       where: {
@@ -85,9 +86,9 @@ class BookmarksController {
       },
       include: [{
         model: articles,
-        as: 'article'
+        as: 'article',
+        attributes: { exclude: ['createdAt', 'updatedAt', 'slug'] }
       }]
-      // name title and link
     });
     if (!bookmark) {
       return StatusResponse.notfound(res, { message: 'no bookmark found' });
@@ -102,7 +103,7 @@ class BookmarksController {
    * @public
    */
   static async delete(req, res) {
-    const { userId } = req.decoded;
+    const { userId } = res.locals.user;
     const { bookmarkId } = req.params;
 
     const bookmark = await bookmarks.destroy({

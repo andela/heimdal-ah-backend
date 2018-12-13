@@ -16,6 +16,11 @@ const tokenDecoded = (req, res, next) => {
   }
 
   req.decoded = decoded;
+  res.locals.user = {
+    userId: req.decoded.userId,
+    username: req.decoded.username
+  };
+
   return next();
 };
 
