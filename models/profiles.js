@@ -1,4 +1,3 @@
-
 export default (sequelize, DataTypes) => {
   const Profiles = sequelize.define('profiles', {
     username: {
@@ -33,6 +32,9 @@ export default (sequelize, DataTypes) => {
     Profiles.belongsTo(models.users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
+    });
+    Profiles.hasMany(models.followers, {
+      foreignKey: 'followingId',
     });
   };
   return Profiles;
