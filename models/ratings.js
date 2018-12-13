@@ -2,8 +2,12 @@ export default (sequelize, DataTypes) => {
   const Ratings = sequelize.define('ratings', {
     stars: {
       type: DataTypes.INTEGER,
-      allowNull: false
-    }
+      allowNull: false,
+      validate: {
+        min: 1,
+        max: 5
+      }
+    },
   }, {});
   Ratings.associate = (models) => {
     Ratings.belongsTo(models.users, {
