@@ -18,10 +18,11 @@ class ArticleValidation {
 
     try {
       const errors = await req.validationErrors();
+
       const err = [];
       if (errors) {
         errors.forEach(({ param, msg }) => {
-          if (err[param] === undefined) {
+          if (!err[param]) {
             err[param] = {
               msg
             };
