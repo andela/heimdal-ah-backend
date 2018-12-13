@@ -1,6 +1,6 @@
 import models from '../models';
 
-const { Tag } = models;
+const { tags: Tag } = models;
 
 const articleHelper = {
   /**

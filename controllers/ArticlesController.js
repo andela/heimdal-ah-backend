@@ -3,7 +3,7 @@ import StatusResponse from '../helpers/StatusResponse';
 import articleHelper from '../helpers/articleHelper';
 // import articlesMiddleware from '../middlewares/articlesMiddleware';
 
-const { Article, Tag, ArticleTag } = models;
+const { articles: Article, tags: Tag } = models;
 
 /**
  * @description UsersController class

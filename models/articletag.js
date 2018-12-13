@@ -9,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
   );
   ArticleTag.associate = (models) => {
     // associations can be defined here
-    ArticleTag.belongsTo(models.Article, {
+    ArticleTag.belongsTo(models.articles, {
       foreignKey: 'articleId'
     });
-    ArticleTag.belongsTo(models.Tag, {
+    ArticleTag.belongsTo(models.tags, {
       foreignKey: 'tagId'
     });
   };

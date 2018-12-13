@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
   const Tag = sequelize.define(
-    'Tag',
+    'tags',
     {
       tagName: DataTypes.STRING
     },
@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
   );
   Tag.associate = (models) => {
     // associations can be defined here
-    Tag.belongsToMany(models.Article, {
+    Tag.belongsToMany(models.articles, {
       through: 'ArticleTag',
       as: 'tags',
       foreignKey: 'tagId'

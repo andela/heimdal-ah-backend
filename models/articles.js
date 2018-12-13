@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
   const Article = sequelize.define(
-    'Article',
+    'articles',
     {
       title: DataTypes.STRING,
       body: DataTypes.TEXT,
@@ -12,7 +12,7 @@ export default (sequelize, DataTypes) => {
   );
   Article.associate = (models) => {
     // associations can be defined here
-    Article.belongsToMany(models.Tag, {
+    Article.belongsToMany(models.tags, {
       through: 'ArticleTag',
       as: 'tags',
       foreignKey: 'articleId'
