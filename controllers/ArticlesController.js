@@ -95,11 +95,6 @@ class ArticlesController {
       const fetchArticle = await articles.findOne({
         where: { ...paramsSlug }
       });
-      // if (!fetchArticle) {
-      //   return StatusResponse.notfound(res, {
-      //     message: 'Could not find article'
-      //   });
-      // }
       return StatusResponse.success(res, {
         message: 'success',
         article: fetchArticle
@@ -125,11 +120,6 @@ class ArticlesController {
           ...paramsSlug
         },
       });
-      // if (!article) {
-      //   return StatusResponse.notfound(res, {
-      //     message: 'Could not find article'
-      //   });
-      // }
       if (!checkUser(article, req.userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
@@ -169,11 +159,6 @@ class ArticlesController {
           ...paramsSlug
         },
       });
-      // if (!article) {
-      //   return StatusResponse.notfound(res, {
-      //     message: 'Could not find article'
-      //   });
-      // }
       if (!checkUser(article, req.userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
