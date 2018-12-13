@@ -6,8 +6,6 @@ import getToken from '../helpers/getToken';
 import mailer from '../helpers/mailer';
 import helper from '../helpers/helper';
 
-// const Op = Sequelize;
-
 /**
  * Signup validation class
  * classname should match file name and start with capital

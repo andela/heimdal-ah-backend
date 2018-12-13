@@ -20,9 +20,17 @@ export default {
       type: Sequelize.STRING,
       allowNull: false
     },
+    image: {
+      type: Sequelize.TEXT,
+      allowNull: true,
+    },
     body: {
       type: Sequelize.TEXT,
       allowNull: false
+    },
+    isArchived: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
     },
     userId: {
       type: Sequelize.INTEGER,

@@ -1,17 +1,11 @@
-export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('bookmarks', {
+/* eslint-disable require-jsdoc */
+export function up(queryInterface, Sequelize) {
+  return queryInterface.createTable('ratings', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
-    },
-    title: {
-      type: Sequelize.STRING
-    },
-    createdAt: {
-      allowNull: false,
-      type: Sequelize.DATE
     },
     userId: {
       type: Sequelize.INTEGER,
@@ -29,10 +23,21 @@ export default {
         key: 'id'
       },
     },
+    stars: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    },
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
     }
-  }),
-  down: queryInterface => queryInterface.dropTable('bookmarks')
-};
+  });
+}
+// eslint-disable-next-line no-unused-vars
+export function down(queryInterface, Sequelize) {
+  return queryInterface.dropTable('ratings');
+}

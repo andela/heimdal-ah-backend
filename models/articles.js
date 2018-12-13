@@ -13,6 +13,14 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    image: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    isArchived: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     body: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -24,7 +32,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
     Articles.hasMany(models.bookmarks, {
-      foreignKey: 'userId',
+      foreignKey: 'articleId',
       as: 'bookmarks'
     });
   };

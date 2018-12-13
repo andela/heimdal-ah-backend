@@ -1,4 +1,3 @@
-
 export default (sequelize, DataTypes) => {
   const bookmarks = sequelize.define('bookmarks', {
     title: DataTypes.STRING

@@ -1,4 +1,3 @@
-
 export default (sequelize, DataTypes) => {
   const Profiles = sequelize.define('profiles', {
     username: {
