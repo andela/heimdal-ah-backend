@@ -62,7 +62,7 @@ describe('Test To Follow, Unfollow user, View Followes, and view following', asy
         .set('access-token', token);
       res.status.should.equal(200);
       res.body.should.have.a('object');
-      console.log(res.body);
+      //   console.log(res.body);
       res.body.should.have.property('message');
     });
     // it('should return 200 on successful update of article', async () => {
