@@ -28,6 +28,10 @@ export default {
       type: Sequelize.TEXT,
       allowNull: false
     },
+    isArchived: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,

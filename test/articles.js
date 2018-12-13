@@ -15,7 +15,6 @@ describe('Test for articles controller', () => {
     };
     const userResponse = await chai
       .request(app)
-      // .post('/api/v1/auth/signup')
       .post('/api/v1/auth/login')
       .send(userData);
     const { token } = userResponse.body;
@@ -96,9 +95,7 @@ describe('Test for articles controller', () => {
         .put('/api/v1/articles/hello-world-new-article-46i05')
         .set('access-token', userToken)
         .send({
-          title: 'This is a title',
-          description: 'This is a description',
-          body: ' his is a powerful article'
+          title: 'This is a title'
         });
       res.status.should.equal(404);
       res.body.should.have.a('object');
@@ -116,7 +113,7 @@ describe('Test for articles controller', () => {
         });
       res.status.should.equal(403);
       res.body.should.have.a('object');
-      res.body.message.should.equal('You cannot edit another persons article');
+      res.body.message.should.equal('Request denied');
     });
     it('should return 200 on successful update of article', async () => {
       const res = await chai
@@ -135,7 +132,7 @@ describe('Test for articles controller', () => {
     });
   });
 
-  describe('Test for deleting articles DELETE/ api/v1/articles:slug', () => {
+  describe('Test for deleting articles DELETE/ api/v1/articles:identifier', () => {
     it('should return 404 if article to be deleted is not found', async () => {
       const res = await chai
         .request(app)
@@ -145,22 +142,24 @@ describe('Test for articles controller', () => {
       res.body.should.have.a('object');
       res.body.message.should.equal('Could not find article');
     });
-    it('should return 403 if user tries to delete article authored by a different user', async () => {
+    it('should return 403 if user tries to archive an article authored by a different user', async () => {
       const res = await chai
         .request(app)
         .delete('/api/v1/articles/this-is-the-second-post-title-mbjb7y')
         .set('access-token', userToken);
       res.status.should.equal(403);
       res.body.should.have.a('object');
-      res.body.message.should.equal('You cannot delete another persons article');
+      res.body.message.should.equal('Request denied');
     });
-    it('should return 204 on successful deletion of an article', async () => {
+    it('should return 200 on successful archiving an article', async () => {
       const res = await chai
         .request(app)
         .delete('/api/v1/articles/this-is-third-post-title-u87ddsa')
         .set('access-token', userToken);
-      res.status.should.equal(204);
+      res.status.should.equal(200);
       res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('Article archived successfully');
     });
   });
 });

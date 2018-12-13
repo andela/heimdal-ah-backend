@@ -1,12 +1,19 @@
-// import jwtDecode from 'jwt-decode';
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-restricted-properties */
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import slug from '../helpers/generateSlug';
+import {
+  checkIdentifier,
+  pageInfo,
+  checkTitle,
+  checkArticle,
+  checkUser
+} from '../helpers/articleHelper';
 
 const { articles } = model;
 /**
-* @description ArticlesController class
-*/
+ * @description ArticlesController class
+ */
 class ArticlesController {
   /**
    * @description - create articles
@@ -16,7 +23,12 @@ class ArticlesController {
    */
   static async create(req, res) {
     try {
-      const articleSlug = slug(req.body.title);
+      const articleTitle = await articles.findOne({
+        where: {
+          title: req.body.title
+        }
+      });
+      const articleSlug = checkTitle(req.body.title, articleTitle);
       const newArticle = await articles.create({
         userId: req.userId,
         title: req.body.title,
@@ -25,12 +37,11 @@ class ArticlesController {
         body: req.body.body,
         image: req.body.image
       });
-      if (newArticle) {
-        StatusResponse.created(res, {
-          message: 'Article successfully created',
-          article: newArticle
-        });
-      }
+
+      StatusResponse.created(res, {
+        message: 'Article successfully created',
+        article: newArticle
+      });
     } catch (error) {
       StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
@@ -44,9 +55,19 @@ class ArticlesController {
    * @param {object} res
    * @returns {object} Returned object
    */
-  static async fetchArticles(req, res) {
+  static async list(req, res) {
+    let page = 1;
+    const { size } = req.query;
+    ({ page } = req.query);
+
     try {
-      const fetchArticles = await articles.findAll();
+      const total = await articles.count();
+      const { limit, offset } = pageInfo(total, page, size);
+      const fetchArticles = await articles.findAndCountAll({
+        limit,
+        offset,
+        order: ['createdAt']
+      });
       if (fetchArticles.length === 0) {
         StatusResponse.success(res, {
           message: 'No article found'
@@ -70,12 +91,12 @@ class ArticlesController {
    * @param {object} res
    * @returns {object} Returned object
    */
-  static async getArticle(req, res) {
+  static async get(req, res) {
+    const paramsSlug = checkIdentifier(req.params.identifier);
+
     try {
       const fetchArticle = await articles.findOne({
-        where: {
-          slug: req.params.slug
-        }
+        where: { ...paramsSlug }
       });
       if (!fetchArticle) {
         StatusResponse.notfound(res, {
@@ -100,38 +121,23 @@ class ArticlesController {
    * @param {object} res
    * @returns {object} Returned object
    */
-  static async editArticle(req, res) {
+  static async update(req, res) {
+    const paramsSlug = checkIdentifier(req.params.identifier);
+    const article = await articles.findOne({
+      where: {
+        ...paramsSlug
+      },
+    });
+    checkArticle(res, article);
+    checkUser(req, res, article);
     try {
-      const article = await articles.findOne({
-        where: {
-          slug: req.params.slug
-        },
+      const data = Object.keys(req.body);
+      const updatedArticle = await articles.update(req.body, {
+        where: { ...paramsSlug },
+        fields: data,
+        returning: true,
+        plain: true
       });
-      if (!article) {
-        return StatusResponse.notfound(res, {
-          message: 'Could not find article'
-        });
-      }
-      if (article.userId !== req.userId) {
-        return StatusResponse.unauthenticated(res, {
-          message: 'You cannot edit another persons article'
-        });
-      }
-      const data = {
-        title: req.body.title || article.title,
-        description: req.body.description || article.description,
-        body: req.body.body || article.body
-      };
-      const updatedArticle = await articles.update(
-        data,
-        {
-          where: {
-            slug: req.params.slug
-          },
-          returning: true,
-          plain: true
-        }
-      );
 
       return StatusResponse.success(res, {
         message: 'Article updated successfully',
@@ -150,32 +156,24 @@ class ArticlesController {
    * @param {object} res
    * @returns {object} Returned object
    */
-  static async deleteArticle(req, res) {
+  static async archive(req, res) {
+    const paramsSlug = checkIdentifier(req.params.identifier);
+    const article = await articles.findOne({
+      where: {
+        ...paramsSlug
+      },
+    });
+    checkArticle(res, article);
+    checkUser(req, res, article);
     try {
-      const article = await articles.findOne({
-        where: {
-          slug: req.params.slug
-        },
+      const data = { isArchived: true };
+      await articles.update(data, {
+        where: { ...paramsSlug },
+        returning: true,
+        plain: true
       });
-      if (!article) {
-        return StatusResponse.notfound(res, {
-          message: 'Could not find article'
-        });
-      }
-      if (article.userId !== req.userId) {
-        StatusResponse.unauthenticated(res, {
-          message: 'You cannot delete another persons article'
-        });
-      }
-
-      await articles.destroy({
-        where: {
-          slug: req.params.slug
-        }
-      });
-
-      return StatusResponse.noContent(res, {
-        message: 'Article deleted successfully'
+      return StatusResponse.success(res, {
+        message: 'Article archived successfully'
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {

@@ -1,4 +1,7 @@
 /* eslint-disable no-unused-vars */
+import chance from 'chance';
+import slugify from 'slugify';
+
 export default {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('articles', [{
     slug: 'this-is-a-post-title-l78hgybf',
@@ -25,6 +28,16 @@ export default {
     description: 'Third descriptive title',
     body: 'Content from article creation',
     userId: 3,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+
+  },
+  {
+    slug: 'this-is-third-post-title-u87ddddsa',
+    title: chance.sentence(),
+    description: chance.sentence(),
+    body: chance.paragraph(),
+    userId: 4,
     createdAt: new Date(),
     updatedAt: new Date(),
 

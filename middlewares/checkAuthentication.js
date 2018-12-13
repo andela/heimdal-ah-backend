@@ -6,7 +6,7 @@ dotenv.config();
 
 const checkAuthentication = (req, res, next) => {
   // Check header or url parameters or post parameters for token
-  const token = req.body.token || req.query.token || req.headers['access-token'];
+  const token = req.headers['access-token'];
   if (!token) {
     StatusResponse.badRequest(res, {
       message: 'You did not provide any token, please enter token, then retry',

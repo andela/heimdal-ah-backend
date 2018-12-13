@@ -41,7 +41,7 @@
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "chance": "^1.0.16",
+    "chance": "^1.0.18",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "email-validator": "^2.0.4",
