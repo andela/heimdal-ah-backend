@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
+import bcrypt from 'bcryptjs';
 
+const genSalt = bcrypt.genSaltSync(8);
+const hashPassword = bcrypt.hashSync('12345678heimdal', genSalt);
 export default {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('users', [{
     email: 'admin@heimdal.com',
-    password: '123456',
+    password: 'hashPassword',
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -11,7 +14,7 @@ export default {
   },
   {
     email: 'user@heimdal.com',
-    password: '123456',
+    password: hashPassword,
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -19,7 +22,7 @@ export default {
   },
   {
     email: 'author@heimdal.com',
-    password: '123456',
+    password: hashPassword,
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -27,7 +30,7 @@ export default {
   },
   {
     email: 'publisher@heimdal.com',
-    password: '123456',
+    password: hashPassword,
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -35,7 +38,7 @@ export default {
   },
   {
     email: 'publisherb@heimdal.com',
-    password: '$2a$08$GZ7U.h/mX.Ny1Ma5E8fAaewXJbRWDn0u2xjRZzatXP3A14DnckdzS',
+    password: hashPassword,
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),

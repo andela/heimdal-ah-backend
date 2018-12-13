@@ -1,9 +1,9 @@
+
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import StatusResponse from '../helpers/StatusResponse';
 
 dotenv.config();
-
 const checkAuthentication = (req, res, next) => {
   // Check header or url parameters or post parameters for token
   const token = req.headers['access-token'];
@@ -15,7 +15,6 @@ const checkAuthentication = (req, res, next) => {
       }
     });
   }
-
   // Decode token
   return jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) {
@@ -26,16 +25,15 @@ const checkAuthentication = (req, res, next) => {
         }
       });
     }
-
     req.userId = decoded.userId;
     req.username = decoded.username;
     res.locals.user = {
-      userId: decoded.userId,
-      username: decoded.username
+      userId: req.userId,
+      username: req.username
     };
+
     // Call the next middleware
     return next();
   });
 };
-
 export default checkAuthentication;
