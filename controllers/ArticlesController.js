@@ -112,6 +112,7 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async update(req, res) {
+    const { userId } = res.locals.user;
     const paramsSlug = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
@@ -119,7 +120,7 @@ class ArticlesController {
           ...paramsSlug
         },
       });
-      if (!checkUser(article, req.userId)) {
+      if (!checkUser(article, userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
         });
@@ -151,6 +152,7 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async archive(req, res) {
+    const { userId } = res.locals.user;
     const paramsSlug = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
@@ -158,7 +160,7 @@ class ArticlesController {
           ...paramsSlug
         },
       });
-      if (!checkUser(article, req.userId)) {
+      if (!checkUser(article, userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
         });
