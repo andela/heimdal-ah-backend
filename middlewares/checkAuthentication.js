@@ -27,11 +27,11 @@ const checkAuthentication = (req, res, next) => {
       });
     }
 
-    req.userId = decoded.userId;
-    req.username = decoded.username;
+    // req.userId = decoded.userId;
+    // req.username = decoded.username;
     res.locals.user = {
-      userId: req.userId,
-      username: req.username
+      userId: decoded.userId,
+      username: decoded.username
     };
     // Call the next middleware
     return next();

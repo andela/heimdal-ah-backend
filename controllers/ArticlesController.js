@@ -54,17 +54,16 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async list(req, res) {
-    let page = 1;
-    const { size } = req.query;
-    ({ page } = req.query);
+    const {
+      size, page = 1, order = 'ASC', orderBy = 'createdAt'
+    } = req.query;
 
     try {
-      const total = await articles.count();
-      const { limit, offset } = pageInfo(total, page, size);
+      const { limit, offset } = pageInfo(page, size);
       const fetchArticles = await articles.findAndCountAll({
         limit,
         offset,
-        order: ['createdAt']
+        order: [[orderBy, order]]
       });
       if (fetchArticles.length === 0) {
         return StatusResponse.success(res, {

@@ -6,20 +6,14 @@ const checkIdentifier = paramsSlug => (
     : { slug: paramsSlug }
 );
 
-const pageInfo = (total, page, size) => {
-  let currentPage = page;
-  const pageNo = Number(currentPage);
-  if (!Number.isNaN(pageNo) && pageNo > 0) currentPage = 1;
-
-  let limit;
+const pageInfo = (page, size) => {
+  const currentPage = Math.abs(Number(page)) || 1;
+  let offset = 0;
+  let limit = 10;
   const sizeNo = Number(size);
   if (!Number.isNaN(sizeNo) && sizeNo > 0) limit = size;
-  limit = 10;
-  let totalPages = Math.ceil(total / limit);
-  if (!totalPages) totalPages = 1;
+  offset = (currentPage - 1) * limit;
 
-  currentPage = Math.min(totalPages, page);
-  let offset = (page - 1) * limit;
   if (Number.isNaN(offset)) offset = 10;
   return { limit, offset };
 };
