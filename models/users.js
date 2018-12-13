@@ -11,27 +11,14 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true
       },
-      username: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      facebookId: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      googleId: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
-      twitterId: {
-        type: DataTypes.STRING,
-        allowNull: true
-      },
       emailVerification: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
       },
-      resettingPassword: DataTypes.BOOLEAN
+      resettingPassword: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      }
     },
     {}
   );
@@ -40,7 +27,11 @@ export default (sequelize, DataTypes) => {
     Users.belongsTo(models.roles, {
       foreignKey: 'roleId',
       onDelete: 'CASCADE',
-      as: 'roles'
+      as: 'roles',
+    });
+    Users.hasOne(models.profiles, {
+      foreignKey: 'userId',
+      as: 'profile'
     });
     Users.hasMany(models.articles, {
     });

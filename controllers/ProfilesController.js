@@ -12,38 +12,6 @@ const { profiles } = model;
  */
 class ProfilesController {
   /**
-   * @description - This method takes care of creating a users profile after registration
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} Created Users Profile
-   */
-  static async createProfile(req, res) {
-    try {
-      const usersProfile = await profiles.create({
-        userId: req.params.userId,
-        username: req.body.username,
-        biodata: req.body.biodata,
-        image: req.body.image,
-        address: req.body.address,
-        dateofbirth: req.body.dateofbirth
-      });
-      if (usersProfile) {
-        Response.created(res, {
-          message: 'Users profile created succesfully',
-          profile: usersProfile
-        });
-      }
-    } catch (error) {
-      Response.internalServerError(res, {
-        message: 'users profile not created succesfully, please try again',
-        error: {
-          body: [`Internal server error => ${error}`]
-        }
-      });
-    }
-  }
-
-  /**
    * @description - This method takes care of a user viewing his or other people's profile
    * @param {object} req
    * @param {object} res
@@ -102,10 +70,13 @@ class ProfilesController {
       if (usersProfile) {
         try {
           const updatedUsersProfile = await usersProfile.update({
+            firstName: req.body.firstName || usersProfile.firstName,
+            lastName: req.body.lastName || usersProfile.lastName,
             biodata: req.body.biodata || usersProfile.biodata,
             image: req.body.image || usersProfile.image,
-            address: req.body.address || usersProfile.address,
-            dateofbirth: req.body.dateofbirth || usersProfile.dateofbirth
+            location: req.body.location || usersProfile.location,
+            twitterUsername: req.body.twitterUsername || usersProfile.twitterUsername,
+            facebookUsername: req.body.facebookUsername || usersProfile.facebookUsername,
           });
           if (updatedUsersProfile) {
             Response.success(res, {

@@ -28,7 +28,7 @@ const checkAuthentication = (req, res, next) => {
     }
 
     req.userId = decoded.userId;
-    req.username = decoded.username;
+    // req.username = decoded.username;
     // Call the next middleware
     return next();
   });

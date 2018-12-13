@@ -1,12 +1,9 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-restricted-properties */
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import {
   checkIdentifier,
   pageInfo,
   checkTitle,
-  checkArticle,
   checkUser
 } from '../helpers/articleHelper';
 
@@ -38,12 +35,12 @@ class ArticlesController {
         image: req.body.image
       });
 
-      StatusResponse.created(res, {
+      return StatusResponse.created(res, {
         message: 'Article successfully created',
         article: newArticle
       });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }
@@ -69,17 +66,16 @@ class ArticlesController {
         order: ['createdAt']
       });
       if (fetchArticles.length === 0) {
-        StatusResponse.success(res, {
+        return StatusResponse.success(res, {
           message: 'No article found'
         });
-      } else {
-        StatusResponse.success(res, {
-          message: 'List of articles',
-          articles: fetchArticles
-        });
       }
+      return StatusResponse.success(res, {
+        message: 'List of articles',
+        articles: fetchArticles
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }
@@ -99,17 +95,16 @@ class ArticlesController {
         where: { ...paramsSlug }
       });
       if (!fetchArticle) {
-        StatusResponse.notfound(res, {
+        return StatusResponse.notfound(res, {
           message: 'Could not find article'
         });
-      } else {
-        StatusResponse.success(res, {
-          message: 'success',
-          article: fetchArticle
-        });
       }
+      return StatusResponse.success(res, {
+        message: 'success',
+        article: fetchArticle
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
     }
@@ -123,14 +118,23 @@ class ArticlesController {
    */
   static async update(req, res) {
     const paramsSlug = checkIdentifier(req.params.identifier);
-    const article = await articles.findOne({
-      where: {
-        ...paramsSlug
-      },
-    });
-    checkArticle(res, article);
-    checkUser(req, res, article);
     try {
+      const article = await articles.findOne({
+        where: {
+          ...paramsSlug
+        },
+      });
+      if (!article) {
+        return StatusResponse.notfound(res, {
+          message: 'Could not find article'
+        });
+      }
+      if (!checkUser(article, req.userId)) {
+        return StatusResponse.forbidden(res, {
+          message: 'Request denied'
+        });
+      }
+
       const data = Object.keys(req.body);
       const updatedArticle = await articles.update(req.body, {
         where: { ...paramsSlug },
@@ -158,14 +162,22 @@ class ArticlesController {
    */
   static async archive(req, res) {
     const paramsSlug = checkIdentifier(req.params.identifier);
-    const article = await articles.findOne({
-      where: {
-        ...paramsSlug
-      },
-    });
-    checkArticle(res, article);
-    checkUser(req, res, article);
     try {
+      const article = await articles.findOne({
+        where: {
+          ...paramsSlug
+        },
+      });
+      if (!article) {
+        return StatusResponse.notfound(res, {
+          message: 'Could not find article'
+        });
+      }
+      if (!checkUser(article, req.userId)) {
+        return StatusResponse.forbidden(res, {
+          message: 'Request denied'
+        });
+      }
       const data = { isArchived: true };
       await articles.update(data, {
         where: { ...paramsSlug },

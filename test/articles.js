@@ -10,7 +10,7 @@ describe('Test for articles controller', () => {
   let userToken;
   before(async () => {
     const userData = {
-      email: 'publisher@heimdal.com',
+      email: 'publisherb@heimdal.com',
       password: 'omotayo123',
     };
     const userResponse = await chai
@@ -118,7 +118,7 @@ describe('Test for articles controller', () => {
     it('should return 200 on successful update of article', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/this-is-third-post-title-u87ddsa')
+        .put('/api/v1/articles/this-is-trd-post-title-u87ddsa')
         .set('access-token', userToken)
         .send({
           title: 'This is a title',
@@ -154,7 +154,7 @@ describe('Test for articles controller', () => {
     it('should return 200 on successful archiving an article', async () => {
       const res = await chai
         .request(app)
-        .delete('/api/v1/articles/this-is-third-post-title-u87ddsa')
+        .delete('/api/v1/articles/this-is-trd-post-title-u87ddsa')
         .set('access-token', userToken);
       res.status.should.equal(200);
       res.body.should.have.a('object');

@@ -33,11 +33,21 @@ export default {
 
   },
   {
-    slug: 'this-is-third-post-title-u87ddddsa',
-    title: chance.sentence(),
-    description: chance.sentence(),
-    body: chance.paragraph(),
+    slug: 'this-is-third-pot-title-u87dda',
+    title: 'This is the third post title',
+    description: 'Third descriptive title',
+    body: 'Content from article creation',
     userId: 4,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+
+  },
+  {
+    slug: 'this-is-trd-post-title-u87ddsa',
+    title: 'This is the thir post title',
+    description: 'Third descriptive title',
+    body: 'Content from article creation',
+    userId: 5,
     createdAt: new Date(),
     updatedAt: new Date(),
 

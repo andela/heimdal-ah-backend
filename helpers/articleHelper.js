@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-properties */
 import slug from './generateSlug';
 import StatusResponse from './StatusResponse';
 
@@ -39,7 +38,7 @@ const checkTitle = (title, articleTitle) => {
     articleSlug = slug(title);
   } else {
     articleSlug = `${slug(title)}-${(
-      Math.floor(Math.random() * Math.pow(25, 6))).toString(36)}`;
+      Math.floor(Math.random() * (25 ** 6))).toString(36)}`;
   }
   return articleSlug;
 };
@@ -52,13 +51,7 @@ const checkArticle = (res, article) => {
   }
 };
 
-const checkUser = (req, res, article) => {
-  if (article.userId !== req.userId) {
-    StatusResponse.forbidden(res, {
-      message: 'Request denied'
-    });
-  }
-};
+const checkUser = (article, userId) => article.userId === userId;
 
 export {
   checkIdentifier,
