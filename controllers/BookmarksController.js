@@ -19,9 +19,18 @@ class BookmarksController {
     const { articleId } = req.params;
     let { title } = req.body;
 
+    const ArticleTitle = await articles.findOne({
+      where: {
+        id: articleId,
+      }
+    });
+
+    const bookmarkTitle = ArticleTitle.title;
+
     if (!title) {
-      title = `article ${articleId}`;
+      title = bookmarkTitle;
     }
+
 
     try {
       const bookmark = await bookmarks.create({
@@ -54,7 +63,7 @@ class BookmarksController {
       return StatusResponse.badRequest(res, { message: 'please insert a title' });
     }
 
-    const bookmark = await bookmarks.findAll({
+    const bookmark = await bookmarks.findAndCountAll({
       where: {
         title,
         userId,
@@ -80,7 +89,7 @@ class BookmarksController {
   static async getAll(req, res) {
     const { userId } = res.locals.user;
 
-    const bookmark = await bookmarks.findAll({
+    const bookmark = await bookmarks.findAndCountAll({
       where: {
         userId
       },

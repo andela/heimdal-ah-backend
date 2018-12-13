@@ -6,15 +6,15 @@ chai.use(chaiHttp);
 chai.should();
 
 describe('/bookmarks', () => {
-  const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlcm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.VxUrXPHtXVNmTSFGBeBS0bn5_XvIz39AcMOwZNTVMAI';
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsInVzZXJuYW1lIjoidXNlciJ9.au5ynl_APO5fpeFLL_Ky9Gk3pdQoHDICIuXgT3OlEnk';
+  const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjg3LCJ1c2VybmFtZSI6IndhbGUifQ.JXYnjKYdCz7N_4Qch-wWQYR64phDBQyPwii1RCcCiHQ';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoid2FsZSJ9.3Kpv3k1eZ7-yJNt_gHEY9szIRgH_wt8-xWfSqS4dzsk';
 
   it('should return status code 401 when user is not logged in', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/bookmarks/');
 
-    res.status.should.equal(401);
+    res.status.should.equal(400);
     res.body.should.be.a('object');
   });
 
@@ -26,7 +26,7 @@ describe('/bookmarks', () => {
 
     res.status.should.equal(400);
     res.body.should.be.a('object');
-    res.body.message.should.be.equal('Please User is not logged in');
+    res.body.message.should.be.equal('Please Article cannot be bookmarked');
   });
 
   it('should return 200 when user is logged in', async () => {
@@ -58,7 +58,7 @@ describe('/bookmarks', () => {
       .set('access-token', token);
 
     res.status.should.equal(200);
-    res.body.should.be.a('array');
+    res.body.should.be.a('object');
   });
 
   it('should return should return a 200 when bookmark is avalaible', async () => {
