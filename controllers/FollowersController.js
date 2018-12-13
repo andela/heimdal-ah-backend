@@ -103,9 +103,9 @@ class FollowersController {
     // console.log(following);
     if (following.length === 0) {
       const payload = {
-        message: 'You  have no followers'
+        message: 'You  have no followers following you'
       };
-      return StatusResponse.conflict(res, payload);
+      return StatusResponse.success(res, payload);
     }
     return res.status(200).send({
       message: following
@@ -124,7 +124,7 @@ class FollowersController {
       const { followingId } = req.params;
       const { userId } = res.locals.user;
       const verifyFollowerUsernameAndId = await FollowersModelQuery
-        .findFollowingByUsernameAndId(followingId, userId);
+        .findFollowingById(followingId, userId);
       if (!verifyFollowerUsernameAndId) {
         return res.send({ message: 'you are not following this user' });
       }
