@@ -83,7 +83,7 @@ class UserValidation {
       const err = [];
       if (errors) {
         errors.forEach(({ param, msg }) => {
-          if (err[param] === undefined) {
+          if (!err[param]) {
             err[param] = {
               msg
             };

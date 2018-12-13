@@ -1,4 +1,3 @@
-import jwtDecode from 'jwt-decode';
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import ProfilesModelQuery from '../lib/ProfilesModelQuery';
@@ -22,10 +21,7 @@ class FollowersController {
     try {
       const { followingId } = req.params;
       const intFollowId = parseInt(followingId, 10);
-      // console.log('---->', followingId);
-      const { token } = req.body;
-      const decode = jwtDecode(token);
-      const { userId } = decode;
+      const { userId } = res.locals.user;
       const verifyFollowerUsernameAndId = await FollowersModelQuery
         .findFollowingById(intFollowId, userId);
       if (verifyFollowerUsernameAndId) {
@@ -77,14 +73,12 @@ class FollowersController {
  * @returns {object} returns a signup object
  */
   static async getAllFollowers(req, res) {
-    const { token } = req.body;
-    const decode = jwtDecode(token);
-    const { userId } = decode;
+    const { userId } = res.locals.user;
     const allReturnedFollowers = await FollowersModelQuery
       .findAllFollowers(userId);
     if (allReturnedFollowers.length === 0) {
       const payload = {
-        message: 'Username does not exist'
+        message: 'You currently do not have any followers'
       };
       return StatusResponse.notfound(res, payload);
     }
@@ -101,11 +95,11 @@ class FollowersController {
  * @returns {object} returns a signup object
  */
   static async getAllFollowing(req, res) {
-    const { token } = req.body;
-    const decode = jwtDecode(token);
-    const { username } = decode;
+    // const { token } = req.body;
+    // const decode = jwtDecode(token);
+    const { userId } = res.locals.user;
     const following = await FollowersModelQuery
-      .findAllFollowing(username);
+      .findAllFollowing(userId);
     // console.log(following);
     if (following.length === 0) {
       const payload = {
@@ -128,9 +122,7 @@ class FollowersController {
   static async unfollowUser(req, res) {
     try {
       const { followingId } = req.params;
-      const { token } = req.body;
-      const decode = jwtDecode(token);
-      const { userId, username } = decode;
+      const { userId } = res.locals.user;
       const verifyFollowerUsernameAndId = await FollowersModelQuery
         .findFollowingByUsernameAndId(followingId, userId);
       if (!verifyFollowerUsernameAndId) {
@@ -143,7 +135,7 @@ class FollowersController {
         };
         return StatusResponse.notfound(res, payload);
       }
-      if (followingId === username) {
+      if (followingId === userId) {
         const payload = {
           message: 'You cannot unfollow yourself',
         };
