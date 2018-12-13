@@ -3,7 +3,7 @@ import StatusResponse from '../helpers/StatusResponse';
 import articleHelper from '../helpers/articleHelper';
 // import articlesMiddleware from '../middlewares/articlesMiddleware';
 
-const { Article, Tag } = models;
+const { Article, Tag, ArticleTag } = models;
 
 /**
  * @description UsersController class
@@ -33,7 +33,15 @@ class ArticlesController {
 
       const createdArticle = await Article.findOne({
         where: { id: article.id },
-        include: { model: Tag, as: 'tags', attributes: ['tagName'] }
+        include: {
+          model: Tag,
+          as: 'tags',
+          required: true,
+          attributes: ['tagName'],
+          through: {
+            attributes: []
+          }
+        }
       });
 
       if (!createdArticle) {
