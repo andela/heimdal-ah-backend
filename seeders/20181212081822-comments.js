@@ -3,6 +3,7 @@ export default {
     content: 'This actually sucks',
     userId: 1,
     articleId: 3,
+    isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -34,6 +35,7 @@ export default {
     content: 'This actually isnt bad',
     userId: 2,
     articleId: 2,
+    isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
