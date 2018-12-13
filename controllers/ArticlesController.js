@@ -19,6 +19,7 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async create(req, res) {
+    const { userId } = res.locals.user;
     try {
       const articleTitle = await articles.findOne({
         where: {
@@ -27,7 +28,7 @@ class ArticlesController {
       });
       const articleSlug = checkTitle(req.body.title, articleTitle);
       const newArticle = await articles.create({
-        userId: req.userId,
+        userId,
         title: req.body.title,
         description: req.body.description,
         slug: articleSlug,
@@ -94,11 +95,11 @@ class ArticlesController {
       const fetchArticle = await articles.findOne({
         where: { ...paramsSlug }
       });
-      if (!fetchArticle) {
-        return StatusResponse.notfound(res, {
-          message: 'Could not find article'
-        });
-      }
+      // if (!fetchArticle) {
+      //   return StatusResponse.notfound(res, {
+      //     message: 'Could not find article'
+      //   });
+      // }
       return StatusResponse.success(res, {
         message: 'success',
         article: fetchArticle
@@ -124,11 +125,11 @@ class ArticlesController {
           ...paramsSlug
         },
       });
-      if (!article) {
-        return StatusResponse.notfound(res, {
-          message: 'Could not find article'
-        });
-      }
+      // if (!article) {
+      //   return StatusResponse.notfound(res, {
+      //     message: 'Could not find article'
+      //   });
+      // }
       if (!checkUser(article, req.userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
@@ -168,11 +169,11 @@ class ArticlesController {
           ...paramsSlug
         },
       });
-      if (!article) {
-        return StatusResponse.notfound(res, {
-          message: 'Could not find article'
-        });
-      }
+      // if (!article) {
+      //   return StatusResponse.notfound(res, {
+      //     message: 'Could not find article'
+      //   });
+      // }
       if (!checkUser(article, req.userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
