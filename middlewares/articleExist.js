@@ -4,7 +4,7 @@ import checkIdentifier from '../helpers/checkIdentifier';
 
 const { articles } = models;
 
-const checkArticle = async (req, res, next) => {
+const articleExist = async (req, res, next) => {
   const paramsSlug = checkIdentifier(req.params.id);
   try {
     const fetchArticle = await articles.findOne({
@@ -17,12 +17,12 @@ const checkArticle = async (req, res, next) => {
         message: 'Could not find article'
       });
     }
+    return next();
   } catch (error) {
-    StatusResponse.internalServerError(res, {
+    return StatusResponse.internalServerError(res, {
       message: `something went wrong, please try again.... ${error}`
     });
   }
-  return next();
 };
 
-export default checkArticle;
+export default articleExist;

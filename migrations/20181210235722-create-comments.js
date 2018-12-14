@@ -24,15 +24,11 @@ export default {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',
       references: {
-        model: 'users',
-        key: 'id',
+        model: 'profiles',
+        key: 'userId',
         as: 'userId'
       },
       allowNull: false
-    },
-    isAnUpdate: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false
     },
     isArchived: {
       type: Sequelize.BOOLEAN,

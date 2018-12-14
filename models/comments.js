@@ -4,10 +4,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    isAnUpdate: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
     commentId: {
       type: DataTypes.INTEGER,
       allowNull: true
@@ -23,7 +19,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       onDelete: 'CASCADE',
     });
-    Comments.belongsTo(models.users, {
+    Comments.belongsTo(models.profiles, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });

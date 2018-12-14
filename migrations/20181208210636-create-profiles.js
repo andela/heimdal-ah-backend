@@ -36,10 +36,12 @@ export function up(queryInterface, Sequelize) {
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      onDelete: 'CASCADE',
       references: {
         model: 'users',
         key: 'id'
       },
+      unique: true
     },
     createdAt: {
       allowNull: false,
