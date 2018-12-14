@@ -22,6 +22,7 @@ class FollowersController {
       const { followingId } = req.params;
       const intFollowId = parseInt(followingId, 10);
       const { userId } = req.app.locals.user;
+
       const verifyFollowerUsernameAndId = await FollowersModelQuery
         .findFollowingById(intFollowId, userId);
       if (verifyFollowerUsernameAndId) {
@@ -75,6 +76,7 @@ class FollowersController {
   static async getAllFollowers(req, res) {
     try {
       const { userId } = res.app.locals.user;
+
       const allReturnedFollowers = await FollowersModelQuery
         .findAllFollowers(userId);
       if (allReturnedFollowers.length === 0) {
@@ -105,6 +107,7 @@ class FollowersController {
   static async getAllFollowing(req, res) {
     try {
       const { userId } = req.app.locals.user;
+
       const following = await FollowersModelQuery
         .findAllFollowing(userId);
       // console.log(following);
@@ -137,6 +140,7 @@ class FollowersController {
     try {
       const { followingId } = req.params;
       const { userId } = req.app.locals.user;
+
       const verifyFollowerUsernameAndId = await FollowersModelQuery
         .findFollowingById(followingId, userId);
       if (!verifyFollowerUsernameAndId) {
