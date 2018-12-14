@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
       },
       readingTime: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       }
     },
     {}

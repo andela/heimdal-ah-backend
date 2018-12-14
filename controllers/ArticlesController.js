@@ -5,7 +5,6 @@ import {
   pageInfo,
   checkTitle,
   checkUser,
-  calcReadingTime,
   createNewTags
 } from '../helpers/articleHelper';
 
@@ -34,7 +33,6 @@ class ArticlesController {
         }
       });
       const articleSlug = checkTitle(req.body.title, articleTitle);
-      const readingTime = calcReadingTime(body);
 
       const newArticle = await Article.create({
         userId,
@@ -42,7 +40,6 @@ class ArticlesController {
         description,
         body,
         image,
-        readingTime,
         slug: articleSlug,
       });
       if (!newArticle) {
