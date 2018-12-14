@@ -29,7 +29,7 @@ const checkAuthentication = (req, res, next) => {
 
     req.userId = decoded.userId;
     req.username = decoded.username;
-    res.locals.user = {
+    req.app.locals.user = {
       userId: decoded.userId,
       username: decoded.username
     };
