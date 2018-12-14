@@ -1,6 +1,6 @@
-// // /**
-// //  * This file will serve as the index to import all unit test
-// //  */
+/**
+ * This file will serve as the index to import all unit test
+ */
 
 
 import './middlewares/userValidation.test';
