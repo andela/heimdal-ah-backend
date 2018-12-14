@@ -19,7 +19,7 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async create(req, res) {
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
     try {
       const articleTitle = await articles.findOne({
         where: {
@@ -112,7 +112,7 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async update(req, res) {
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
     const paramsSlug = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
@@ -152,7 +152,7 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async archive(req, res) {
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
     const paramsSlug = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({

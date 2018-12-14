@@ -15,7 +15,7 @@ class CommentController {
   static async create(req, res) {
     const { content } = req.body;
     const { id } = req.params;
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
 
     try {
       const comment = await comments.create({
