@@ -29,6 +29,15 @@ describe('/bookmarks', () => {
     res.body.should.be.a('object');
   });
 
+  it('should return status code 40 when user is not logged in', async () => {
+    const res = await chai
+      .request(app)
+      .get('/api/v1/articles/bookmarks/search?q=this-is-trd-post-title-u87ddsa')
+      .set('access-token', userToken);
+    res.status.should.equal(200);
+    res.body.should.be.a('object');
+  });
+
   it('should return a 404 when user is not avaliable', async () => {
     const res = await chai
       .request(app)

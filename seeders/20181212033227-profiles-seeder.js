@@ -30,6 +30,12 @@ export default {
     createdAt: new Date(),
     updatedAt: new Date(),
     userId: 5,
+  },
+  {
+    username: 'user1',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    userId: 6,
   }], {}),
 
   down: (queryInterface, Sequelize) => queryInterface.bulkDelete('profiles', null, {})

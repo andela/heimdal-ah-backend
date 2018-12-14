@@ -37,6 +37,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'profile'
     });
+    Profiles.hasMany(models.followers, {
+      foreignKey: 'followingId',
+    });
   };
   return Profiles;
 };
