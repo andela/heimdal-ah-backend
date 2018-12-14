@@ -35,6 +35,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'bookmarks'
     });
+    Articles.hasMany(models.likes, {});
   };
   return Articles;
 };

@@ -31,6 +31,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'commentId',
       as: 'comments'
     });
+    Comments.hasMany(models.likes, {});
   };
   return Comments;
 };
