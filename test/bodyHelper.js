@@ -12,7 +12,10 @@ const bodyHelper = {
       email: testHelper.userEmail,
       password: testHelper.password
     }
-  }
+  },
+  userToken: undefined,
+  articleId: undefined,
+  article: undefined,
 };
 
 export default bodyHelper;

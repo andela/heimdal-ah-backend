@@ -1,37 +1,76 @@
+import slug from './generateSlug';
 import models from '../models';
 
 const { tags: Tag } = models;
 
-const articleHelper = {
-  /**
-   * @description This method is used to calculate an articles reading time
-   * @param {String} bodyText - sentences, phrases, paragraphs etc
-   * @returns {String} readingTime
-   */
-  calcReadingTime(bodyText) {
-    const matches = bodyText.match(/\S+/g);
-    const numberOfWords = matches ? matches.length : 0;
-    const averageWPM = 225;
-    const readingTime = Math.ceil(numberOfWords / averageWPM);
-
-    return readingTime > 1 ? `${readingTime} mins read` : `${readingTime} min read`;
-  },
-
-  /**
-   * @description This method is used to add all the tags to the current article
-   * @param {Array} tags - An array of tags <= 5
-   * @param {Object} article - the recently created sequelize article
-   * @returns {Object} object - the sequelize object of article tags
-   */
-  async addArticleTags(tags, article) {
-    let tagList = tags.map(async thisTag => Tag.findOrCreate({
-      where: { tagName: thisTag }
-    }));
-    tagList = await Promise.all(tagList);
-    const tagIds = tagList.map(pickedTag => pickedTag[0].id);
-
-    return article.addTags(tagIds);
+const checkIdentifier = paramsSlug => (Number.isInteger(parseInt(paramsSlug, 10))
+  ? {
+    id: paramsSlug
   }
+  : {
+    slug: paramsSlug
+  });
+
+const pageInfo = (page, size) => {
+  const currentPage = Math.abs(Number(page)) || 1;
+  let offset = 0;
+  let limit = 10;
+  const sizeNo = Number(size);
+  if (!Number.isNaN(sizeNo) && sizeNo > 0) limit = size;
+  offset = (currentPage - 1) * limit;
+
+  if (Number.isNaN(offset)) offset = 10;
+  return {
+    limit,
+    offset
+  };
 };
 
-export default articleHelper;
+const checkTitle = (title, articleTitle) => {
+  let articleSlug;
+  if (!articleTitle) {
+    articleSlug = slug(title);
+  } else {
+    articleSlug = `${slug(title)}-${Math.floor(Math.random() * (25 ** 6)).toString(36)}`;
+  }
+  return articleSlug;
+};
+
+const checkUser = (article, userId) => article.userId === userId;
+
+/**
+ * @description This method is used to calculate an articles reading time
+ * @param {String} bodyText - sentences, phrases, paragraphs etc
+ * @returns {String} readingTime
+ */
+const calcReadingTime = (bodyText) => {
+  const matches = bodyText.match(/\S+/g);
+  const numberOfWords = matches ? matches.length : 0;
+  const averageWPM = 225;
+  const readingTime = Math.ceil(numberOfWords / averageWPM);
+
+  return readingTime > 1 ? `${readingTime} mins read` : `${readingTime} min read`;
+};
+
+/**
+ * @description This method is used to add all the tags to the current article
+ * @param {Array} tags - An array of tags <= 5
+ * @param {Object} article - the recently created sequelize article
+ * @returns {Object} object - the sequelize object of article tags
+ */
+const addArticleTags = async (tags, article) => {
+  let tagList = tags.map(async thisTag => Tag.findOrCreate({
+    where: {
+      tagName: thisTag
+    }
+  }));
+
+  tagList = await Promise.all(tagList);
+  const tagIds = tagList.map(pickedTag => pickedTag[0].id);
+
+  return article.addTags(tagIds);
+};
+
+export {
+  checkIdentifier, pageInfo, checkTitle, checkUser, calcReadingTime, addArticleTags
+};

@@ -1,13 +1,10 @@
 import express from 'express';
-import Users from '../controllers/ProfilesController';
-import { checkUsersId, validProfileInput } from '../middlewares/ProfilesMiddleware';
+import ProfilesController from '../controllers/ProfilesController';
 
 const router = express.Router();
 
-router.get('/:username', Users.viewProfile);
+router.get('/:username', ProfilesController.viewProfile);
 
-router.post('/:userId', checkUsersId, validProfileInput, Users.createProfile);
-
-router.put('/:username', Users.updateProfile);
+router.put('/:username', ProfilesController.updateProfile);
 
 export default router;

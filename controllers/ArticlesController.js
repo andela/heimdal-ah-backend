@@ -1,42 +1,64 @@
 import models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import articleHelper from '../helpers/articleHelper';
-// import articlesMiddleware from '../middlewares/articlesMiddleware';
+import {
+  checkIdentifier,
+  pageInfo,
+  checkTitle,
+  checkUser,
+  calcReadingTime,
+  addArticleTags
+} from '../helpers/articleHelper';
 
 const { articles: Article, tags: Tag } = models;
 
 /**
- * @description UsersController class
+ * @description ArticlesController class
  */
 class ArticlesController {
   /**
-   * @description Create an article
-   * @param {Object} req - HTTP Request
-   * @param {Object} res - HTTP Response
-   * @return {Object} Returned object
+   * @description - create articles
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
    */
   static async create(req, res) {
-    const { body, tags } = req.body;
-
-    const readingTime = articleHelper.calcReadingTime(body);
-    req.body.readingTime = readingTime;
+    const { userId } = res.locals.user;
+    const {
+      tags, body, title, description, image
+    } = req.body;
 
     try {
-      const article = await Article.create(req.body);
-      if (!article) {
-        const payload = { message: 'Could not create article' };
+      const articleTitle = await Article.findOne({
+        where: {
+          title: req.body.title
+        }
+      });
+      const articleSlug = checkTitle(req.body.title, articleTitle);
+      const readingTime = calcReadingTime(body);
+
+      const newArticle = await Article.create({
+        userId,
+        title,
+        description,
+        body,
+        image,
+        readingTime,
+        slug: articleSlug,
+      });
+      if (!newArticle) {
+        const payload = { message: 'Could not create article, try again' };
         return StatusResponse.notfound(res, payload);
       }
+
       if (tags) {
-        await articleHelper.addArticleTags(tags, article);
+        await addArticleTags(tags, newArticle);
       }
 
       const createdArticle = await Article.findOne({
-        where: { id: article.id },
+        where: { id: newArticle.id },
         include: {
           model: Tag,
           as: 'tags',
-          required: true,
           attributes: ['tagName'],
           through: {
             attributes: []
@@ -45,14 +67,173 @@ class ArticlesController {
       });
 
       if (!createdArticle) {
-        const payload = { message: 'article not found' };
+        const payload = { message: 'Article created' };
         return StatusResponse.notfound(res, payload);
       }
-      const payload = { article: createdArticle };
-      return StatusResponse.success(res, payload);
+      const payload = { article: createdArticle, message: 'Article successfully created' };
+      return StatusResponse.created(res, payload);
     } catch (error) {
-      const payload = { message: 'An error occured, try again' };
-      return StatusResponse.internalServerError(res, payload);
+      return StatusResponse.internalServerError(res, {
+        message: `Something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - list articles
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async list(req, res) {
+    const { articles } = models;
+
+    const {
+      size, page = 1, order = 'ASC', orderBy = 'createdAt'
+    } = req.query;
+
+    try {
+      const { limit, offset } = pageInfo(page, size);
+      const fetchArticles = await articles.findAndCountAll({
+        include: {
+          model: Tag,
+          as: 'tags',
+          attributes: ['tagName'],
+          through: {
+            attributes: []
+          }
+        },
+        limit,
+        offset,
+        order: [[orderBy, order]]
+      });
+      if (fetchArticles.length === 0) {
+        return StatusResponse.success(res, {
+          message: 'No article found'
+        });
+      }
+      return StatusResponse.success(res, {
+        message: 'List of articles',
+        articles: fetchArticles
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - fetch single article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async get(req, res) {
+    const { articles } = models;
+
+    const paramsSlug = checkIdentifier(req.params.identifier);
+
+    try {
+      const fetchArticle = await articles.findOne({
+        where: { ...paramsSlug },
+        include: {
+          model: Tag,
+          as: 'tags',
+          attributes: ['tagName'],
+          through: {
+            attributes: []
+          }
+        },
+      });
+      return StatusResponse.success(res, {
+        message: 'success',
+        article: fetchArticle
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - update article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async update(req, res) {
+    const { articles } = models;
+
+    const { userId } = res.locals.user;
+    const paramsSlug = checkIdentifier(req.params.identifier);
+    try {
+      const article = await articles.findOne({
+        where: {
+          ...paramsSlug
+        },
+      });
+      if (!checkUser(article, userId)) {
+        return StatusResponse.forbidden(res, {
+          message: 'Request denied'
+        });
+      }
+
+      const data = Object.keys(req.body);
+      const updatedArticle = await articles.update(req.body, {
+        where: { ...paramsSlug },
+        fields: data,
+        returning: true,
+        plain: true
+      });
+
+      return StatusResponse.success(res, {
+        message: 'Article updated successfully',
+        article: updatedArticle
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - delete article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async archive(req, res) {
+    const { articles } = models;
+
+    const { userId } = res.locals.user;
+    const paramsSlug = checkIdentifier(req.params.identifier);
+    try {
+      const article = await articles.findOne({
+        where: {
+          ...paramsSlug
+        },
+      });
+      if (!checkUser(article, userId)) {
+        return StatusResponse.forbidden(res, {
+          message: 'Request denied'
+        });
+      }
+      const data = { isArchived: true };
+      await articles.update(data, {
+        where: { ...paramsSlug },
+        returning: true,
+        plain: true
+      });
+      return StatusResponse.success(res, {
+        message: 'Article archived successfully'
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
     }
   }
 }

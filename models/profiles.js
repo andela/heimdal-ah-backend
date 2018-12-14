@@ -1,9 +1,15 @@
-
 export default (sequelize, DataTypes) => {
   const Profiles = sequelize.define('profiles', {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
+    },
+    firstName: {
+      type: DataTypes.STRING,
+    },
+    lastName: {
+      type: DataTypes.STRING,
     },
     biodata: {
       type: DataTypes.STRING,
@@ -11,12 +17,15 @@ export default (sequelize, DataTypes) => {
     image: {
       type: DataTypes.STRING,
     },
-    address: {
+    location: {
       type: DataTypes.STRING,
     },
-    dateofbirth: {
-      type: DataTypes.STRING,
-    }
+    twitterUsername: {
+      type: DataTypes.STRING
+    },
+    facebookUsername: {
+      type: DataTypes.STRING
+    },
   }, {});
   Profiles.associate = (models) => {
     // associations can be defined here
