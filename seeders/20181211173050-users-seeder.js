@@ -43,7 +43,23 @@ export default {
     createdAt: new Date(),
     updatedAt: new Date(),
     roleId: 3,
-  }], {}),
-
+  },
+  {
+    email: 'usertest@heimdal.com',
+    password: '$2y$08$pAT7OB/WXBR2bHlnIWsNieFTOHCxuSL73sCHJdvUNe7s7uCAcavy2',
+    emailVerification: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    roleId: 3,
+  },
+  {
+    email: 'usertest@heimdal.com',
+    password: '$2y$08$pAT7OB/WXBR2bHlnIWsNieFTOHCxuSL73sCHJdvUNe7s7uCAcavy2',
+    emailVerification: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    roleId: 3,
+  }
+  ], {}),
   down: (queryInterface, Sequelize) => queryInterface.bulkDelete('users', null, {})
 };
