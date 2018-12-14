@@ -61,10 +61,5 @@ export default {
     roleId: 3,
   }
   ], {}),
-
-  down: (queryInterface, Sequelize) => {
-  }
-  ], {}),
-
   down: (queryInterface, Sequelize) => queryInterface.bulkDelete('users', null, {})
 };
