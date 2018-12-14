@@ -1,10 +1,10 @@
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('comments', {
     id: {
-      allowNull: false,
+      type: Sequelize.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      allowNull: false,
     },
     content: {
       type: Sequelize.TEXT,

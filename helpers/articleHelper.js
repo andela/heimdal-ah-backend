@@ -29,7 +29,6 @@ const checkTitle = (title, articleTitle) => {
   return articleSlug;
 };
 
-
 const checkUser = (article, userId) => article.userId === userId;
 
 export {

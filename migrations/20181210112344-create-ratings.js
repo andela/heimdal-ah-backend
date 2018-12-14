@@ -15,7 +15,7 @@ export function up(queryInterface, Sequelize) {
         key: 'id'
       },
     },
-    articleId: {
+    identifier: {
       type: Sequelize.INTEGER,
       allowNull: false,
       references: {
