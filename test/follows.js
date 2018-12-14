@@ -65,20 +65,5 @@ describe('Test To Follow, Unfollow user, View Followes, and view following', asy
       //   console.log(res.body);
       res.body.should.have.property('message');
     });
-    // it('should return 200 on successful update of article', async () => {
-    //       const res = await chai
-    //         .request(app)
-    //         .put('/api/v1/articles/this-is-trd-post-title-u87ddsa')
-    //         .set('access-token', userToken)
-    //         .send({
-    //           title: 'This is a title',
-    //           description: 'This is a description',
-    //           body: ' his is a powerful article'
-    //         });
-    //       res.status.should.equal(200);
-    //       res.body.should.have.a('object');
-    //       res.body.should.have.property('message');
-    //       res.body.message.should.equal('Article updated successfully');
-    //     });
   });
 });

@@ -14,7 +14,7 @@ router.get('/authors', UsersController.list);
 // follow user begins here
 router.post('/:followingId/follow', checkAuthentication, FollowersController.followUsers);
 router.post('/:followingId/unfollow', checkAuthentication, FollowersController.unfollowUser);
-router.get('/follow', checkAuthentication, FollowersController.getAllFollowers);
+router.get('/followers', checkAuthentication, FollowersController.getAllFollowers);
 router.get('/following', checkAuthentication, FollowersController.getAllFollowing);
 /**
  * Verify the users email

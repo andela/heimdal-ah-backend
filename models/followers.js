@@ -10,11 +10,6 @@ export default (sequelize, DataTypes) => {
   }, {});
   // eslint-disable-next-line no-unused-vars
   followers.associate = (models) => {
-    // associations can be defined here
-    // followers.belongsTo(models.profiles, {
-    //   foreignKey: 'followingUsername',
-    //   onDelete: 'CASCADE'
-    // });
     followers.belongsTo(models.profiles, {
       foreignKey: 'followingId',
       onDelete: 'CASCADE',

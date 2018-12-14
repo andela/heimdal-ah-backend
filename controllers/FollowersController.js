@@ -73,19 +73,27 @@ class FollowersController {
  * @returns {object} returns a signup object
  */
   static async getAllFollowers(req, res) {
-    const { userId } = res.locals.user;
-    const allReturnedFollowers = await FollowersModelQuery
-      .findAllFollowers(userId);
-    if (allReturnedFollowers.length === 0) {
+    try {
+      const { userId } = res.locals.user;
+      const allReturnedFollowers = await FollowersModelQuery
+        .findAllFollowers(userId);
+      if (allReturnedFollowers.length === 0) {
+        const payload = {
+          message: 'You currently do not have any followers'
+        };
+        return StatusResponse.notfound(res, payload);
+      }
       const payload = {
-        message: 'You currently do not have any followers'
+        message: allReturnedFollowers
       };
-      return StatusResponse.notfound(res, payload);
+      return StatusResponse.success(res, payload);
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      });
     }
-    const payload = {
-      message: allReturnedFollowers
-    };
-    return StatusResponse.success(res, payload);
   }
 
   // find all people wey dey follow me based on my username
@@ -95,21 +103,27 @@ class FollowersController {
  * @returns {object} returns a signup object
  */
   static async getAllFollowing(req, res) {
-    // const { token } = req.body;
-    // const decode = jwtDecode(token);
-    const { userId } = res.locals.user;
-    const following = await FollowersModelQuery
-      .findAllFollowing(userId);
-    // console.log(following);
-    if (following.length === 0) {
-      const payload = {
-        message: 'You  have no followers following you'
-      };
-      return StatusResponse.success(res, payload);
+    try {
+      const { userId } = res.locals.user;
+      const following = await FollowersModelQuery
+        .findAllFollowing(userId);
+      // console.log(following);
+      if (following.length === 0) {
+        const payload = {
+          message: 'You  have no followers following you'
+        };
+        return StatusResponse.success(res, payload);
+      }
+      return res.status(200).send({
+        message: following
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      });
     }
-    return res.status(200).send({
-      message: following
-    });
   }
 
   // unfollow user
