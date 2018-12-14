@@ -38,7 +38,7 @@ describe('Test To Follow, Unfollow user, View Followes, and view following', asy
     it('should return 200 on getting all followers', async () => {
       const res = await chai
         .request(app)
-        .get('/api/v1/users/follow')
+        .get('/api/v1/users/followers')
         .set('access-token', token);
       res.status.should.equal(200);
       res.body.should.have.a('object');
