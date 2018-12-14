@@ -110,7 +110,6 @@ class BookmarksController {
     try {
       const bookmark = await bookmarks.destroy({
         where: {
-          isArchived: false,
           id: bookmarkId,
           userId
         }
