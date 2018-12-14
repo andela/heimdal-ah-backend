@@ -44,7 +44,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Articles.hasMany(models.bookmarks, {
-      foreignKey: 'userId',
+      foreignKey: 'articleId',
       as: 'bookmarks'
     });
     Articles.belongsToMany(models.tags, {
