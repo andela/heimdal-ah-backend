@@ -27,7 +27,7 @@ app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
-app.use('/api/v1/bookmarks', bookmarks);
+app.use('/api/v1/articles', bookmarks);
 app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles', article);
 app.use('/api/v1/ratings', ratings);

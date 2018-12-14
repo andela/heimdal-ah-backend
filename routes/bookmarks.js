@@ -7,24 +7,24 @@ import articleExist from '../middlewares/articleExist';
 const router = express.Router();
 
 router.get(
-  '/',
+  '/bookmarks',
   checkAuthentication,
   BookmarksController.getAll
 );
 router.post(
-  '/:articleId',
+  '/:articleId/bookmarks',
   checkAuthentication,
   articleExist,
   bookmarkValidate,
   BookmarksController.create
 );
 router.get(
-  '/search',
+  '/bookmarks/search',
   checkAuthentication,
   BookmarksController.search
 );
 router.delete(
-  '/:bookmarkId',
+  '/bookmarks/:bookmarkId',
   checkAuthentication,
   BookmarksController.delete
 );

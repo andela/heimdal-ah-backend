@@ -19,7 +19,7 @@ const checkArticle = async (req, res, next) => {
         message: 'Could not find article'
       });
     }
-    req.locals.article = fetchedArticle;
+    req.app.locals.article = fetchedArticle;
     return next();
   } catch (error) {
     return StatusResponse.internalServerError(res, {

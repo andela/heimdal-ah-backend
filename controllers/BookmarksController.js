@@ -15,7 +15,7 @@ class BookmarksController {
    * @public
    */
   static async create(req, res) {
-    const { user: { userId }, article: { title } } = req.locals;
+    const { user: { userId }, article: { title } } = req.app.locals;
     const { articleId } = req.params;
 
     try {
@@ -43,7 +43,7 @@ class BookmarksController {
    */
   static async search(req, res) {
     const { q } = req.query;
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
     const searchTokens = q.split(' ').map(term => `%${term}%`);
 
     try {
@@ -75,7 +75,7 @@ class BookmarksController {
    * @public
    */
   static async getAll(req, res) {
-    const { userId } = req.locals.user;
+    const { userId } = req.app.locals.user;
 
     try {
       const bookmark = await bookmarks.findAndCountAll({
@@ -105,7 +105,7 @@ class BookmarksController {
    * @public
    */
   static async delete(req, res) {
-    const { user: { userId } } = res.locals;
+    const { user: { userId } } = req.app.locals;
     const { bookmarkId } = req.params;
     try {
       const bookmark = await bookmarks.destroy({
