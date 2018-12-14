@@ -4,19 +4,22 @@ import checkIdentifier from '../helpers/checkIdentifier';
 
 const { articles } = models;
 
-const articleExist = async (req, res, next) => {
-  const paramsSlug = checkIdentifier(req.params.id);
+const checkArticle = async (req, res, next) => {
   try {
-    const fetchArticle = await articles.findOne({
+    const identifier = req.params.id || req.params.articleId || req.params.identifier;
+    const whereFilter = checkIdentifier(identifier);
+    const fetchedArticle = await articles.findOne({
       where: {
-        ...paramsSlug
+        ...whereFilter,
+        isArchived: false
       }
     });
-    if (!fetchArticle) {
+    if (!fetchedArticle) {
       return StatusResponse.notfound(res, {
         message: 'Could not find article'
       });
     }
+    req.app.locals.article = fetchedArticle;
     return next();
   } catch (error) {
     return StatusResponse.internalServerError(res, {
@@ -25,4 +28,4 @@ const articleExist = async (req, res, next) => {
   }
 };
 
-export default articleExist;
+export default checkArticle;

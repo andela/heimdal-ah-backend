@@ -6,7 +6,7 @@ const hashPassword = bcrypt.hashSync('12345678heimdal', genSalt);
 export default {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('users', [{
     email: 'admin@heimdal.com',
-    password: 'hashPassword',
+    password: hashPassword,
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -45,13 +45,5 @@ export default {
     roleId: 3,
   }], {}),
 
-  down: (queryInterface, Sequelize) => {
-    /*
-      Add reverting commands here.
-      Return a promise to correctly handle asynchronicity.
-
-      Example:
-      return queryInterface.bulkDelete('People', null, {});
-    */
-  }
+  down: (queryInterface, Sequelize) => queryInterface.bulkDelete('users', null, {})
 };
