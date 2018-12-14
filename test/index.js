@@ -11,4 +11,5 @@ import './passwords';
 import './articles';
 import './comments';
 import './likes';
+import './ratings';
 import './helpers/articleHelpers';
