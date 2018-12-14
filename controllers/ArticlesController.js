@@ -42,10 +42,6 @@ class ArticlesController {
         image,
         slug: articleSlug,
       });
-      if (!newArticle) {
-        const payload = { message: 'Could not create article, try again' };
-        return StatusResponse.notfound(res, payload);
-      }
 
       if (tags) {
         const createTags = await createNewTags(tags);
