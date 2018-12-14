@@ -6,7 +6,7 @@ import {
   checkTitle,
   checkUser,
   calcReadingTime,
-  addArticleTags
+  createNewTags
 } from '../helpers/articleHelper';
 
 const { articles: Article, tags: Tag } = models;
@@ -51,7 +51,8 @@ class ArticlesController {
       }
 
       if (tags) {
-        await addArticleTags(tags, newArticle);
+        const createTags = await createNewTags(tags);
+        await newArticle.addTags(createTags);
       }
 
       const createdArticle = await Article.findOne({
@@ -187,6 +188,11 @@ class ArticlesController {
         returning: true,
         plain: true
       });
+      const { tags } = req.body;
+      if (tags) {
+        const createTags = await createNewTags(tags);
+        await updatedArticle.setTags(createTags);
+      }
 
       return StatusResponse.success(res, {
         message: 'Article updated successfully',

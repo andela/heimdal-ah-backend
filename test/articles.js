@@ -52,6 +52,43 @@ describe('Test for articles controller', () => {
       res.body.message.should.equal('Article successfully created');
       bodyHelper.article = res.body.article;
     });
+
+
+    it('should return 400 if the tags sent are not an array of tags', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/v1/articles')
+        .set('access-token', userToken)
+        .send({
+          title: 'This is a title',
+          description: 'This is a description',
+          body: ' his is a powerful article',
+          image: 'www.image',
+          tags: '1, 2, 4',
+        });
+      res.status.should.equal(400);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('Tags should be an array containing tag names');
+    });
+
+    it('should return 400 if the number of tags sent exceeds 7', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/v1/articles')
+        .set('access-token', userToken)
+        .send({
+          title: 'This is a title',
+          description: 'This is a description',
+          body: ' his is a powerful article',
+          image: 'www.image',
+          tags: ['bag', 'food', 'grap', '1', '2', '3', '4', '5'],
+        });
+      res.status.should.equal(400);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('You can only add a maximum of 7 tags');
+    });
   });
 
   describe('Test for fetching a single article GET/ api/v1/articles/:slug', () => {

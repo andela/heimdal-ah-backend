@@ -53,12 +53,12 @@ const calcReadingTime = (bodyText) => {
 };
 
 /**
- * @description This method is used to add all the tags to the current article
+ * @description This method is used to create new tags abd return the created tag ids
  * @param {Array} tags - An array of tags <= 5
  * @param {Object} article - the recently created sequelize article
  * @returns {Object} object - the sequelize object of article tags
  */
-const addArticleTags = async (tags, article) => {
+const createNewTags = async (tags) => {
   let tagList = tags.map(async thisTag => Tag.findOrCreate({
     where: {
       tagName: thisTag
@@ -68,9 +68,9 @@ const addArticleTags = async (tags, article) => {
   tagList = await Promise.all(tagList);
   const tagIds = tagList.map(pickedTag => pickedTag[0].id);
 
-  return article.addTags(tagIds);
+  return tagIds;
 };
 
 export {
-  checkIdentifier, pageInfo, checkTitle, checkUser, calcReadingTime, addArticleTags
+  checkIdentifier, pageInfo, checkTitle, checkUser, calcReadingTime, createNewTags
 };
