@@ -191,7 +191,7 @@ class ArticlesController {
       const { tags } = req.body;
       if (tags) {
         const createTags = await createNewTags(tags);
-        await updatedArticle.setTags(createTags);
+        await article.setTags(createTags);
       }
 
       return StatusResponse.success(res, {
