@@ -2,6 +2,7 @@ import express from 'express';
 import BookmarksController from '../controllers/BookmarksController';
 import bookmarkValidate from '../middlewares/bookmarksValidate';
 import checkAuthentication from '../middlewares/checkAuthentication';
+import articleExist from '../middlewares/articleExist';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.get(
 router.post(
   '/:articleId',
   checkAuthentication,
+  articleExist,
   bookmarkValidate,
   BookmarksController.create
 );

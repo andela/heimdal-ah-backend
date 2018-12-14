@@ -11,7 +11,7 @@ const bookmarksValidate = async (req, res, next) => {
 
   const result = await validateBookmarks(userId, articleId);
 
-  if (result !== 'success') {
+  if (result !== true) {
     return StatusResponse.badRequest(res, { message: 'Please Article cannot be bookmarked' });
   }
   return next();
