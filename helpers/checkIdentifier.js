@@ -1,7 +1,7 @@
-const checkIdentifier = paramsSlug => (
-  Number.isInteger(parseInt(paramsSlug, 10))
-    ? { id: paramsSlug }
-    : { slug: paramsSlug }
+const checkIdentifier = identifier => (
+  Number.isInteger(parseInt(identifier, 10))
+    ? { id: identifier }
+    : { slug: identifier }
 );
 
 export default checkIdentifier;

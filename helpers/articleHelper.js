@@ -39,20 +39,6 @@ const checkTitle = (title, articleTitle) => {
 const checkUser = (article, userId) => article.userId === userId;
 
 /**
- * @description This method is used to calculate an articles reading time
- * @param {String} bodyText - sentences, phrases, paragraphs etc
- * @returns {String} readingTime
- */
-const calcReadingTime = (bodyText) => {
-  const matches = bodyText.match(/\S+/g);
-  const numberOfWords = matches ? matches.length : 0;
-  const averageWPM = 225;
-  const readingTime = Math.ceil(numberOfWords / averageWPM);
-
-  return readingTime > 1 ? `${readingTime} mins read` : `${readingTime} min read`;
-};
-
-/**
  * @description This method is used to create new tags abd return the created tag ids
  * @param {Array} tags - An array of tags <= 5
  * @param {Object} article - the recently created sequelize article
@@ -72,5 +58,5 @@ const createNewTags = async (tags) => {
 };
 
 export {
-  checkIdentifier, pageInfo, checkTitle, checkUser, calcReadingTime, createNewTags
+  checkIdentifier, pageInfo, checkTitle, checkUser, createNewTags
 };
