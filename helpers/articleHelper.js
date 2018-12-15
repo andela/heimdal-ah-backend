@@ -68,6 +68,5 @@ const calcReadingTime = (bodyText) => {
 };
 
 export {
-  checkIdentifier, pageInfo, checkTitle, checkUser, createNewTags
   checkIdentifier, pageInfo, checkTitle, checkUser, createNewTags, calcReadingTime
 };
