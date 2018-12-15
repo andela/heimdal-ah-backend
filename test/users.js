@@ -12,10 +12,10 @@ chai.should();
 
 describe('User Authentication Test', () => {
   describe('GET /', () => {
-    it('should return 200 for visiting a random endpoint on the app', async () => {
+    it('should return 404 for visiting a random endpoint on the app', async () => {
       const res = await chai.request(app).get('/');
       res.should.be.a('object');
-      res.status.should.equal(200);
+      res.status.should.equal(404);
     });
   });
 
@@ -30,10 +30,10 @@ describe('User Authentication Test', () => {
         .request(app)
         .post('/api/v1/auth/signup')
         .send(data);
-      // console.log(res.body);
       res.should.be.a('object');
       res.status.should.equal(201);
       bodyHelper.emailToken.validTokenInDb = res.body.emailToken;
+      bodyHelper.userToken = res.body.token;
     });
 
     it('should return error if user enters an existing email', async () => {
