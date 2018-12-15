@@ -25,17 +25,23 @@ router.get('/:id/comments', checkAuthenticated, checkArticleId, articleExist, li
 router.post('/:id/comments', checkAuthenticated, checkCommentContent, articleExist, create);
 router.delete('/:articleId/comments/:commentId', checkAuthenticated, checkCommentId, checkCommentParams, archive);
 
-router.get('/:articleId/comments/:commentId',
+router.get(
+  '/:articleId/comments/:commentId',
   [
     checkAuthenticated,
     checkCommentId
-  ], getACommentHistory);
+  ],
+  getACommentHistory
+);
 
-router.put('/:articleId/comments/:commentId',
+router.put(
+  '/:articleId/comments/:commentId',
   [
     checkAuthenticated,
     checkCommentId,
     checkCommentContent,
-  ], createCommentHistory);
+  ],
+  createCommentHistory
+);
 
 export default router;

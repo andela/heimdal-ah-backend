@@ -61,9 +61,7 @@ class CommentHistoriesController {
       });
 
 
-      await comments.create(
-        latestComment.dataValues
-      );
+      await comments.create(latestComment.dataValues);
 
       return StatusResponse.success(res, {
         comment: updatedComment[1],
