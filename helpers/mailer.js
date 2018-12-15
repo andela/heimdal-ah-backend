@@ -22,7 +22,7 @@ const mailer = {
       html: emailBody
     };
 
-    sgMail
+    return sgMail
       .send(msg)
       .then(() => true)
       .catch(() => false);
