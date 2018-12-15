@@ -2,10 +2,8 @@ import express from 'express';
 import CommentValidation from '../middlewares/CommentValidation';
 import checkAuthenticated from '../middlewares/checkAuthentication';
 import CommentController from '../controllers/CommentController';
-import checkArticle from '../middlewares/checkArticle';
 import CommentHistoriesController from '../controllers/CommentHistoriesController';
-
-import authoriseCommentEdit from '../middlewares/authoriseCommentEdit';
+import articleExist from '../middlewares/articleExist';
 
 const {
   checkCommentContent,
@@ -23,8 +21,8 @@ const {
 const { create, list, archive } = CommentController;
 const router = express.Router();
 
-router.get('/:id/comments', checkAuthenticated, checkArticleId, checkArticle, list);
-router.post('/:id/comments', checkAuthenticated, checkCommentContent, checkArticle, create);
+router.get('/:id/comments', checkAuthenticated, checkArticleId, articleExist, list);
+router.post('/:id/comments', checkAuthenticated, checkCommentContent, articleExist, create);
 router.delete('/:articleId/comments/:commentId', checkAuthenticated, checkCommentId, checkCommentParams, archive);
 
 router.get('/:articleId/comments/:commentId',

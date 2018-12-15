@@ -15,6 +15,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
   const nonExistingCommentRequest = httpMocks.createRequest({
@@ -24,6 +31,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
   const archivedArticleRequest = httpMocks.createRequest({
@@ -33,6 +47,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
   const archivedCommentRequest = httpMocks.createRequest({
@@ -42,6 +63,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
   const noCommentHistoryRequest = httpMocks.createRequest({
@@ -51,6 +79,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
   const commentRequest = httpMocks.createRequest({
@@ -60,6 +95,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
   const serverErrorRequest = httpMocks.createRequest({
@@ -69,6 +111,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
   const notMostUpdatedCommentRequest = httpMocks.createRequest({
@@ -78,6 +127,13 @@ describe('Comment History Tests', () => {
     },
     body: {
       content: 'This is a new commit, to edit a commit history'
+    },
+    app: {
+      locals: {
+        user: {
+          userId: 1
+        }
+      }
     }
   });
 
@@ -139,22 +195,25 @@ describe('Comment History Tests', () => {
   });
 
   describe('UPDATE /api/v1/articles:articleId/comments/:commentId', () => {
-    const wrongUserResponse = httpMocks.createResponse({
-      locals: {
-        user: {
-          userId: 5
+    const wrongUserRequest = httpMocks.createRequest({
+      params: {
+        articleId: 1,
+        commentId: 1
+      },
+      body: {
+        content: 'This is a new commit, to edit a commit history'
+      },
+      app: {
+        locals: {
+          user: {
+            userId: 5
+          }
         }
       }
     });
     let res;
     beforeEach(() => {
-      res = httpMocks.createResponse({
-        locals: {
-          user: {
-            userId: 1
-          }
-        }
-      });
+      res = httpMocks.createResponse({});
     });
 
     it('should return status code 404 if article does not exist', async () => {
@@ -182,9 +241,9 @@ describe('Comment History Tests', () => {
       data.message.should.be.equal('Comment not Found');
     });
     it('should return status code 403 if comment blongs to another user', async () => {
-      await CommentHistoriesController.createCommentHistory(commentRequest, wrongUserResponse);
-      const data = JSON.parse(wrongUserResponse._getData());
-      wrongUserResponse.statusCode.should.equal(403);
+      await CommentHistoriesController.createCommentHistory(wrongUserRequest, res);
+      const data = JSON.parse(res._getData());
+      res.statusCode.should.equal(403);
       data.message.should.be.equal('Not Authorised');
     });
     it('should return status code 404 if comment is not the most updated', async () => {

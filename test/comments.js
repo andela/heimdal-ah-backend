@@ -27,6 +27,7 @@ describe('Comment Validation and Creation', () => {
       description: 'This is a new description',
       body: 'This is a powerful new article',
       slug: 'dummy-slug',
+      readingTime: '2 mins',
       userId: user.id
     };
     article = await articles.create(data);

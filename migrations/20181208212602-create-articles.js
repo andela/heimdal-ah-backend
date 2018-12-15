@@ -28,9 +28,17 @@ export default {
       type: Sequelize.TEXT,
       allowNull: false
     },
+    isPublished: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     isArchived: {
       type: Sequelize.BOOLEAN,
       defaultValue: false
+    },
+    readingTime: {
+      type: Sequelize.STRING,
+      allowNull: true
     },
     userId: {
       type: Sequelize.INTEGER,

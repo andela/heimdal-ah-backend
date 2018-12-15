@@ -17,7 +17,7 @@ class CommentHistoriesController {
   static async createCommentHistory(req, res) {
     const { content } = req.body;
     const { articleId, commentId } = req.params;
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
 
     try {
       const latestComment = await comments.findOne({
