@@ -5,7 +5,8 @@ import {
   pageInfo,
   checkTitle,
   checkUser,
-  createNewTags
+  createNewTags,
+  calcReadingTime
 } from '../helpers/articleHelper';
 
 const { articles: Article, tags: Tag } = models;
@@ -21,7 +22,6 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async create(req, res) {
-    // const { userId } = res.locals.user;
     const { userId } = req.app.locals.user;
     const {
       tags, body, title, description, image
@@ -33,6 +33,7 @@ class ArticlesController {
         }
       });
       const articleSlug = checkTitle(req.body.title, articleTitle);
+      const readingTime = calcReadingTime(body);
 
       const newArticle = await Article.create({
         userId,
@@ -40,6 +41,7 @@ class ArticlesController {
         description,
         body,
         image,
+        readingTime,
         slug: articleSlug,
       });
 
@@ -160,6 +162,8 @@ class ArticlesController {
   static async update(req, res) {
     const { articles } = models;
     const { userId } = req.app.locals.user;
+    const { body, title, tags } = req.body;
+
     const paramsSlug = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
@@ -172,15 +176,20 @@ class ArticlesController {
           message: 'Request denied'
         });
       }
+      if (title) {
+        req.body.slug = checkTitle(title, title);
+      }
+      if (body) {
+        req.body.readingTime = calcReadingTime(body);
+      }
 
-      const data = Object.keys(req.body);
       const updatedArticle = await articles.update(req.body, {
         where: { ...paramsSlug },
-        fields: data,
+        fields: ['title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
         returning: true,
         plain: true
       });
-      const { tags } = req.body;
+
       if (tags) {
         const createTags = await createNewTags(tags);
         await article.setTags(createTags);
