@@ -33,6 +33,7 @@ describe('User Authentication Test', () => {
       res.should.be.a('object');
       res.status.should.equal(201);
       bodyHelper.emailToken.validTokenInDb = res.body.emailToken;
+      bodyHelper.userToken = res.body.token;
     });
 
     it('should return error if user enters an existing email', async () => {
