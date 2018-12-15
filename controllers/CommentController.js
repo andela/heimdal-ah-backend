@@ -89,7 +89,7 @@ class CommentController {
   static async archive(req, res) {
     const { commentId } = req.params;
     try {
-      comments.update({
+      await comments.update({
         isArchived: true,
       }, {
         where: {
