@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import Chance from 'chance';
@@ -32,6 +33,7 @@ describe('Comment Validation and Creation', () => {
       .post(postCommentUrl)
       .set('access-token', userToken)
       .send(contentDataWithEmpty);
+    logger.log(res.body);
     res.status.should.equal(400);
     res.body.should.be.a('object');
     res.body.should.have.property('errors');
