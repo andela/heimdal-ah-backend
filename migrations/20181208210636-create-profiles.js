@@ -7,13 +7,11 @@ export function up(queryInterface, Sequelize) {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id'
-      },
+    firstName: {
+      type: Sequelize.STRING,
+    },
+    lastName: {
+      type: Sequelize.STRING,
     },
     username: {
       type: Sequelize.STRING,
@@ -22,19 +20,27 @@ export function up(queryInterface, Sequelize) {
     },
     biodata: {
       type: Sequelize.STRING,
-      allowNull: false,
     },
     image: {
       type: Sequelize.STRING,
-      allowNull: false,
     },
-    address: {
+    location: {
       type: Sequelize.STRING,
-      allowNull: false,
     },
-    dateofbirth: {
-      type: Sequelize.STRING,
+    twitterUsername: {
+      type: Sequelize.STRING
+    },
+    facebookUsername: {
+      type: Sequelize.STRING
+    },
+    userId: {
+      type: Sequelize.INTEGER,
       allowNull: false,
+      unique: true,
+      references: {
+        model: 'users',
+        key: 'id'
+      },
     },
     createdAt: {
       allowNull: false,

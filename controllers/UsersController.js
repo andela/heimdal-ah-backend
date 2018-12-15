@@ -19,7 +19,10 @@ class UsersController {
     try {
       const authors = await users.findAll({
         include: [
-          profiles,
+          {
+            model: profiles,
+            as: 'profile'
+          },
           {
             model: roles,
             as: 'roles',

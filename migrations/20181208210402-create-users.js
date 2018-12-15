@@ -1,4 +1,3 @@
-
 export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('users', {
     id: {
@@ -13,19 +12,11 @@ export default {
     password: {
       type: Sequelize.STRING
     },
-    username: {
-      type: Sequelize.STRING
-    },
-    facebookId: {
-      type: Sequelize.STRING
-    },
-    googleId: {
-      type: Sequelize.STRING
-    },
-    twitterId: {
-      type: Sequelize.STRING,
-    },
     emailVerification: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
+    resettingPassword: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
@@ -42,9 +33,9 @@ export default {
       onDelete: 'CASCADE',
       references: {
         model: 'roles',
-        key: 'id',
-      },
-    },
+        key: 'id'
+      }
+    }
   }),
   // eslint-disable-next-line no-unused-vars
   down: (queryInterface, Sequelize) => queryInterface.dropTable('users')

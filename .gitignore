@@ -43,4 +43,5 @@ node_modules
 
 
 # Build
-build
+dist/
+.vscode/settings.json

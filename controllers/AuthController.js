@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import usersModel from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import UserModelQuery from '../lib/user';
+import UserModelQuery from '../lib/UserModelQuery';
 import getToken from '../helpers/getToken';
 import mailer from '../helpers/mailer';
 import helper from '../helpers/helper';
@@ -18,33 +18,17 @@ class AuthController {
    */
   static async signUp(req, res) {
     const { email, password, username } = req.body;
-    const { users, roles } = usersModel;
+    const { users, roles, profiles } = usersModel;
 
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
 
     const emailToken = helper.generateEmailToken(email);
 
-    const link = `http://${
-      req.headers.host
-    }/api/v1/users/verify-email/${emailToken}`;
-
-    const emailSubject = 'Verify your email on Authors Haven';
-
-    const emailBody = `
-      <div>
-        <h2 style="color: blue">Hello ${username}, Thanks for signing up on heimdal</h2>
-        Please click here to verify your email address, this link expires in two days.
-        <a href="${link}">${link}</a>
-      </div>
-    `;
-
-    const emailContent = { emailSubject, emailBody };
-
-    mailer.sendCustomMail(email, emailContent);
+    const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
 
     try {
-      const user = await UserModelQuery.getUserByEmail(email);
+      let user = await UserModelQuery.getUserByEmail(email);
 
       if (user) {
         const payload = {
@@ -53,26 +37,38 @@ class AuthController {
         return StatusResponse.conflict(res, payload);
       }
 
-      const roleData = await roles.create(
+      user = await profiles.findOne({
+        where: { username }
+      });
+
+      if (user) {
+        const payload = {
+          message: 'This username has been taken'
+        };
+        return StatusResponse.conflict(res, payload);
+      }
+
+      mailer.sendVerificationMail(email, username, link);
+
+      const { id: roleId } = await roles.find({ where: { name: 'user' } });
+      const newUser = await users.create(
         {
-          users: {
-            email,
-            username,
-            password: hashPassword
-          },
+          email,
+          roleId,
+          password: hashPassword,
+          profile: { username }
         },
-        { include: [{ model: users, as: 'users' }] },
+        { include: [{ model: profiles, as: 'profile' }] }
       );
 
-      const newUser = roleData.users[0];
-      newUser.password = undefined;
-      const token = getToken(newUser.id, username);
+      const token = getToken(newUser.id, newUser.username);
+
       const payload = {
         message: 'user created succesfully',
-        user: newUser,
         token,
         emailToken
       };
+
       return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -101,16 +97,15 @@ class AuthController {
       }
       if (!bcrypt.compareSync(password, user.dataValues.password)) {
         const payload = {
-          message: 'you have entered invalid credentials',
+          message: 'you have entered invalid credentials'
         };
         return StatusResponse.notfound(res, payload);
       }
-      const { username, id } = user;
+      const { id, profile: { username } } = user;
       const token = getToken(id, username);
       user.dataValues.password = undefined;
       const payload = {
         message: 'user logged in succesfully',
-        user,
         token
       };
       return StatusResponse.success(res, payload);
@@ -121,6 +116,21 @@ class AuthController {
         }
       });
     }
+  }
+
+  /**
+   * @param {object} req Request Object
+   * @param {object} res Response Object
+   * @return {object} login response to user
+   */
+  static socialAuth(req, res) {
+    const { id, profile: { username } } = req.user;
+    const token = getToken({ id, username });
+    const payload = {
+      message: 'user logged in succesfully',
+      token
+    };
+    return StatusResponse.success(res, payload);
   }
 }
 
