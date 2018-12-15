@@ -46,27 +46,12 @@ class ArticlesController {
       });
 
       if (tags) {
-        const createTags = await createNewTags(tags);
-        await newArticle.addTags(createTags);
+        const createdTags = await createNewTags(tags);
+        await newArticle.addTags(createdTags);
+        newArticle.dataValues.tags = tags;
       }
 
-      const createdArticle = await Article.findOne({
-        where: { id: newArticle.id },
-        include: {
-          model: Tag,
-          as: 'tags',
-          attributes: ['tagName'],
-          through: {
-            attributes: []
-          }
-        }
-      });
-
-      if (!createdArticle) {
-        const payload = { message: 'Article created' };
-        return StatusResponse.notfound(res, payload);
-      }
-      const payload = { article: createdArticle, message: 'Article successfully created' };
+      const payload = { article: newArticle, message: 'Article successfully created' };
       return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -187,12 +172,12 @@ class ArticlesController {
         where: { ...paramsSlug },
         fields: ['title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
         returning: true,
-        plain: true
       });
 
       if (tags) {
-        const createTags = await createNewTags(tags);
-        await article.setTags(createTags);
+        const createdTags = await createNewTags(tags);
+        await article.setTags(createdTags);
+        updatedArticle['1']['0'].dataValues.tags = tags;
       }
 
       return StatusResponse.success(res, {
@@ -229,12 +214,10 @@ class ArticlesController {
       }
       const data = { isArchived: true };
       await articles.update(data, {
-        where: { ...paramsSlug },
-        returning: true,
-        plain: true
+        where: { ...paramsSlug }
       });
       return StatusResponse.success(res, {
-        message: 'Article archived successfully'
+        message: 'Article deleted(archived) successfully'
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
