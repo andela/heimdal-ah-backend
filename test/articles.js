@@ -66,7 +66,7 @@ describe('Test for articles controller', () => {
     it('should return 200 on successful retrieval of an article', async () => {
       const res = await chai
         .request(app)
-        .get('/api/v1/articles/this-is-a-post-title-l78hgybf')
+        .get('/api/v1/articles/1')
         .set('access-token', userToken);
       res.status.should.equal(200);
       res.body.should.have.a('object');
@@ -92,7 +92,7 @@ describe('Test for articles controller', () => {
     it('should return 404 if article to be edited is not found', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/hello-world-new-article-46i05')
+        .put('/api/v1/articles/50')
         .set('access-token', userToken)
         .send({
           title: 'This is a title'
@@ -104,7 +104,7 @@ describe('Test for articles controller', () => {
     it('should return 403 if user tries to edit article authored by a different user', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/this-is-the-second-post-title-mbjb7y')
+        .put('/api/v1/articles/1')
         .set('access-token', userToken)
         .send({
           title: 'This is a title',
@@ -118,7 +118,7 @@ describe('Test for articles controller', () => {
     it('should return 200 on successful update of article', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/this-is-trd-post-title-u87ddsa')
+        .put('/api/v1/articles/1')
         .set('access-token', userToken)
         .send({
           title: 'This is a title',
@@ -136,7 +136,7 @@ describe('Test for articles controller', () => {
     it('should return 404 if article to be deleted is not found', async () => {
       const res = await chai
         .request(app)
-        .delete('/api/v1/articles/ncsfn-jsjns--sn')
+        .delete('/api/v1/articles/50')
         .set('access-token', userToken);
       res.status.should.equal(404);
       res.body.should.have.a('object');
@@ -145,7 +145,7 @@ describe('Test for articles controller', () => {
     it('should return 403 if user tries to archive an article authored by a different user', async () => {
       const res = await chai
         .request(app)
-        .delete('/api/v1/articles/this-is-the-second-post-title-mbjb7y')
+        .delete('/api/v1/articles/1')
         .set('access-token', userToken);
       res.status.should.equal(403);
       res.body.should.have.a('object');
@@ -154,7 +154,7 @@ describe('Test for articles controller', () => {
     it('should return 200 on successful archiving an article', async () => {
       const res = await chai
         .request(app)
-        .delete('/api/v1/articles/this-is-trd-post-title-u87ddsa')
+        .delete('/api/v1/articles/1')
         .set('access-token', userToken);
       res.status.should.equal(200);
       res.body.should.have.a('object');

@@ -1,9 +1,9 @@
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
+import pagination from '../helpers/pagination';
 import {
   checkIdentifier,
-  pageInfo,
-  checkTitle,
+  generateSlug,
   checkUser
 } from '../helpers/articleHelper';
 
@@ -21,12 +21,8 @@ class ArticlesController {
   static async create(req, res) {
     const { userId } = res.locals.user;
     try {
-      const articleTitle = await articles.findOne({
-        where: {
-          title: req.body.title
-        }
-      });
-      const articleSlug = checkTitle(req.body.title, articleTitle);
+      const articleTitle = await articles.findOne({ where: { title: req.body.title } });
+      const articleSlug = generateSlug(req.body.title, articleTitle);
       const newArticle = await articles.create({
         userId,
         title: req.body.title,
@@ -59,7 +55,7 @@ class ArticlesController {
     } = req.query;
 
     try {
-      const { limit, offset } = pageInfo(page, size);
+      const { limit, offset } = pagination(page, size);
       const fetchArticles = await articles.findAndCountAll({
         limit,
         offset,
@@ -70,9 +66,18 @@ class ArticlesController {
           message: 'No article found'
         });
       }
+      const { rows, count } = fetchArticles;
+      const totalPages = Math.ceil(count / limit);
+      const total = rows.length;
       return StatusResponse.success(res, {
         message: 'List of articles',
-        articles: fetchArticles
+        articles: fetchArticles,
+        metadata: {
+          page,
+          total,
+          limit,
+          totalPages
+        }
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -88,11 +93,11 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async get(req, res) {
-    const paramsSlug = checkIdentifier(req.params.identifier);
+    const whereClause = checkIdentifier(req.params.identifier);
 
     try {
       const fetchArticle = await articles.findOne({
-        where: { ...paramsSlug }
+        where: { ...whereClause }
       });
       return StatusResponse.success(res, {
         message: 'success',
@@ -113,11 +118,11 @@ class ArticlesController {
    */
   static async update(req, res) {
     const { userId } = res.locals.user;
-    const paramsSlug = checkIdentifier(req.params.identifier);
+    // const whereClause = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
         where: {
-          ...paramsSlug
+          id: req.params.id
         },
       });
       if (!checkUser(article, userId)) {
@@ -128,7 +133,7 @@ class ArticlesController {
 
       const data = Object.keys(req.body);
       const updatedArticle = await articles.update(req.body, {
-        where: { ...paramsSlug },
+        where: { id: req.params.id },
         fields: data,
         returning: true,
         plain: true
@@ -153,11 +158,10 @@ class ArticlesController {
    */
   static async archive(req, res) {
     const { userId } = res.locals.user;
-    const paramsSlug = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
         where: {
-          ...paramsSlug
+          id: req.params.id
         },
       });
       if (!checkUser(article, userId)) {
@@ -167,7 +171,7 @@ class ArticlesController {
       }
       const data = { isArchived: true };
       await articles.update(data, {
-        where: { ...paramsSlug },
+        where: { id: req.params.id },
         returning: true,
         plain: true
       });

@@ -1,7 +1,7 @@
-const checkIdentifier = paramsSlug => (
-  Number.isInteger(parseInt(paramsSlug, 10))
-    ? { id: paramsSlug }
-    : { slug: paramsSlug }
+const checkIdentifier = whereClause => (
+  Number.isInteger(parseInt(whereClause, 10))
+    ? { id: whereClause }
+    : { slug: whereClause }
 );
 
 export default checkIdentifier;

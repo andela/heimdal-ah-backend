@@ -1,40 +1,26 @@
-import slug from './generateSlug';
+import slugify from 'slugify';
 
-const checkIdentifier = paramsSlug => (
-  Number.isInteger(parseInt(paramsSlug, 10))
-    ? { id: paramsSlug }
-    : { slug: paramsSlug }
+const checkIdentifier = identifier => (
+  Number.isInteger(parseInt(identifier, 10))
+    ? { id: identifier }
+    : { slug: identifier }
 );
 
-const pageInfo = (page, size) => {
-  const currentPage = Math.abs(Number(page)) || 1;
-  let offset = 0;
-  let limit = 10;
-  const sizeNo = Number(size);
-  if (!Number.isNaN(sizeNo) && sizeNo > 0) limit = size;
-  offset = (currentPage - 1) * limit;
-
-  if (Number.isNaN(offset)) offset = 10;
-  return { limit, offset };
-};
-
-const checkTitle = (title, articleTitle) => {
+const generateSlug = (title, articleTitle) => {
   let articleSlug;
-  if (!articleTitle) {
-    articleSlug = slug(title);
+  if (articleTitle === null) {
+    articleSlug = slugify(title);
   } else {
-    articleSlug = `${slug(title)}-${(
+    articleSlug = `${slugify(title)}-${(
       Math.floor(Math.random() * (25 ** 6))).toString(36)}`;
   }
   return articleSlug;
 };
 
-
 const checkUser = (article, userId) => article.userId === userId;
 
 export {
   checkIdentifier,
-  pageInfo,
-  checkTitle,
-  checkUser
+  generateSlug,
+  checkUser,
 };
