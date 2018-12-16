@@ -5,8 +5,10 @@ import password from './passwords';
 import twitterRouter from './twitterRouter';
 import bookmarks from './bookmarks';
 import comment from './comment';
-import article from './articles';
+import articles from './articles';
 import likes from './likes';
+import ratings from './ratings';
+
 
 export {
   auth,
@@ -15,7 +17,9 @@ export {
   password,
   twitterRouter,
   comment,
-  article,
+  articles,
   bookmarks,
+  ratings,
   likes
+
 };

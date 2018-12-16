@@ -13,6 +13,7 @@ import {
   article,
   comment,
   bookmarks,
+  ratings,
   likes
 } from './routes';
 
@@ -38,6 +39,7 @@ app.use('/api/v1/users', user);
 app.use('/api/v1/bookmarks', bookmarks);
 app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles', article);
+app.use('/api/v1/ratings', ratings);
 app.use('/api/v1/articles', likes);
 passportAuth();
 

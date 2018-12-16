@@ -14,17 +14,12 @@ class BookmarksController {
    * @public
    */
   static async create(req, res) {
-    const { userId } = res.locals.user;
+    const { user: { userId }, article: { title } } = req.app.locals;
     const { articleId } = req.params;
-    let { title } = req.body;
-
-    if (!title) {
-      title = `untitled ${articleId}`;
-    }
 
     try {
       const bookmark = await bookmarks.create({
-        title,
+        title: req.body.title || title,
         userId,
         articleId
       });
@@ -46,28 +41,30 @@ class BookmarksController {
    * @public
    */
   static async search(req, res) {
-    const { title } = req.body;
-    const { userId } = res.locals.user;
+    const { q } = req.query;
+    const { userId } = req.app.locals.user;
+    const searchTokens = q.split(' ').map(term => `%${term}%`);
 
-    if (!title) {
-      return StatusResponse.badRequest(res, { message: 'please insert a title' });
+    try {
+      const bookmark = await bookmarks.findAndCountAll({
+        where: {
+          title: { $iLike: { $any: searchTokens } },
+          userId,
+        },
+        attributes: { include: ['createdAt', 'title'] },
+        include: [{
+          model: articles,
+          as: 'article',
+          attributes: { include: ['title', 'id', 'slug'] }
+        }]
+      });
+      if (!bookmark) {
+        return StatusResponse.notfound(res, { message: 'no bookmark found' });
+      }
+      return StatusResponse.success(res, bookmark);
+    } catch (error) {
+      return StatusResponse.internalServerError(res, { meassge: 'Server error' });
     }
-
-    const bookmark = await bookmarks.findAll({
-      where: {
-        title,
-        userId,
-      },
-      include: [{
-        model: articles,
-        as: 'article',
-        attributes: { exclude: ['createdAt', 'updatedAt', 'slug'] }
-      }],
-    });
-    if (!bookmark) {
-      return StatusResponse.notfound(res, { message: 'no bookmark found' });
-    }
-    return StatusResponse.success(res, bookmark);
   }
 
   /** @description get all bookmarks
@@ -77,22 +74,27 @@ class BookmarksController {
    * @public
    */
   static async getAll(req, res) {
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
 
-    const bookmark = await bookmarks.findAll({
-      where: {
-        userId
-      },
-      include: [{
-        model: articles,
-        as: 'article',
-        attributes: { exclude: ['createdAt', 'updatedAt', 'slug'] }
-      }]
-    });
-    if (!bookmark) {
-      return StatusResponse.notfound(res, { message: 'no bookmark found' });
+    try {
+      const bookmark = await bookmarks.findAndCountAll({
+        where: {
+          userId
+        },
+        attributes: { include: ['createdAt', 'title'] },
+        include: [{
+          model: articles,
+          as: 'article',
+          attributes: { include: ['title', 'id', 'slug'] }
+        }]
+      });
+      if (!bookmark) {
+        return StatusResponse.notfound(res, { message: 'no bookmark found' });
+      }
+      return StatusResponse.success(res, bookmark);
+    } catch (error) {
+      return StatusResponse.internalServerError(res, { message: 'server error' });
     }
-    return StatusResponse.success(res, bookmark);
   }
 
   /** @description Delete a bookmark
@@ -102,19 +104,22 @@ class BookmarksController {
    * @public
    */
   static async delete(req, res) {
-    const { userId } = res.locals.user;
+    const { user: { userId } } = req.app.locals;
     const { bookmarkId } = req.params;
-
-    const bookmark = await bookmarks.destroy({
-      where: {
-        id: bookmarkId,
-        userId
+    try {
+      const bookmark = await bookmarks.destroy({
+        where: {
+          id: bookmarkId,
+          userId
+        }
+      });
+      if (!bookmark) {
+        return StatusResponse.notfound(res, { message: 'bookmark was not found' });
       }
-    });
-    if (!bookmark) {
-      return StatusResponse.notfound(res, { message: 'bookmark was not found' });
+      return StatusResponse.success(res, { message: 'bookmark was deleted successfully' });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, { message: 'server error' });
     }
-    return StatusResponse.success(res, { message: 'bookmark was deleted successfully' });
   }
 }
 export default BookmarksController;
