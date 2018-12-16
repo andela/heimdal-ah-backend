@@ -16,7 +16,6 @@ export default {
     },
     articleId: {
       type: Sequelize.INTEGER,
-      allowNull: false,
       references: {
         model: 'articles',
         key: 'id'

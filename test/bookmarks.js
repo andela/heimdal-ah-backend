@@ -20,7 +20,7 @@ describe('/bookmarks', () => {
     userToken = token;
   });
 
-  it('should return status code 40 when user is not logged in', async () => {
+  it('should return status code 400 when user is not logged in', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/bookmarks/');

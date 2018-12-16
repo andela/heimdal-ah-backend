@@ -2,15 +2,14 @@ import Models from '../models';
 import StatusResponse from './StatusResponse';
 /** @description function to like an article
    * @param {string} res is the request parameter
-   * @param {string} articleId is the response parameter
-   *  @param {string} commentId is the response parameter
+   * @param {string} payload is the response parameter
+   *  @param {string} userId is the response parameter
    * @return {object} the response object
    * @public
    */
-const like = async (res, articleId, commentId) => {
+const like = async (res, payload) => {
   const { likes } = Models;
-  const { userId } = res.locals.user;
-
+  const { userId, articleId, commentId } = payload;
   try {
     const ifExist = await likes.findOne({
       where: {
@@ -28,37 +27,45 @@ const like = async (res, articleId, commentId) => {
           commentId
         }
       });
-      return StatusResponse.success(res, { message: 'hurray!!! you UNliked this article' });
+      return StatusResponse.success(res, { message: 'Unlike was succesful' });
     }
-
-    const add = await likes.create({
+    //  if like does not exist create new like
+    const addLikes = await likes.create({
       userId,
       articleId,
       commentId
     });
-
-    if (!add) {
-      return StatusResponse.badRequest(res, { message: 'error like could not be added' });
+    if (!addLikes) {
+      return StatusResponse.badRequest(res, { message: 'like was not added' });
     }
 
-    return StatusResponse.success(res, { message: 'hurray! you liked this article' });
+    return StatusResponse.success(res, { message: 'like was successful' });
   } catch (error) {
     return StatusResponse.internalServerError(error);
   }
 };
 
-const numOflikers = async (res, id) => {
+
+const numOflikers = async (res, payload) => {
   const { likes, users } = Models;
+  const { articleId, commentId } = payload;
   try {
     const numOfLikes = await likes.findAndCountAll({
       where: {
-        id
+        articleId,
+        commentId,
       },
       include: [{
         model: users,
         as: 'user',
         attributes: {
-          exclude: ['createdAt', 'updatedAt', 'slug', 'resettingPassword', 'password']
+          exclude: [
+            'password',
+            'createdAt',
+            'updatedAt',
+            'resettingPassword',
+            'emailVerification'
+          ]
         }
       }]
     });

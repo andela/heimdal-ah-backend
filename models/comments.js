@@ -27,10 +27,6 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
-    Comments.hasMany(models.bookmarks, {
-      foreignKey: 'commentId',
-      as: 'comments'
-    });
     Comments.hasMany(models.likes, {});
   };
   return Comments;

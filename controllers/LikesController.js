@@ -1,6 +1,6 @@
 import { like, numOflikers } from '../helpers/likes';
-import Models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
+import ArticleQueryModel from '../lib/ArticleQueryModel';
 
 
 /** @description usersController class
@@ -16,51 +16,42 @@ class LikesController {
    */
   static async likesArticles(req, res) {
     const { articleId } = req.params;
-    const commentId = null;
-    if (!parseInt(articleId, 10)) {
-      return StatusResponse.badRequest(res, { message: ' this is a bad request' });
-    }
+    const { userId } = req.app.locals.user;
+    const payload = {
+      articleId,
+      userId,
+      commentId: null
+    };
+
     try {
-      const { articles } = Models;
-      const ifExist = await articles.findOne({
-        where: {
-          id: articleId,
-          isArchived: false
-        }
-      });
-      if (!ifExist) {
-        return StatusResponse.badRequest(res, { message: 'article does not exist' });
-      }
-      return like(res, articleId, commentId);
+      await like(res, payload);
     } catch (error) {
-      return StatusResponse.internalServerError(res, { message: 'server error' });
+      StatusResponse.internalServerError(res, { message: 'server error' });
     }
   }
 
-  /** @description function to like an article
+  /** @description function to like a comment
    * @param {string} req is the request parameter
    * @param {string} res is the response parameter
    * @return {object} the response object
    * @public
    */
   static async likesComments(req, res) {
-    const { articleId, commentId } = req.params;
-    const { comments } = Models;
-    if (!parseInt(commentId, 10) || !parseInt(articleId, 10)) {
-      return StatusResponse.badRequest(res, { message: ' this is a bad request' });
-    }
+    const { commentId } = req.params;
+    const { userId } = req.app.locals.user;
+    const payload = {
+      articleId: null,
+      userId,
+      commentId,
+    };
+
     try {
-      const ifExist = await comments.findOne({
-        where: {
-          id: commentId,
-          articleId,
-          isArchived: false
-        }
-      });
+      const ifExist = await ArticleQueryModel.getCommentById(commentId);
       if (!ifExist) {
-        return StatusResponse.badRequest(res, { message: 'comment does not exist' });
+        return StatusResponse.notfound(res, { message: 'comment was not found' });
       }
-      return like(res, articleId, commentId);
+      const likeComment = await like(res, payload);
+      return likeComment;
     } catch (error) {
       return StatusResponse.internalServerError(res, { message: 'server error' });
     }
@@ -74,22 +65,37 @@ class LikesController {
    */
   static async getAriticles(req, res) {
     const { articleId } = req.params;
-    const { articles } = Models;
-
-    if (!parseInt(articleId, 10)) {
-      return StatusResponse.badRequest(res, { message: ' this is a bad request' });
-    }
+    const payload = {
+      articleId,
+      commentId: null
+    };
     try {
-      const ifExist = await articles.findOne({
-        where: {
-          id: articleId,
-          isArchived: false
-        }
-      });
+      const likes = await numOflikers(res, payload);
+      return likes;
+    } catch (error) {
+      return StatusResponse.internalServerError(res, { message: 'server error' });
+    }
+  }
+
+  /** @description get all comments
+   * @param {string} req is the request parameter
+   * @param {string} res is the response parameter
+   * @return {object} the response object
+   * @public
+   */
+  static async likedComments(req, res) {
+    const { commentId } = req.params;
+    const payload = {
+      commentId,
+      articleId: null
+    };
+    try {
+      const ifExist = await ArticleQueryModel.getCommentById(commentId);
       if (!ifExist) {
-        return StatusResponse.badRequest(res, { message: 'article does not exist' });
+        return StatusResponse.notfound(res, { message: 'comment was not found' });
       }
-      return numOflikers(res, articleId);
+      const likes = await numOflikers(res, payload);
+      return likes;
     } catch (error) {
       return StatusResponse.internalServerError(res, { message: 'server error' });
     }
