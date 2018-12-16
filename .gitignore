@@ -45,3 +45,4 @@ node_modules
 # Build
 dist/
 .vscode/settings.json
+. editorconfig

@@ -7,6 +7,7 @@ import bookmarks from './bookmarks';
 import comment from './comment';
 import articles from './articles';
 import ratings from './ratings';
+import highlightedTexts from './highlightedTexts';
 
 export {
   auth,
@@ -17,5 +18,6 @@ export {
   comment,
   articles,
   bookmarks,
-  ratings
+  ratings,
+  highlightedTexts
 };

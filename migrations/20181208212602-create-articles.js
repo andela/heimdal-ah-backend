@@ -22,7 +22,7 @@ export default {
     },
     image: {
       type: Sequelize.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     body: {
       type: Sequelize.TEXT,
@@ -45,8 +45,9 @@ export default {
       allowNull: false,
       references: {
         model: 'users',
-        key: 'id'
-      },
+        key: 'id',
+        as: 'userId'
+      }
     },
     createdAt: {
       allowNull: false,

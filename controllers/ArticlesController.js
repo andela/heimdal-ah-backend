@@ -8,7 +8,9 @@ import {
   createNewTags
 } from '../helpers/articleHelper';
 
-const { articles: Article, tags: Tag } = models;
+import highlitedTextsUpdater from '../lib/highlitedTextsUpdater';
+
+const { articles: Article, tags: Tag, HighlightedText } = models;
 
 /**
  * @description ArticlesController class
@@ -40,7 +42,7 @@ class ArticlesController {
         description,
         body,
         image,
-        slug: articleSlug,
+        slug: articleSlug
       });
 
       if (tags) {
@@ -89,14 +91,20 @@ class ArticlesController {
     try {
       const { limit, offset } = pageInfo(page, size);
       const fetchArticles = await articles.findAndCountAll({
-        include: {
-          model: Tag,
-          as: 'tags',
-          attributes: ['tagName'],
-          through: {
-            attributes: []
+        include: [
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['tagName'],
+            through: {
+              attributes: []
+            }
+          },
+          {
+            model: HighlightedText,
+            as: 'highlightedPortions'
           }
-        },
+        ],
         limit,
         offset,
         order: [[orderBy, order]]
@@ -131,14 +139,20 @@ class ArticlesController {
     try {
       const fetchArticle = await articles.findOne({
         where: { ...paramsSlug },
-        include: {
-          model: Tag,
-          as: 'tags',
-          attributes: ['tagName'],
-          through: {
-            attributes: []
+        include: [
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['tagName'],
+            through: {
+              attributes: []
+            }
+          },
+          {
+            model: HighlightedText,
+            as: 'highlightedPortions'
           }
-        },
+        ]
       });
       return StatusResponse.success(res, {
         message: 'success',
@@ -166,6 +180,7 @@ class ArticlesController {
         where: {
           ...paramsSlug
         },
+        include: { model: HighlightedText, as: 'highlightedPortions' }
       });
       if (!checkUser(article, userId)) {
         return StatusResponse.forbidden(res, {
@@ -173,24 +188,38 @@ class ArticlesController {
         });
       }
 
+      // console.log(reqBody);
       const data = Object.keys(req.body);
       const updatedArticle = await articles.update(req.body, {
         where: { ...paramsSlug },
         fields: data,
-        returning: true,
-        plain: true
+        returning: true
       });
       const { tags } = req.body;
       if (tags) {
         const createTags = await createNewTags(tags);
-        await updatedArticle.setTags(createTags);
+        await article.setTags(createTags);
       }
 
+      const reqBody = {
+        body: updatedArticle[1][0].body,
+        highlightedPortions: article.highlightedPortions
+      };
+      const newUpdatedPortions = await highlitedTextsUpdater(userId, article.id, reqBody, res);
+      if (!newUpdatedPortions) {
+        return StatusResponse.success(res, {
+          message: 'Article updated successfully, no highlights weere adjusted',
+          article: updatedArticle,
+          highlightedPortions: article.dataValues.highlightedPortions
+        });
+      }
       return StatusResponse.success(res, {
-        message: 'Article updated successfully',
-        article: updatedArticle
+        message: 'Article updated successfully, some highlights were adjusted or removed',
+        article: updatedArticle,
+        highlightedPortions: newUpdatedPortions
       });
     } catch (error) {
+      // console.log(error);
       return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });
@@ -211,7 +240,7 @@ class ArticlesController {
       const article = await articles.findOne({
         where: {
           ...paramsSlug
-        },
+        }
       });
       if (!checkUser(article, userId)) {
         return StatusResponse.forbidden(res, {
