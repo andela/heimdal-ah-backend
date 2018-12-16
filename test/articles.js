@@ -3,6 +3,7 @@ import chaiHttp from 'chai-http';
 // import jwtDecode from 'jwt-decode';
 
 import app from '../index';
+import bodyHelper from './bodyHelper';
 
 chai.use(chaiHttp);
 
@@ -11,7 +12,7 @@ describe('Test for articles controller', () => {
   before(async () => {
     const userData = {
       email: 'publisherb@heimdal.com',
-      password: 'omotayo123',
+      password: '12345678heimdal',
     };
     const userResponse = await chai
       .request(app)
@@ -49,6 +50,44 @@ describe('Test for articles controller', () => {
       res.body.should.have.a('object');
       res.body.should.have.property('message');
       res.body.message.should.equal('Article successfully created');
+      bodyHelper.article = res.body.article;
+    });
+
+
+    it('should return 400 if the tags sent are not an array of tags', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/v1/articles')
+        .set('access-token', userToken)
+        .send({
+          title: 'This is a title',
+          description: 'This is a description',
+          body: ' his is a powerful article',
+          image: 'www.image',
+          tags: '1, 2, 4',
+        });
+      res.status.should.equal(400);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('Tags should be an array containing tag names');
+    });
+
+    it('should return 400 if the number of tags sent exceeds 7', async () => {
+      const res = await chai
+        .request(app)
+        .post('/api/v1/articles')
+        .set('access-token', userToken)
+        .send({
+          title: 'This is a title',
+          description: 'This is a description',
+          body: ' his is a powerful article',
+          image: 'www.image',
+          tags: ['bag', 'food', 'grap', '1', '2', '3', '4', '5'],
+        });
+      res.status.should.equal(400);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('You can only add a maximum of 7 tags');
     });
   });
 
@@ -109,7 +148,7 @@ describe('Test for articles controller', () => {
         .send({
           title: 'This is a title',
           description: 'This is a description',
-          body: ' his is a powerful article'
+          body: 'this is a powerful article'
         });
       res.status.should.equal(403);
       res.body.should.have.a('object');
@@ -118,12 +157,12 @@ describe('Test for articles controller', () => {
     it('should return 200 on successful update of article', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/1')
+        .put('/api/v1/articles/5')
         .set('access-token', userToken)
         .send({
           title: 'This is a title',
           description: 'This is a description',
-          body: ' his is a powerful article'
+          body: ' this is a powerful article'
         });
       res.status.should.equal(200);
       res.body.should.have.a('object');
@@ -154,7 +193,7 @@ describe('Test for articles controller', () => {
     it('should return 200 on successful archiving an article', async () => {
       const res = await chai
         .request(app)
-        .delete('/api/v1/articles/1')
+        .delete('/api/v1/articles/5')
         .set('access-token', userToken);
       res.status.should.equal(200);
       res.body.should.have.a('object');

@@ -1,13 +1,16 @@
-import model from '../models';
+import models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import pagination from '../helpers/pagination';
+import ArticleQueryModel from '../lib/ArticleQueryModel';
 import {
   checkIdentifier,
-  generateSlug,
-  checkUser
+  checkUser,
+  checkTitle,
+  createNewTags
 } from '../helpers/articleHelper';
 
-const { articles } = model;
+const { articles: Article, tags: Tag } = models;
+
 /**
  * @description ArticlesController class
  */
@@ -19,26 +22,48 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async create(req, res) {
-    const { userId } = res.locals.user;
+    const { userId } = req.app.locals.user;
+    const {
+      tags, body, title, description, image
+    } = req.body;
     try {
-      const articleTitle = await articles.findOne({ where: { title: req.body.title } });
-      const articleSlug = generateSlug(req.body.title, articleTitle);
-      const newArticle = await articles.create({
+      const articleTitle = await ArticleQueryModel.getArticleByTitle();
+      const articleSlug = checkTitle(req.body.title, articleTitle);
+      const newArticle = await Article.create({
         userId,
-        title: req.body.title,
-        description: req.body.description,
+        title,
+        description,
+        body,
+        image,
         slug: articleSlug,
-        body: req.body.body,
-        image: req.body.image
       });
 
-      return StatusResponse.created(res, {
-        message: 'Article successfully created',
-        article: newArticle
+      if (tags) {
+        const createTags = await createNewTags(tags);
+        await newArticle.addTags(createTags);
+      }
+
+      const createdArticle = await Article.findOne({
+        where: { id: newArticle.id },
+        include: {
+          model: Tag,
+          as: 'tags',
+          attributes: ['tagName'],
+          through: {
+            attributes: []
+          }
+        }
       });
+
+      if (!createdArticle) {
+        const payload = { message: 'Article created' };
+        return StatusResponse.notfound(res, payload);
+      }
+      const payload = { article: createdArticle, message: 'Article successfully created' };
+      return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {
-        message: `something went wrong, please try again.... ${error}`
+        message: `Something went wrong, please try again.... ${error}`
       });
     }
   }
@@ -50,13 +75,24 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async list(req, res) {
+    const { articles } = models;
     const {
       size, page = 1, order = 'ASC', orderBy = 'createdAt'
     } = req.query;
-
     try {
-      const { limit, offset } = pagination(page, size);
+      const count = await ArticleQueryModel.getArticleCount();
+      const {
+        limit, offset, totalPages, currentPage
+      } = pagination(page, size, count);
       const fetchArticles = await articles.findAndCountAll({
+        include: {
+          model: Tag,
+          as: 'tags',
+          attributes: ['tagName'],
+          through: {
+            attributes: []
+          }
+        },
         limit,
         offset,
         order: [[orderBy, order]]
@@ -66,15 +102,14 @@ class ArticlesController {
           message: 'No article found'
         });
       }
-      const { rows, count } = fetchArticles;
-      const totalPages = Math.ceil(count / limit);
-      const total = rows.length;
+      const { rows } = fetchArticles;
+      const articleCount = rows.length;
       return StatusResponse.success(res, {
         message: 'List of articles',
         articles: fetchArticles,
         metadata: {
-          page,
-          total,
+          currentPage,
+          articleCount,
           limit,
           totalPages
         }
@@ -96,8 +131,16 @@ class ArticlesController {
     const whereClause = checkIdentifier(req.params.identifier);
 
     try {
-      const fetchArticle = await articles.findOne({
-        where: { ...whereClause }
+      const fetchArticle = await Article.findOne({
+        where: { ...whereClause },
+        include: {
+          model: Tag,
+          as: 'tags',
+          attributes: ['tagName'],
+          through: {
+            attributes: []
+          }
+        },
       });
       return StatusResponse.success(res, {
         message: 'success',
@@ -117,12 +160,14 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async update(req, res) {
-    const { userId } = res.locals.user;
-    // const whereClause = checkIdentifier(req.params.identifier);
+    const { articles } = models;
+    const { userId } = req.app.locals.user;
+    const whereClause = checkIdentifier(req.params.identifier);
+
     try {
       const article = await articles.findOne({
         where: {
-          id: req.params.id
+          ...whereClause
         },
       });
       if (!checkUser(article, userId)) {
@@ -133,11 +178,16 @@ class ArticlesController {
 
       const data = Object.keys(req.body);
       const updatedArticle = await articles.update(req.body, {
-        where: { id: req.params.id },
+        where: { ...whereClause },
         fields: data,
         returning: true,
         plain: true
       });
+      const { tags } = req.body;
+      if (tags) {
+        const createTags = await createNewTags(tags);
+        await updatedArticle.setTags(createTags);
+      }
 
       return StatusResponse.success(res, {
         message: 'Article updated successfully',
@@ -157,11 +207,13 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async archive(req, res) {
-    const { userId } = res.locals.user;
+    const { articles } = models;
+    const { userId } = req.app.locals.user;
+    const whereClause = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
         where: {
-          id: req.params.id
+          ...whereClause
         },
       });
       if (!checkUser(article, userId)) {
@@ -171,7 +223,7 @@ class ArticlesController {
       }
       const data = { isArchived: true };
       await articles.update(data, {
-        where: { id: req.params.id },
+        where: { ...whereClause },
         returning: true,
         plain: true
       });
