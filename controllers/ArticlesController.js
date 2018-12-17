@@ -5,7 +5,8 @@ import {
   pageInfo,
   checkTitle,
   checkUser,
-  createNewTags
+  createNewTags,
+  calcReadingTime
 } from '../helpers/articleHelper';
 
 const { articles: Article, tags: Tag } = models;
@@ -21,7 +22,6 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async create(req, res) {
-    // const { userId } = res.locals.user;
     const { userId } = req.app.locals.user;
     const {
       tags, body, title, description, image
@@ -33,6 +33,7 @@ class ArticlesController {
         }
       });
       const articleSlug = checkTitle(req.body.title, articleTitle);
+      const readingTime = calcReadingTime(body);
 
       const newArticle = await Article.create({
         userId,
@@ -40,31 +41,17 @@ class ArticlesController {
         description,
         body,
         image,
+        readingTime,
         slug: articleSlug,
       });
 
       if (tags) {
-        const createTags = await createNewTags(tags);
-        await newArticle.addTags(createTags);
+        const createdTags = await createNewTags(tags);
+        await newArticle.addTags(createdTags);
+        newArticle.dataValues.tags = tags;
       }
 
-      const createdArticle = await Article.findOne({
-        where: { id: newArticle.id },
-        include: {
-          model: Tag,
-          as: 'tags',
-          attributes: ['tagName'],
-          through: {
-            attributes: []
-          }
-        }
-      });
-
-      if (!createdArticle) {
-        const payload = { message: 'Article created' };
-        return StatusResponse.notfound(res, payload);
-      }
-      const payload = { article: createdArticle, message: 'Article successfully created' };
+      const payload = { article: newArticle, message: 'Article successfully created' };
       return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -160,6 +147,8 @@ class ArticlesController {
   static async update(req, res) {
     const { articles } = models;
     const { userId } = req.app.locals.user;
+    const { body, title, tags } = req.body;
+
     const paramsSlug = checkIdentifier(req.params.identifier);
     try {
       const article = await articles.findOne({
@@ -172,18 +161,23 @@ class ArticlesController {
           message: 'Request denied'
         });
       }
+      if (title) {
+        req.body.slug = checkTitle(title, title);
+      }
+      if (body) {
+        req.body.readingTime = calcReadingTime(body);
+      }
 
-      const data = Object.keys(req.body);
       const updatedArticle = await articles.update(req.body, {
         where: { ...paramsSlug },
-        fields: data,
+        fields: ['title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
         returning: true,
-        plain: true
       });
-      const { tags } = req.body;
+
       if (tags) {
-        const createTags = await createNewTags(tags);
-        await updatedArticle.setTags(createTags);
+        const createdTags = await createNewTags(tags);
+        await article.setTags(createdTags);
+        updatedArticle['1']['0'].dataValues.tags = tags;
       }
 
       return StatusResponse.success(res, {
@@ -220,12 +214,10 @@ class ArticlesController {
       }
       const data = { isArchived: true };
       await articles.update(data, {
-        where: { ...paramsSlug },
-        returning: true,
-        plain: true
+        where: { ...paramsSlug }
       });
       return StatusResponse.success(res, {
-        message: 'Article archived successfully'
+        message: 'Article deleted(archived) successfully'
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
