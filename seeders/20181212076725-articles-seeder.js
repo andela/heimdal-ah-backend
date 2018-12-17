@@ -9,6 +9,7 @@ export default {
     description: 'Descriptive title',
     body: 'Content',
     userId: 1,
+    isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -18,9 +19,9 @@ export default {
     description: 'Second descriptive title',
     body: 'Content from article creation',
     userId: 2,
+    isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-
   },
   {
     slug: 'this-is-third-post-title-u87ddsa',
@@ -28,9 +29,9 @@ export default {
     description: 'Third descriptive title',
     body: 'Content from article creation',
     userId: 3,
+    isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-
   },
   {
     slug: 'this-is-third-pot-title-u87dda',
@@ -38,9 +39,9 @@ export default {
     description: 'Third descriptive title',
     body: 'Content from article creation',
     userId: 4,
+    isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-
   },
   {
     slug: 'this-is-trd-post-title-u87ddsa',
@@ -48,9 +49,29 @@ export default {
     description: 'Third descriptive title',
     body: 'Content from article creation',
     userId: 5,
+    isArchived: false,
     createdAt: new Date(),
     updatedAt: new Date(),
-
+  },
+  {
+    slug: 'what-a-wonderful-world-u87dda',
+    title: 'What a wonderful world title',
+    description: 'This describes a world that is wonderful',
+    body: 'Nature is a wonderful place',
+    userId: 1,
+    isArchived: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    slug: 'it-is-fun-to-be-alive-u87dda',
+    title: 'It is fun to be alive',
+    description: 'It so much fun to be alive',
+    body: 'Yeah, Live is such a sweet place',
+    userId: 1,
+    isArchived: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   }], {}),
 
   down: (queryInterface, Sequelize) => {

@@ -23,11 +23,19 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       onDelete: 'CASCADE',
     });
+
     Comments.belongsTo(models.users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
     Comments.hasMany(models.likes, {});
+    Comments.belongsTo(models.comments, {
+      foreignKey: 'commentId',
+      onDelete: 'CASCADE',
+    });
+    // Comments.hasOne(models.comments, {
+    //   foreignKey: 'commentId',
+    // });
   };
   return Comments;
 };
