@@ -65,14 +65,10 @@ class ArticlesController {
   static async list(req, res) {
     const { articles } = models;
     const {
-      size, page = 1, order = 'ASC', orderBy = 'createdAt'
+      size, page = 1, order = 'ASC', orderBy = 'id'
     } = req.query;
     try {
-      const count = await ArticleQueryModel.getArticlesCount();
-      const {
-        limit, offset, totalPages, currentPage
-      } = pagination(page, size, count);
-      const fetchArticles = await articles.findAndCountAll({
+      const fetchhArticles = await articles.findAndCountAll({
         include: {
           model: Tag,
           as: 'tags',
@@ -81,23 +77,27 @@ class ArticlesController {
             attributes: []
           }
         },
-        limit,
-        offset,
         order: [[orderBy, order]]
       });
-      if (fetchArticles.length === 0) {
+
+      const {
+        limit, offset, totalPages, currentPage
+      } = pagination(page, size, fetchhArticles.count);
+      const fetchedArticles = fetchhArticles.rows.slice(offset, parseInt(offset, 10)
+      + parseInt(limit, 10));
+
+      if (fetchedArticles.length === 0) {
         return StatusResponse.success(res, {
           message: 'No article found'
         });
       }
-      const { rows } = fetchArticles;
-      const articleCount = rows.length;
       return StatusResponse.success(res, {
         message: 'List of articles',
-        articles: fetchArticles,
+        articles: fetchedArticles,
         metadata: {
+          count: fetchhArticles.count,
           currentPage,
-          articleCount,
+          articleCount: fetchedArticles.length,
           limit,
           totalPages
         }

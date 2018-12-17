@@ -19,24 +19,6 @@ const checkArticle = async (req, res, next) => {
   return next();
 };
 
-
-// const findArticleById = async (req, res, next) => {
-//   try {
-//     const fetchArticle = await articles.findOne({
-//       where: {
-//         id: req.params.id
-//       }
-//     });
-//     if (!fetchArticle) {
-//       return StatusResponse.notfound(res, {
-//         message: 'Could not find article'
-//       });
-//     }
-//     return fetchArticle;
-//   } catch (error) {
-//     StatusResponse.internalServerError(res, {
-//       message: `something went wrong, please try again.... ${error}`
-//     });
 const checkTags = (req, res, next) => {
   const { tags } = req.body;
   if (tags) {
