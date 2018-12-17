@@ -42,7 +42,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 200 when user is avaliable', async () => {
+  it('should return a 200 when user is avaliable and article is also avaliable', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/likes')
@@ -53,7 +53,7 @@ describe('/likes', () => {
     res.body.message.should.be.equal('like was successful');
   });
 
-  it('should return a 200 when user is avaliable', async () => {
+  it('should return a 200 when a registered user unlikes an article', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/likes')
@@ -74,7 +74,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 200 when user is avaliable', async () => {
+  it('should return a 200 when user is registered and article is avaliable', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/likes')
@@ -84,7 +84,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 401 when user is not avaliable', async () => {
+  it('should return a 401 when user is not registered', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/likes')
@@ -95,7 +95,7 @@ describe('/likes', () => {
   });
 
 
-  it('should return a 200 when user is avaliable', async () => {
+  it('should return a 200 when a registered user likes a comment', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/comments/1/likes')
@@ -106,7 +106,7 @@ describe('/likes', () => {
     res.body.message.should.be.equal('like was successful');
   });
 
-  it('should return a 200 when user is avaliable', async () => {
+  it('should return a 200 when a registered user UNlikes a comment', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/comments/1/likes')
@@ -115,16 +115,6 @@ describe('/likes', () => {
     res.status.should.equal(200);
     res.body.should.be.a('object');
     res.body.message.should.be.equal('Unlike was succesful');
-  });
-
-  it('should return a 404 when comment is not avaliable', async () => {
-    const res = await chai
-      .request(app)
-      .post('/api/v1/articles/1/comments/2000/likes')
-      .set('access-token', userToken);
-
-    res.status.should.equal(404);
-    res.body.should.be.a('object');
   });
 
   it('should return a 200 when article and commentId and articleId are correct', async () => {
@@ -147,7 +137,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a  when article and commentId and articleId are correct', async () => {
+  it('should return a 401 when an unregistered user tries to like a comment', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/comments/1/likes')

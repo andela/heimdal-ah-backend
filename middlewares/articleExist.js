@@ -1,9 +1,8 @@
-import StatusResponse from '../helpers/StatusResponse';
 import models from '../models';
-import checkIdentifier from '../helpers/checkIdentifier';
+import { checkIdentifier } from '../helpers/articleHelper';
+import StatusResponse from '../helpers/StatusResponse';
 
 const { articles } = models;
-
 const checkArticle = async (req, res, next) => {
   try {
     const identifier = req.params.id || req.params.articleId || req.params.identifier;
