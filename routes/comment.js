@@ -1,9 +1,9 @@
 import express from 'express';
 import CommentValidation from '../middlewares/CommentValidation';
-import checkAuthenticated from '../middlewares/checkAuthentication';
+import checkAuthentication from '../middlewares/checkAuthentication';
 import CommentController from '../controllers/CommentController';
+import { checkArticle } from '../middlewares/articleMiddleware';
 import CommentHistoriesController from '../controllers/CommentHistoriesController';
-import articleExist from '../middlewares/articleExist';
 
 const {
   checkCommentContent,
@@ -21,14 +21,17 @@ const {
 const { create, list, archive } = CommentController;
 const router = express.Router();
 
-router.get('/:id/comments', checkAuthenticated, checkArticleId, articleExist, list);
-router.post('/:id/comments', checkAuthenticated, checkCommentContent, articleExist, create);
-router.delete('/:articleId/comments/:commentId', checkAuthenticated, checkCommentId, checkCommentParams, archive);
+router.get('/:articleId/comments', checkAuthentication, checkArticle, checkArticleId, list);
+router.post('/:articleId/comments', checkAuthentication, checkArticleId, checkCommentContent, checkArticle, create);
+router.delete('/:articleId/comments/:commentId', checkAuthentication, checkArticle, checkCommentId, checkCommentParams, archive);
+router.get('/:id/comments', checkAuthentication, checkArticleId, checkArticle, list);
+router.post('/:id/comments', checkAuthentication, checkCommentContent, checkArticle, create);
+router.delete('/:articleId/comments/:commentId', checkAuthentication, checkCommentId, checkCommentParams, archive);
 
 router.get(
   '/:articleId/comments/:commentId',
   [
-    checkAuthenticated,
+    checkAuthentication,
     checkCommentId
   ],
   getACommentHistory
@@ -37,7 +40,7 @@ router.get(
 router.put(
   '/:articleId/comments/:commentId',
   [
-    checkAuthenticated,
+    checkAuthentication,
     checkCommentId,
     checkCommentContent,
   ],
