@@ -55,8 +55,8 @@ describe('Comment Validation and Creation', () => {
     res.body.should.be.a('object');
     res.body.should.have.property('errors');
     res.body.errors.should.be.a('object');
-    res.body.errors.should.have.property('identifier');
-    res.body.errors.identifier.msg.should.equal('Article Id must be an Integer');
+    res.body.errors.should.have.property('articleId');
+    res.body.errors.articleId.msg.should.equal('Article Id must be an Integer');
   });
 
   it('should return an error if the content value is too long', async () => {

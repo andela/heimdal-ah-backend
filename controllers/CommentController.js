@@ -15,12 +15,12 @@ class CommentController {
    */
   static async create(req, res) {
     const { content } = req.body;
-    const { identifier } = req.params;
+    const { articleId } = req.params;
     const { userId } = req.app.locals.user;
     try {
       const comment = await comments.create({
         userId,
-        articleId: identifier,
+        articleId,
         content
       });
       const payload = {
@@ -46,14 +46,14 @@ class CommentController {
    * @return {Object} Returned object
    */
   static async list(req, res) {
-    const { identifier } = req.params;
+    const { articleId } = req.params;
     try {
       const comment = await comments.findAll({
         include: [
           profiles,
         ],
         where: {
-          articleId: identifier,
+          articleId,
           isArchived: false,
           commentId: null
         }
