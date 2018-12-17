@@ -148,7 +148,7 @@ describe('Comment Validation and Creation', () => {
       isArchived: true
     };
     const res = await chai.request(app)
-      .delete('/api/v1/articles/1/comments/1')
+      .delete('/api/v1/articles/1/comments/3')
       .set('access-token', userToken)
       .send(data);
     res.status.should.equal(200);

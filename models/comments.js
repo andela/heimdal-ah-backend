@@ -23,6 +23,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
+    Comments.belongsTo(models.comments, {
+      foreignKey: 'commentId',
+      onDelete: 'CASCADE',
+    });
   };
   return Comments;
 };
