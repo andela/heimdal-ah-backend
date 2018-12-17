@@ -1,6 +1,6 @@
 import Models from '../models';
 import StatusResponse from './StatusResponse';
-/** @description function to like an article
+/** @description function to like an article and comments
    * @param {string} res is the request parameter
    * @param {string} payload is the response parameter
    *  @param {string} userId is the response parameter
@@ -30,14 +30,11 @@ const like = async (res, payload) => {
       return StatusResponse.success(res, { message: 'Unlike was succesful' });
     }
     //  if like does not exist create new like
-    const addLikes = await likes.create({
+    await likes.create({
       userId,
       articleId,
       commentId
     });
-    if (!addLikes) {
-      return StatusResponse.badRequest(res, { message: 'like was not added' });
-    }
 
     return StatusResponse.success(res, { message: 'like was successful' });
   } catch (error) {
@@ -45,7 +42,12 @@ const like = async (res, payload) => {
   }
 };
 
-
+/** @description number of likes for comment and articles
+   * @param {string} res is the request parameter
+   * @param {string} payload is the response parameter
+   * @return {object} the response object
+   * @public
+   */
 const numOflikers = async (res, payload) => {
   const { likes, users } = Models;
   const { articleId, commentId } = payload;
@@ -58,15 +60,10 @@ const numOflikers = async (res, payload) => {
       include: [{
         model: users,
         as: 'user',
-        attributes: {
-          exclude: [
-            'password',
-            'createdAt',
-            'updatedAt',
-            'resettingPassword',
-            'emailVerification'
-          ]
-        }
+        attributes: [
+          'id', 'email', 'roleId'
+        ]
+
       }]
     });
     if (!numOfLikes) {

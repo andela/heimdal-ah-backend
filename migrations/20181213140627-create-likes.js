@@ -24,7 +24,7 @@ export default {
     commentId: {
       type: Sequelize.INTEGER,
       references: {
-        model: 'articles',
+        model: 'comments',
         key: 'id'
       },
     },
