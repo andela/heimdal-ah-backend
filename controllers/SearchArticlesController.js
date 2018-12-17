@@ -12,7 +12,7 @@ const {
  * @param {object} res
  * @returns {class} Articles searched for
  */
-class SearchController {
+class SearchArticlesController {
   /**
    * @description - This method takes care of retrieving articles by authors
    * @param {object} req
@@ -120,4 +120,4 @@ class SearchController {
   }
 }
 
-export default SearchController;
+export default SearchArticlesController;

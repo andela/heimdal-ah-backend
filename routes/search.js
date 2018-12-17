@@ -1,12 +1,12 @@
 import express from 'express';
 import { getAuthor } from '../middlewares/ProfilesMiddleware';
-import getTagId from '../middlewares/ArticleByTag';
-import SearchController from '../controllers/SearchController';
+import { getTagId } from '../middlewares/articleMiddleware';
+import SearchArticlesController from '../controllers/SearchArticlesController';
 
 const router = express.Router();
 
-router.get('/author', getAuthor, SearchController.byAuthor);
-router.get('/title', SearchController.byTitle);
-router.get('/tag', getTagId, SearchController.byTags);
+router.get('/author', getAuthor, SearchArticlesController.byAuthor);
+router.get('/title', SearchArticlesController.byTitle);
+router.get('/tag', getTagId, SearchArticlesController.byTags);
 
 export default router;

@@ -48,9 +48,8 @@ const getAuthor = async (req, res, next) => {
       message: 'No such author',
     });
   }
-  req.userId = author.userId;
   req.app.locals.user = {
-    userId: req.userId,
+    userId: author.userId,
   };
   return next();
 };
