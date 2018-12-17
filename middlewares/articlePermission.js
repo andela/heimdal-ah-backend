@@ -26,10 +26,9 @@ const articlePermission = async (req, res, next) => {
         userId: req.userId,
         username: req.username
       };
-      return next();
     });
-  } else {
     return next();
   }
+  return next();
 };
 export default articlePermission;
