@@ -36,6 +36,7 @@ export function up(queryInterface, Sequelize) {
     userId: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      onDelete: 'CASCADE',
       unique: true,
       references: {
         model: 'users',

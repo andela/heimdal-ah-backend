@@ -1,4 +1,3 @@
-
 import Models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 
@@ -56,7 +55,7 @@ class BookmarksController {
         include: [{
           model: articles,
           as: 'article',
-          attributes: { include: ['title', 'id', 'slug'] }
+          attributes: ['title', 'id', 'slug']
         }]
       });
       if (!bookmark) {
@@ -82,11 +81,11 @@ class BookmarksController {
         where: {
           userId
         },
-        attributes: { include: ['createdAt', 'title'] },
+        attributes: ['createdAt', 'title', 'userId'],
         include: [{
           model: articles,
           as: 'article',
-          attributes: { include: ['title', 'id', 'slug'] }
+          attributes: ['title', 'id', 'slug']
         }]
       });
       if (!bookmark) {

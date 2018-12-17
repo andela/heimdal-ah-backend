@@ -1,5 +1,6 @@
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
+import pagination from '../helpers/pagination';
 
 const {
   articles,
@@ -20,16 +21,33 @@ class SearchArticlesController {
    * @returns {object} Articles by authors
    */
   static async byAuthor(req, res) {
+    const {
+      size, page = 1, order = 'DESC', orderBy = 'id'
+    } = req.query;
     try {
       const articlesByAuthor = await articles.findAndCountAll({
         where: {
           userId: req.app.locals.user.userId,
-        }
+        },
+        order: [[orderBy, order]]
       });
-      if (articlesByAuthor.count >= 1) {
+      const {
+        limit, offset, totalPages, currentPage
+      } = pagination(page, size, articlesByAuthor.count);
+      const fetchedArticles = articlesByAuthor.rows.slice(offset, parseInt(offset, 10)
+      + parseInt(limit, 10));
+
+      if (fetchedArticles.length >= 1) {
         StatusResponse.success(res, {
           message: 'All Articles by this author returned succesfully',
-          articles: articlesByAuthor
+          articles: fetchedArticles,
+          metadata: {
+            count: articlesByAuthor.count,
+            currentPage,
+            articleCount: fetchedArticles.length,
+            limit,
+            totalPages
+          }
         });
       } else {
         StatusResponse.notfound(res, {

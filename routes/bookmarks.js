@@ -2,19 +2,19 @@ import express from 'express';
 import BookmarksController from '../controllers/BookmarksController';
 import bookmarkValidate from '../middlewares/bookmarksValidate';
 import checkAuthentication from '../middlewares/checkAuthentication';
-import articleExist from '../middlewares/articleExist';
+import { checkArticle } from '../middlewares/articleMiddleware';
 
 const router = express.Router();
 
 router.get(
-  '/bookmarks',
+  '/bookmarks/all',
   checkAuthentication,
   BookmarksController.getAll
 );
 router.post(
   '/:articleId/bookmarks',
   checkAuthentication,
-  articleExist,
+  checkArticle,
   bookmarkValidate,
   BookmarksController.create
 );

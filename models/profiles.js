@@ -33,6 +33,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
     });
+    Profiles.hasMany(models.comments, {
+      foreignKey: 'userId',
+      as: 'profile'
+    });
     Profiles.hasMany(models.followers, {
       foreignKey: 'followingId',
     });
