@@ -57,6 +57,16 @@ const createNewTags = async (tags) => {
   return tagIds;
 };
 
+
+const calcReadingTime = (bodyText) => {
+  const matches = bodyText.match(/\S+/g);
+  const numberOfWords = matches ? matches.length : 0;
+  const averageWPM = 225;
+  const readingTime = Math.ceil(numberOfWords / averageWPM);
+
+  return readingTime > 1 ? `${readingTime} mins read` : `${readingTime} min read`;
+};
+
 export {
-  checkIdentifier, pageInfo, checkTitle, checkUser, createNewTags
+  checkIdentifier, pageInfo, checkTitle, checkUser, createNewTags, calcReadingTime
 };
