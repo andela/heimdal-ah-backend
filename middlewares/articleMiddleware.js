@@ -48,6 +48,9 @@ const checkTags = (req, res, next) => {
       const payload = { message: 'You can only add a maximum of 7 tags' };
       return StatusResponse.badRequest(res, payload);
     }
+
+    const tagString = tags.map(eachTag => eachTag.toString());
+    req.body.tags = tagString;
   }
   return next();
 };

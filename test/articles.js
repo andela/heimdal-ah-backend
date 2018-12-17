@@ -198,7 +198,7 @@ describe('Test for articles controller', () => {
       res.status.should.equal(200);
       res.body.should.have.a('object');
       res.body.should.have.property('message');
-      res.body.message.should.equal('Article archived successfully');
+      res.body.message.should.equal('Article deleted(archived) successfully');
     });
   });
 });
