@@ -1,4 +1,7 @@
-import Response from '../helpers/StatusResponse';
+import StatusResponse from '../helpers/StatusResponse';
+import model from '../models';
+
+const { profiles } = model;
 
 // This function checks for user id being an integer on [users profile creation]
 const checkUsersId = (req, res, next) => {
@@ -23,7 +26,7 @@ const validProfileInput = (req, res, next) => {
     || !req.body.address
     || !req.body.dateofbirth
   ) {
-    Response.badRequest(res, {
+    StatusResponse.badRequest(res, {
       message: 'User input(s) field must me not be empty',
       error: {
         body: ['Invalid input']
@@ -33,5 +36,24 @@ const validProfileInput = (req, res, next) => {
   return next();
 };
 
+// This function checks to see whether a profile exist or not [used in filtering articles by author]
+const getAuthor = async (req, res, next) => {
+  const author = await profiles.findOne({
+    where: {
+      username: req.query.author
+    },
+  });
+  if (!author) {
+    return StatusResponse.notfound(res, {
+      message: 'No such author',
+    });
+  }
+  req.userId = author.userId;
+  req.app.locals.user = {
+    userId: req.userId,
+  };
+  return next();
+};
+
 // Export all middlewares here
-export { checkUsersId, validProfileInput };
+export { checkUsersId, validProfileInput, getAuthor };

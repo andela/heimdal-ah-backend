@@ -2,10 +2,10 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import StatusResponse from '../helpers/StatusResponse';
+import UserModelQuery from '../lib/UserModelQuery';
 
 dotenv.config();
-const checkAuthentication = (req, res, next) => {
-  // Check header or url parameters or post parameters for token
+const checkAuthentication = async (req, res, next) => {
   const token = req.headers['access-token'];
   if (!token) {
     StatusResponse.badRequest(res, {
@@ -15,24 +15,26 @@ const checkAuthentication = (req, res, next) => {
       }
     });
   } else {
-    // Decode token
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
       if (err) {
-        // Wrong token
         return StatusResponse.unauthorized(res, {
           errors: {
             body: ['User token not authenticated, wrong token']
           }
         });
       }
+
+      const user = await UserModelQuery.getUserById(decoded.userId);
+      if (!user) {
+        return StatusResponse.unauthorized(res, { message: 'user does not exist' });
+      }
+
       req.userId = decoded.userId;
       req.username = decoded.username;
-      res.locals.user = {
+      req.app.locals.user = {
         userId: req.userId,
         username: req.username
       };
-
-      // Call the next middleware
       return next();
     });
   }

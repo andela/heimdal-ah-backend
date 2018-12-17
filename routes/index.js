@@ -3,8 +3,10 @@ import user from './users';
 import profiles from './profiles';
 import password from './passwords';
 import twitterRouter from './twitterRouter';
+import bookmarks from './bookmarks';
 import comment from './comment';
-import article from './articles';
+import articles from './articles';
+import search from './search';
 import ratings from './ratings';
 
 export {
@@ -14,6 +16,8 @@ export {
   password,
   twitterRouter,
   comment,
-  article,
+  articles,
+  bookmarks,
+  search,
   ratings
 };
