@@ -24,8 +24,8 @@ const mailer = {
 
     return sgMail
       .send(msg)
-      .then(() => true)
-      .catch(() => false);
+      .then(() => ({ success: true, message: 'email sent' }))
+      .catch(() => ({ success: false, message: 'email not sent' }));
   },
   /**
    * @description This method is used to send a verification mail to a user

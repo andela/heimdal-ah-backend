@@ -31,7 +31,8 @@ const checkTitle = (title, articleTitle) => {
   if (!articleTitle) {
     articleSlug = slug(title);
   } else {
-    articleSlug = `${slug(title)}-${Math.floor(Math.random() * (25 ** 6)).toString(36)}`;
+    const multiplyWith = 25 ** 6;
+    articleSlug = `${slug(title)}-${Math.floor(Math.random() * multiplyWith).toString(36)}`;
   }
   return articleSlug;
 };
@@ -45,7 +46,7 @@ const checkUser = (article, userId) => article.userId === userId;
  * @returns {Object} object - the sequelize object of article tags
  */
 const createNewTags = async (tags) => {
-  let tagList = tags.map(async thisTag => Tag.findOrCreate({
+  let tagList = await tags.map(async thisTag => Tag.findOrCreate({
     where: {
       tagName: thisTag
     }
@@ -57,12 +58,11 @@ const createNewTags = async (tags) => {
   return tagIds;
 };
 
-
 const calcReadingTime = (bodyText) => {
   const matches = bodyText.match(/\S+/g);
   const numberOfWords = matches ? matches.length : 0;
-  const averageWPM = 225;
-  const readingTime = Math.ceil(numberOfWords / averageWPM);
+  const averageWordsPerMinute = 225;
+  const readingTime = Math.ceil(numberOfWords / averageWordsPerMinute);
 
   return readingTime > 1 ? `${readingTime} mins read` : `${readingTime} min read`;
 };

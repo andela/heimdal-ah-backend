@@ -14,4 +14,5 @@ import './commentHistory';
 import './likes';
 import './ratings';
 import './helpers/articleHelpers';
+import './helpers/mailer';
 import './follows';
