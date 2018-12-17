@@ -23,7 +23,7 @@ describe('/likes', () => {
     userToken = token;
   });
 
-  it('should return status code 400 when user is not logged in', async () => {
+  it('should return status code 400 when user is not authenticated', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/likes');
@@ -32,7 +32,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 401 when user is not avaliable', async () => {
+  it('should return a 401 when user not authenticated', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/likes')
@@ -42,7 +42,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 200 when user is avaliable and article is also avaliable', async () => {
+  it('should return a 200 when an authenticated user likes an article', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/likes')
@@ -53,7 +53,7 @@ describe('/likes', () => {
     res.body.message.should.be.equal('like was successful');
   });
 
-  it('should return a 200 when a registered user unlikes an article', async () => {
+  it('should return a 200 when an authenticated user unlikes an article', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/likes')
@@ -74,7 +74,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 200 when user is registered and article is avaliable', async () => {
+  it('should return a 200 when an authenticated likes an article', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/likes')
@@ -84,7 +84,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 401 when user is not registered', async () => {
+  it('should return a 401 when user is not authenticated', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/likes')
@@ -117,7 +117,7 @@ describe('/likes', () => {
     res.body.message.should.be.equal('Unlike was succesful');
   });
 
-  it('should return a 200 when article and commentId and articleId are correct', async () => {
+  it('should return a 200 when article and comment and article are in the database', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/comments/1/likes')
@@ -137,7 +137,7 @@ describe('/likes', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 401 when an unregistered user tries to like a comment', async () => {
+  it('should return a 401 when a user is not authenticated', async () => {
     const res = await chai
       .request(app)
       .get('/api/v1/articles/1/comments/1/likes')
