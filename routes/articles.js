@@ -13,4 +13,5 @@ router.get('/', ArticlesController.list);
 router.get('/:identifier', checkArticle, ArticlesController.get);
 router.put('/:identifier', checkAuthentication, checkArticle, checkTags, ArticlesController.update);
 router.delete('/:identifier', checkAuthentication, checkArticle, ArticlesController.archive);
+
 export default router;
