@@ -5,18 +5,27 @@ import StatusResponse from '../helpers/StatusResponse';
 const { articles } = models;
 
 const checkArticle = async (req, res, next) => {
-  const paramsSlug = checkIdentifier(req.params.identifier);
-  const article = await articles.findOne({
-    where: {
-      ...paramsSlug
-    },
-  });
-  if (!article) {
-    return StatusResponse.notfound(res, {
-      message: 'Could not find article'
+  try {
+    const identifier = req.params.id || req.params.articleId || req.params.identifier;
+    const whereFilter = checkIdentifier(identifier);
+    const fetchedArticle = await articles.findOne({
+      where: {
+        ...whereFilter,
+        isArchived: false
+      }
+    });
+    if (!fetchedArticle) {
+      return StatusResponse.notfound(res, {
+        message: 'Could not find article'
+      });
+    }
+    req.app.locals.article = fetchedArticle;
+    return next();
+  } catch (error) {
+    return StatusResponse.internalServerError(res, {
+      message: `something went wrong, please try again.... ${error}`
     });
   }
-  return next();
 };
 
 const checkTags = (req, res, next) => {
@@ -30,6 +39,9 @@ const checkTags = (req, res, next) => {
       const payload = { message: 'You can only add a maximum of 7 tags' };
       return StatusResponse.badRequest(res, payload);
     }
+
+    const tagString = tags.map(eachTag => eachTag.toString());
+    req.body.tags = tagString;
   }
   return next();
 };

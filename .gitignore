@@ -38,10 +38,11 @@ node_modules
 .vscode
 
 # Vs code
-.vscode
+.vscode/
 .vscode/settings.json
 
 
 # Build
 dist/
 .vscode/settings.json
+. editorconfig
