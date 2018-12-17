@@ -1,6 +1,9 @@
 import StatusResponse from './StatusResponse';
 import {
-  findLikes, deleteLikes, createLikes, listOfLikers
+  findLikes,
+  deleteLikes,
+  createLikes,
+  listOfLikers
 } from '../lib/likes';
 /** @description function to like an article and comments
    * @param {string} res is the request parameter
