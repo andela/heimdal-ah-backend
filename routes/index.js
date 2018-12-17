@@ -6,7 +6,9 @@ import twitterRouter from './twitterRouter';
 import bookmarks from './bookmarks';
 import comment from './comment';
 import articles from './articles';
+import likes from './likes';
 import ratings from './ratings';
+
 
 export {
   auth,
@@ -17,5 +19,6 @@ export {
   comment,
   articles,
   bookmarks,
-  ratings
+  ratings,
+  likes
 };

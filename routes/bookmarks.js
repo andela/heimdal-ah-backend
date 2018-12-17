@@ -7,7 +7,7 @@ import { checkArticle } from '../middlewares/articleMiddleware';
 const router = express.Router();
 
 router.get(
-  '/bookmarks',
+  '/bookmarks/all',
   checkAuthentication,
   BookmarksController.getAll
 );
