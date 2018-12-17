@@ -2,7 +2,7 @@ import express from 'express';
 import CommentValidation from '../middlewares/CommentValidation';
 import checkAuthentication from '../middlewares/checkAuthentication';
 import CommentController from '../controllers/CommentController';
-import checkArticle from '../middlewares/articleExist';
+import { checkArticle } from '../middlewares/articleMiddleware';
 
 
 const {
