@@ -1,12 +1,12 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
-import sinon from 'sinon';
+// import sinon from 'sinon';
 import dotenv from 'dotenv';
 import app from '../index';
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
-import db from '../models';
-import StatusResponse from '../helpers/StatusResponse';
+// import db from '../models';
+// import StatusResponse from '../helpers/StatusResponse';
 
 dotenv.config();
 chai.use(chaiHttp);
@@ -16,7 +16,7 @@ chai.should();
 //   value.should.equal(expected);
 // };
 
-describe.only('Reader Stats', () => {
+describe('Reader Stats', () => {
   let userToken;
   before(async () => {
     const userData = {
@@ -116,7 +116,7 @@ describe.only('Reader Stats', () => {
   //     .get(getArticle)
   //     .set('access-token', userToken);
   //   res.status.should.equal(500);
-  //   res.body.message.should.equal('something went wrong, please try again.... Dummy error message');
+  //   // res.body.message.should.equal('something went wrong, please try again.... Dummy error message');
   //   assertEqual(spy.calledOnce, true);
   //   const message = {
   //     message: `something went wrong, please try again.... ${err}`

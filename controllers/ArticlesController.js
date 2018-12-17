@@ -113,9 +113,7 @@ class ArticlesController {
    */
   static async get(req, res) {
     const { articles } = models;
-    const { userId } = req.app.locals.user;
     const paramsSlug = checkIdentifier(req.params.identifier);
-
     try {
       const fetchArticle = await articles.findOne({
         where: { ...paramsSlug },
@@ -128,15 +126,17 @@ class ArticlesController {
           }
         },
       });
-      const readInfo = {
-        articleId: fetchArticle.id,
-        userId
-      };
-      const pullResult = await ReadingStatsModelQuery.createReaderStats(readInfo);
+      if (req.app.locals.user) {
+        const { userId } = req.app.locals.user;
+        const readInfo = {
+          articleId: fetchArticle.id,
+          userId
+        };
+        await ReadingStatsModelQuery.createReaderStats(readInfo);
+      }
       return StatusResponse.success(res, {
         message: 'success',
         article: fetchArticle,
-        pullResult
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
