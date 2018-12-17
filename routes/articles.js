@@ -5,7 +5,9 @@ import checkAuthentication from '../middlewares/checkAuthentication';
 import { checkArticle, checkTags } from '../middlewares/articleMiddleware';
 import articlePermission from '../middlewares/articlePermission';
 
+
 const router = express.Router();
+
 
 router.post('/', checkAuthentication, ArticlesValidation.validateInput, checkTags, ArticlesController.create);
 router.get('/', ArticlesController.list);

@@ -44,6 +44,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onDelete: 'CASCADE'
     });
+    Users.hasMany(models.likes, {});
     Users.hasMany(models.ratings);
   };
   return Users;
