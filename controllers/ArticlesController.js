@@ -1,10 +1,11 @@
 import models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
+import pagination from '../helpers/pagination';
+import ArticleQueryModel from '../lib/ArticleQueryModel';
 import {
   checkIdentifier,
-  pageInfo,
-  checkTitle,
   checkUser,
+  checkTitle,
   createNewTags,
   calcReadingTime
 } from '../helpers/articleHelper';
@@ -27,14 +28,9 @@ class ArticlesController {
       tags, body, title, description, image
     } = req.body;
     try {
-      const articleTitle = await Article.findOne({
-        where: {
-          title: req.body.title
-        }
-      });
+      const articleTitle = await ArticleQueryModel.getArticleByTitle();
       const articleSlug = checkTitle(req.body.title, articleTitle);
       const readingTime = calcReadingTime(body);
-
       const newArticle = await Article.create({
         userId,
         title,
@@ -67,15 +63,11 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async list(req, res) {
-    const { articles } = models;
-
     const {
-      size, page = 1, order = 'ASC', orderBy = 'createdAt'
+      size, page = 1, order = 'ASC', orderBy = 'id'
     } = req.query;
-
     try {
-      const { limit, offset } = pageInfo(page, size);
-      const fetchArticles = await articles.findAndCountAll({
+      const articles = await Article.findAndCountAll({
         include: {
           model: Tag,
           as: 'tags',
@@ -84,18 +76,30 @@ class ArticlesController {
             attributes: []
           }
         },
-        limit,
-        offset,
         order: [[orderBy, order]]
       });
-      if (fetchArticles.length === 0) {
+
+      const {
+        limit, offset, totalPages, currentPage
+      } = pagination(page, size, articles.count);
+      const fetchedArticles = articles.rows.slice(offset, parseInt(offset, 10)
+      + parseInt(limit, 10));
+
+      if (fetchedArticles.length === 0) {
         return StatusResponse.success(res, {
           message: 'No article found'
         });
       }
       return StatusResponse.success(res, {
         message: 'List of articles',
-        articles: fetchArticles
+        articles: fetchedArticles,
+        metadata: {
+          count: articles.count,
+          currentPage,
+          articleCount: fetchedArticles.length,
+          limit,
+          totalPages
+        }
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -111,13 +115,11 @@ class ArticlesController {
    * @returns {object} Returned object
    */
   static async get(req, res) {
-    const { articles } = models;
-
-    const paramsSlug = checkIdentifier(req.params.identifier);
+    const whereFilter = checkIdentifier(req.params.identifier);
 
     try {
-      const fetchArticle = await articles.findOne({
-        where: { ...paramsSlug },
+      const fetchArticle = await Article.findOne({
+        where: { ...whereFilter },
         include: {
           model: Tag,
           as: 'tags',
@@ -147,15 +149,11 @@ class ArticlesController {
   static async update(req, res) {
     const { articles } = models;
     const { userId } = req.app.locals.user;
-    const { body, title, tags } = req.body;
+    const whereFilter = checkIdentifier(req.params.identifier);
 
-    const paramsSlug = checkIdentifier(req.params.identifier);
+    const { body, title, tags } = req.body;
     try {
-      const article = await articles.findOne({
-        where: {
-          ...paramsSlug
-        },
-      });
+      const article = await ArticleQueryModel.getArticleByIdentifier(whereFilter);
       if (!checkUser(article, userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
@@ -169,7 +167,7 @@ class ArticlesController {
       }
 
       const updatedArticle = await articles.update(req.body, {
-        where: { ...paramsSlug },
+        where: { ...whereFilter },
         fields: ['title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
         returning: true,
       });
@@ -200,13 +198,9 @@ class ArticlesController {
   static async archive(req, res) {
     const { articles } = models;
     const { userId } = req.app.locals.user;
-    const paramsSlug = checkIdentifier(req.params.identifier);
+    const whereFilter = checkIdentifier(req.params.identifier);
     try {
-      const article = await articles.findOne({
-        where: {
-          ...paramsSlug
-        },
-      });
+      const article = await ArticleQueryModel.getArticleByIdentifier(whereFilter);
       if (!checkUser(article, userId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
@@ -214,7 +208,9 @@ class ArticlesController {
       }
       const data = { isArchived: true };
       await articles.update(data, {
-        where: { ...paramsSlug }
+        where: { ...whereFilter },
+        returning: true,
+        plain: true
       });
       return StatusResponse.success(res, {
         message: 'Article deleted(archived) successfully'

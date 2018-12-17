@@ -1,37 +1,19 @@
-import slug from './generateSlug';
+import slugify from 'slugify';
 import models from '../models';
 
 const { tags: Tag } = models;
-
-const checkIdentifier = paramsSlug => (Number.isInteger(parseInt(paramsSlug, 10))
-  ? {
-    id: paramsSlug
-  }
-  : {
-    slug: paramsSlug
-  });
-
-const pageInfo = (page, size) => {
-  const currentPage = Math.abs(Number(page)) || 1;
-  let offset = 0;
-  let limit = 10;
-  const sizeNo = Number(size);
-  if (!Number.isNaN(sizeNo) && sizeNo > 0) limit = size;
-  offset = (currentPage - 1) * limit;
-
-  if (Number.isNaN(offset)) offset = 10;
-  return {
-    limit,
-    offset
-  };
-};
+const checkIdentifier = identifier => (
+  Number.isInteger(parseInt(identifier, 10))
+    ? { id: identifier }
+    : { slug: identifier }
+);
 
 const checkTitle = (title, articleTitle) => {
   let articleSlug;
-  if (!articleTitle) {
-    articleSlug = slug(title);
+  if (articleTitle === null) {
+    articleSlug = slugify(title);
   } else {
-    articleSlug = `${slug(title)}-${Math.floor(Math.random() * (25 ** 6)).toString(36)}`;
+    articleSlug = `${slugify(title)}-${Math.floor(Math.random() * (25 ** 6)).toString(36)}`;
   }
   return articleSlug;
 };
@@ -68,5 +50,5 @@ const calcReadingTime = (bodyText) => {
 };
 
 export {
-  checkIdentifier, pageInfo, checkTitle, checkUser, createNewTags, calcReadingTime
+  checkIdentifier, checkUser, checkTitle, createNewTags, calcReadingTime
 };
