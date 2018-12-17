@@ -81,7 +81,7 @@ class BookmarksController {
         where: {
           userId
         },
-        attributes: ['createdAt', 'title'],
+        attributes: ['createdAt', 'title', 'userId'],
         include: [{
           model: articles,
           as: 'article',
