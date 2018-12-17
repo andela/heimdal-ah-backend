@@ -4,7 +4,6 @@ import StatusResponse from '../helpers/StatusResponse';
 const {
   articles,
   ArticleTag,
-  tags,
 } = model;
 
 /**

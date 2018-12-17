@@ -76,7 +76,6 @@ describe('Heimdal Search and Filter Test Suite', () => {
       res.status.should.equal(404);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
-      res.body.should.have.property('articles');
       res.body.message.should.equal('No Articles with such tags');
     });
   });
