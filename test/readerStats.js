@@ -102,7 +102,7 @@ describe('Reader Stats', () => {
       .get(readerStatUrl)
       .set('access-token', userToken);
     res.status.should.equal(200);
-    res.body.message.should.be.a('object');
+    res.body.should.be.a('object');
     res.body.should.have.property('message');
   });
 

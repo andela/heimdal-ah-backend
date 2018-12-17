@@ -23,11 +23,13 @@ class ReadingStatsController {
       };
       return StatusResponse.notfound(res, payload);
     }
+    const userData = userStats.rows[0];
+    const { username } = userData.profile;
     const payload = {
-      message: {
-        userStats,
-        'Number of articles read': userStats.count
-      }
+      message: `Number of articles read:${userStats.count} by ${username}`,
+      readerStat: userStats.count,
+      username,
+      userData
     };
     return StatusResponse.success(res, payload);
   }

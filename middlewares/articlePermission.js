@@ -7,7 +7,7 @@ dotenv.config();
 const articlePermission = async (req, res, next) => {
   const token = req.headers['access-token'];
   if (token) {
-    jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+    return jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
       if (err) {
         return StatusResponse.unauthorized(res, {
           errors: {
@@ -26,8 +26,8 @@ const articlePermission = async (req, res, next) => {
         userId: req.userId,
         username: req.username
       };
+      return next();
     });
-    return next();
   }
   return next();
 };
