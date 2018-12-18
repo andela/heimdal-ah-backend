@@ -1,4 +1,5 @@
-export default {
+
+export default{
   up: (queryInterface, Sequelize) => queryInterface.createTable('reports', {
     id: {
       allowNull: false,
@@ -6,7 +7,30 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    escalation: {
+    reportType: {
+      type: Sequelize.ENUM,
+      values: ['spam', 'plagarism', 'others'],
+      allowNull: false,
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    },
+    articleId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'articles',
+        key: 'id'
+      }
+    },
+    context: {
       type: Sequelize.TEXT
     },
     createdAt: {

@@ -7,6 +7,10 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         unique: true
       },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER
+      },
       title: {
         type: DataTypes.STRING,
         allowNull: false
@@ -52,6 +56,10 @@ export default (sequelize, DataTypes) => {
       as: 'tags',
       foreignKey: 'articleId'
     });
+    // Articles.hasMany(models.report, {
+    //   foreignKey: 'articleId',
+    //   as: 'report',
+    // });
   };
   return Articles;
 };
