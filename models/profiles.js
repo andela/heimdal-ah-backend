@@ -1,5 +1,6 @@
 export default (sequelize, DataTypes) => {
   const Profiles = sequelize.define('profiles', {
+
     username: {
       type: DataTypes.STRING,
       allowNull: false,

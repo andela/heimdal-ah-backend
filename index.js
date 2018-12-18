@@ -14,6 +14,7 @@ import {
   comment,
   bookmarks,
   ratings,
+  readStats,
   reports,
   likes,
   search
@@ -44,6 +45,7 @@ app.use('/api/v1/articles', reports);
 app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);
+app.use('/api/v1/users', readStats);
 app.use('/api/v1/articles', likes);
 passportAuth();
 
