@@ -4,7 +4,7 @@ import StatusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/UserModelQuery';
 import getToken from '../helpers/getToken';
 import mailer from '../helpers/mailer';
-import helper from '../helpers/helper';
+import generateEmailToken from '../helpers/generateEmailToken';
 
 /**
  * Signup validation class
@@ -23,7 +23,7 @@ class AuthController {
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
 
-    const emailToken = helper.generateEmailToken(email);
+    const emailToken = generateEmailToken(email);
 
     const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
 
