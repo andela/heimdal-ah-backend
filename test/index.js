@@ -16,4 +16,4 @@ import './likes';
 import './ratings';
 import './helpers/articleHelpers';
 import './follows';
-import './reports';
+import './search';

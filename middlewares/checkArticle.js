@@ -5,27 +5,24 @@ import checkIdentifier from '../helpers/checkIdentifier';
 const { articles } = models;
 
 const checkArticle = async (req, res, next) => {
+  const paramsSlug = checkIdentifier(req.params.id);
   try {
-    const identifier = req.params.id || req.params.articleId || req.params.identifier;
-    const whereFilter = checkIdentifier(identifier);
-    const fetchedArticle = await articles.findOne({
+    const fetchArticle = await articles.findOne({
       where: {
-        ...whereFilter,
-        isArchived: false
+        ...paramsSlug
       }
     });
-    if (!fetchedArticle) {
+    if (!fetchArticle) {
       return StatusResponse.notfound(res, {
         message: 'Could not find article'
       });
     }
-    req.app.locals.article = fetchedArticle;
-    return next();
   } catch (error) {
-    return StatusResponse.internalServerError(res, {
+    StatusResponse.internalServerError(res, {
       message: `something went wrong, please try again.... ${error}`
     });
   }
+  return next();
 };
 
 export default checkArticle;

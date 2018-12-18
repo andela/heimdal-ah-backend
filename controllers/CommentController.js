@@ -1,7 +1,8 @@
+import { Op } from 'sequelize';
 import db from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 
-const { comments, users } = db;
+const { comments, profiles } = db;
 /**
  * @description CommentController class
  */
@@ -14,13 +15,12 @@ class CommentController {
    */
   static async create(req, res) {
     const { content } = req.body;
-    const { id } = req.params;
+    const { articleId } = req.params;
     const { userId } = req.app.locals.user;
-
     try {
       const comment = await comments.create({
         userId,
-        articleId: id,
+        articleId,
         content
       });
       const payload = {
@@ -46,16 +46,16 @@ class CommentController {
    * @return {Object} Returned object
    */
   static async list(req, res) {
-    const { id } = req.params;
+    const { articleId } = req.params;
     try {
       const comment = await comments.findAll({
         include: [
-          users,
+          profiles,
         ],
         where: {
-          articleId: id,
+          articleId,
           isArchived: false,
-          isAnUpdate: false
+          commentId: null
         }
       });
       if (comment.length === 0) {
@@ -89,11 +89,11 @@ class CommentController {
   static async archive(req, res) {
     const { commentId } = req.params;
     try {
-      comments.update({
+      await comments.update({
         isArchived: true,
       }, {
         where: {
-          id: commentId
+          [Op.or]: [{ id: commentId }, { commentId }]
         }
       });
       const payload = {
