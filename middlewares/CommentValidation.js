@@ -61,7 +61,7 @@ class CommentValidation {
    * @return {object} User validation response to user
    */
   static checkArticleId(req, res, next) {
-    req.checkParams('id', 'Article Id must be an Integer').isInt();
+    req.checkParams('articleId', 'Article Id must be an Integer').isInt();
     const errors = req.validationErrors();
     const err = [];
 

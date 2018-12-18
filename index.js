@@ -5,7 +5,18 @@ import validator from 'express-validator';
 import passport from 'passport';
 
 import {
-  auth, profiles, user, password, twitterRouter, articles, comment, bookmarks, ratings
+  auth,
+  profiles,
+  user,
+  password,
+  twitterRouter,
+  articles,
+  comment,
+  bookmarks,
+  ratings,
+  reports,
+  likes,
+  search
 } from './routes';
 
 import logger from './config/logger';
@@ -27,10 +38,13 @@ app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
-app.use('/api/v1/articles', bookmarks);
-app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles', articles);
+app.use('/api/v1/articles', bookmarks);
+app.use('/api/v1/articles', reports);
+app.use('/api/v1/articles', comment);
+app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);
+app.use('/api/v1/articles', likes);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered

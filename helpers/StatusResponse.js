@@ -88,9 +88,6 @@ class StatusResponse {
    * @param {object} data
    * @returns {object} forbidden
    */
-  static noContent(res, data) {
-    return res.status(204).json(data);
-  }
 }
 
 export default StatusResponse;
