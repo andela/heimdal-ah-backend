@@ -101,7 +101,10 @@ class AuthController {
         };
         return StatusResponse.notfound(res, payload);
       }
-      const { id, profile: { username } } = user;
+      const {
+        id,
+        profile: { username }
+      } = user;
       const token = getToken(id, username);
       user.dataValues.password = undefined;
       const payload = {
@@ -124,7 +127,10 @@ class AuthController {
    * @return {object} login response to user
    */
   static socialAuth(req, res) {
-    const { id, profile: { username } } = req.user;
+    const {
+      id,
+      profile: { username }
+    } = req.user;
     const token = getToken({ id, username });
     const payload = {
       message: 'user logged in succesfully',
