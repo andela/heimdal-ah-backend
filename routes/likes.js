@@ -1,35 +1,35 @@
 import express from 'express';
 import LikesController from '../controllers/LikesController';
 import checkAuthentication from '../middlewares/checkAuthentication';
-import articleExist from '../middlewares/articleExist';
+import { checkArticle } from '../middlewares/articleMiddleware';
 
 const router = express.Router();
 
 router.post(
   '/:articleId/likes',
   checkAuthentication,
-  articleExist,
+  checkArticle,
   LikesController.likesArticles
 );
 
 router.get(
   '/:articleId/likes',
   checkAuthentication,
-  articleExist,
+  checkArticle,
   LikesController.getAriticles
 );
 
 router.post(
   '/:articleId/comments/:commentId/likes',
   checkAuthentication,
-  articleExist,
+  checkArticle,
   LikesController.likesComments
 );
 
 router.get(
   '/:articleId/comments/:commentId/likes',
   checkAuthentication,
-  articleExist,
+  checkArticle,
   LikesController.likedComments
 );
 
