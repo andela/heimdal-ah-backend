@@ -24,11 +24,13 @@ class ReadingStatsController {
         };
         return StatusResponse.notfound(res, payload);
       }
+      const { username } = userStats.rows[0].profile;
       const articles = userStats.rows.map(stat => stat.article);
       const payload = {
+        username,
         message: 'Number of articles read:',
         readerStat: userStats.count,
-        articles,
+        articles
       };
       return StatusResponse.success(res, payload);
     } catch (error) {
