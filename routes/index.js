@@ -9,6 +9,7 @@ import articles from './articles';
 import search from './search';
 import likes from './likes';
 import ratings from './ratings';
+import reports from './reports';
 
 
 export {
@@ -22,5 +23,6 @@ export {
   bookmarks,
   search,
   ratings,
-  likes
+  likes,
+  reports
 };
