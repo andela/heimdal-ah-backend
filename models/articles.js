@@ -51,6 +51,7 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'highlightedPortions'
     });
+    Articles.hasMany(models.likes, {});
     Articles.belongsToMany(models.tags, {
       through: 'ArticleTag',
       as: 'tags',

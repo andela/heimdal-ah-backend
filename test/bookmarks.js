@@ -20,10 +20,10 @@ describe('/bookmarks', () => {
     userToken = token;
   });
 
-  it('should return status code 40 when user is not logged in', async () => {
+  it('should return status code 400 when user is not logged in', async () => {
     const res = await chai
       .request(app)
-      .get('/api/v1/articles/bookmarks/');
+      .get('/api/v1/articles/bookmarks/all');
 
     res.status.should.equal(400);
     res.body.should.be.a('object');
@@ -38,7 +38,7 @@ describe('/bookmarks', () => {
     res.body.should.be.a('object');
   });
 
-  it('should return a 404 when user is not avaliable', async () => {
+  it('should return a 401 when user is not avaliable', async () => {
     const res = await chai
       .request(app)
       .post('/api/v1/articles/1/bookmarks')
@@ -73,14 +73,14 @@ describe('/bookmarks', () => {
   it('should return status code 200 when user is logged in', async () => {
     const res = await chai
       .request(app)
-      .get('/api/v1/articles/bookmarks')
+      .get('/api/v1/articles/bookmarks/all')
       .set('access-token', userToken);
 
     res.status.should.equal(200);
     res.body.should.be.a('object');
   });
 
-  it('should return should return a 200 when bookmark is avalaible', async () => {
+  it('should return should return a 200 when bookmark to be deleted is avaliable', async () => {
     const res = await chai
       .request(app)
       .delete('/api/v1/articles/bookmarks/1')
@@ -91,10 +91,10 @@ describe('/bookmarks', () => {
     res.body.message.should.be.equal('bookmark was deleted successfully');
   });
 
-  it('should return should return a 200 when bookmark is not avalaible', async () => {
+  it('should return should return a 404 when bookmark to be deleted is not avaliable', async () => {
     const res = await chai
       .request(app)
-      .delete('/api/v1/articles/bookmarks/676')
+      .delete('/api/v1/articles/bookmarks/6756')
       .set('access-token', userToken);
 
     res.status.should.equal(404);

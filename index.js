@@ -14,7 +14,9 @@ import {
   comment,
   bookmarks,
   ratings,
-  highlightedTexts
+  highlightedTexts,
+  likes,
+  search
 } from './routes';
 
 import logger from './config/logger';
@@ -36,11 +38,13 @@ app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
+app.use('/api/v1/articles', articles);
 app.use('/api/v1/articles', bookmarks);
 app.use('/api/v1/articles', comment);
-app.use('/api/v1/articles', articles);
+app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);
 app.use('/api/v1/articles', highlightedTexts);
+app.use('/api/v1/articles', likes);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered

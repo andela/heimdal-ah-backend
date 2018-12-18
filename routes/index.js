@@ -6,6 +6,8 @@ import twitterRouter from './twitterRouter';
 import bookmarks from './bookmarks';
 import comment from './comment';
 import articles from './articles';
+import search from './search';
+import likes from './likes';
 import ratings from './ratings';
 import highlightedTexts from './highlightedTexts';
 
@@ -19,5 +21,7 @@ export {
   articles,
   bookmarks,
   ratings,
-  highlightedTexts
+  highlightedTexts,
+  search,
+  likes
 };
