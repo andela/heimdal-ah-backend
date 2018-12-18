@@ -6,9 +6,10 @@ import app from '../../index';
 chai.use(chaiHttp);
 chai.should();
 
-const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoid2FsZSIsImlhdCI6MTU0NDY4NDgxMH0.9KcL0YzJF8w7vZO6APgVEMeIQjtqQW05JqIi5piaBHI';
+
 // let articlesId;
 describe('Heimdal Middleware Report Controller Test', () => {
+  const userToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoid2FsZSIsImlhdCI6MTU0NDY4NDgxMH0.9KcL0YzJF8w7vZO6APgVEMeIQjtqQW05JqIi5piaBHI';
   describe(' POST /articles/:identifier/report - A user should be able to report an article', () => {
     it('should return status code 400 on reporting an article with invalid reportType parameters', async () => {
       const res = await chai.request(app)

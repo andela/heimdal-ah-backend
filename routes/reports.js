@@ -5,5 +5,5 @@ import checkAuthentication from '../middlewares/checkAuthentication';
 import reportValidation from '../middlewares/reportValidation';
 
 const router = express.Router();
-router.post('/:identifier/reports', checkAuthentication, checkArticle, reportValidation, ReportController.create);
+router.post('/:articleId/reports', checkAuthentication, checkArticle, reportValidation, ReportController.create);
 export default router;
