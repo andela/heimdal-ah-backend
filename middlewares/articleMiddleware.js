@@ -48,9 +48,15 @@ const checkTags = (req, res, next) => {
 const { tags } = models;
 
 const getTagId = async (req, res, next) => {
+  let validTags;
+  if (Array.isArray(req.query.tag)) {
+    validTags = req.query.tag.map(tag => tag.replace(/ /g, ''));
+  } else {
+    validTags = [req.query.tag].map(tag => tag.replace(/ /g, ''));
+  }
   const tag = await tags.findAndCountAll({
     where: {
-      tagName: req.query.tag
+      tagName: { $ilike: { $any: `{%${validTags}%}` } }
     },
   });
   if (tag.count < 1) {
@@ -58,9 +64,9 @@ const getTagId = async (req, res, next) => {
       message: 'No Articles with such tags',
     });
   }
-  req.tagId = tag.rows[0].id;
+  const tagIds = tag.rows.map(val => val.id);
   req.app.locals.tag = {
-    tagId: req.tagId,
+    tagIds,
   };
   return next();
 };
