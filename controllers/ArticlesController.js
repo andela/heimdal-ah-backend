@@ -10,7 +10,9 @@ import {
   calcReadingTime
 } from '../helpers/articleHelper';
 
-import highlitedTextsUpdater from '../lib/highlitedTextsUpdater';
+import highlightsLogic from '../lib/highlightsLogic';
+
+const { updateHighlights } = highlightsLogic;
 
 const { articles: Article, tags: Tag, HighlightedText } = models;
 
@@ -69,7 +71,6 @@ class ArticlesController {
       size, page = 1, order = 'ASC', orderBy = 'id'
     } = req.query;
     try {
-      // const { limit, offset } = pagination(page, size);
       const articles = await Article.findAndCountAll({
         include: [
           {
@@ -79,15 +80,10 @@ class ArticlesController {
             through: {
               attributes: []
             }
-          },
-          {
-            model: HighlightedText,
-            as: 'highlightedPortions'
           }
         ],
         order: [[orderBy, order]]
       });
-
       const {
         limit, offset, totalPages, currentPage
       } = pagination(page, size, articles.count);
@@ -196,25 +192,25 @@ class ArticlesController {
         updatedArticle['1']['0'].dataValues.tags = tags;
       }
 
-      const reqBody = {
-        body: updatedArticle[1][0].body,
-        highlightedPortions: article.highlightedPortions
-      };
-      const newUpdatedPortions = await highlitedTextsUpdater(userId, article.id, reqBody, res);
-      if (!newUpdatedPortions) {
+      const updatedHighlights = await updateHighlights(
+        article.highlightedPortions,
+        updatedArticle[1][0].body, userId
+      );
+
+      if (!updatedHighlights) {
         return StatusResponse.success(res, {
           message: 'Article updated successfully, no highlights weere adjusted',
           article: updatedArticle,
           highlightedPortions: article.dataValues.highlightedPortions
         });
       }
+
       return StatusResponse.success(res, {
         message: 'Article updated successfully, some highlights were adjusted or removed',
         article: updatedArticle,
-        highlightedPortions: newUpdatedPortions
+        highlightedPortions: updatedHighlights
       });
     } catch (error) {
-      // console.log(error);
       return StatusResponse.internalServerError(res, {
         message: `something went wrong, please try again.... ${error}`
       });

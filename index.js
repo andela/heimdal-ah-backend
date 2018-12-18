@@ -14,7 +14,7 @@ import {
   comment,
   bookmarks,
   ratings,
-  highlightedTexts,
+  highlights,
   likes,
   search
 } from './routes';
@@ -43,7 +43,7 @@ app.use('/api/v1/articles', bookmarks);
 app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);
-app.use('/api/v1/articles', highlightedTexts);
+app.use('/api/v1/articles', highlights);
 app.use('/api/v1/articles', likes);
 passportAuth();
 

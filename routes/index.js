@@ -9,7 +9,7 @@ import articles from './articles';
 import search from './search';
 import likes from './likes';
 import ratings from './ratings';
-import highlightedTexts from './highlightedTexts';
+import highlights from './highlights';
 
 export {
   auth,
@@ -21,7 +21,7 @@ export {
   articles,
   bookmarks,
   ratings,
-  highlightedTexts,
+  highlights,
   search,
   likes
 };

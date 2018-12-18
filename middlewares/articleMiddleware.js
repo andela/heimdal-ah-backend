@@ -19,6 +19,7 @@ const checkArticle = async (req, res, next) => {
       });
     }
     req.app.locals.article = fetchedArticle;
+
     return next();
   } catch (error) {
     return StatusResponse.internalServerError(res, {
