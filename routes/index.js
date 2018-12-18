@@ -21,12 +21,8 @@ export {
   comment,
   articles,
   bookmarks,
-<<<<<<< HEAD
-  ratings,
-  reports
-=======
   search,
   ratings,
-  likes
->>>>>>> f61aed7532c81751fd56ce6c7738105cb63ef790
+  likes,
+  reports
 };

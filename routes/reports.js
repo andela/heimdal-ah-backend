@@ -1,6 +1,6 @@
 import express from 'express';
 import ReportController from '../controllers/ReportController';
-import checkArticle from '../middlewares/articleExist';
+import { checkArticle } from '../middlewares/articleMiddleware';
 import checkAuthentication from '../middlewares/checkAuthentication';
 import reportValidation from '../middlewares/reportValidation';
 

@@ -5,9 +5,6 @@ import validator from 'express-validator';
 import passport from 'passport';
 
 import {
-<<<<<<< HEAD
-  auth, profiles, user, password, twitterRouter, articles, comment, bookmarks, reports, ratings
-=======
   auth,
   profiles,
   user,
@@ -17,9 +14,9 @@ import {
   comment,
   bookmarks,
   ratings,
+  reports,
   likes,
   search
->>>>>>> f61aed7532c81751fd56ce6c7738105cb63ef790
 } from './routes';
 
 import logger from './config/logger';
