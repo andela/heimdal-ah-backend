@@ -1,20 +1,13 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
-// import sinon from 'sinon';
 import dotenv from 'dotenv';
 import app from '../index';
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
-// import db from '../models';
-// import StatusResponse from '../helpers/StatusResponse';
 
 dotenv.config();
 chai.use(chaiHttp);
 chai.should();
-
-// const assertEqual = (value, expected) => {
-//   value.should.equal(expected);
-// };
 
 describe('Reader Stats', () => {
   let userToken;
@@ -31,7 +24,7 @@ describe('Reader Stats', () => {
     userToken = token;
   });
   const getArticle = '/api/v1/articles/this-is-third-pot-title-u87dda';
-  const readerStatUrl = '/api/v1/users/stats';
+  const readerStatUrl = '/api/v1/users/readerstats';
   const articleWrongUrl = '/api/v1/articles/this-is-third-pot-title-u87ddaew';
 
   it('it should return a 404 if the user has no stats', async () => {
@@ -46,7 +39,7 @@ describe('Reader Stats', () => {
       .send(user2);
     const { token } = userResponse.body;
     const res = await chai.request(app)
-      .get('/api/v1/users/stats')
+      .get('/api/v1/users/readerstats')
       .set('access-token', token);
     res.status.should.equal(404);
     res.body.should.be.a('object');
@@ -104,25 +97,7 @@ describe('Reader Stats', () => {
     res.status.should.equal(200);
     res.body.should.be.a('object');
     res.body.should.have.property('message');
+    res.body.should.have.property('articles');
+    res.body.articles.should.be.a('array');
   });
-
-  // it('should test for internal server error', async () => {
-  //   const { readerStats } = db;
-  //   const err = new Error('Dummy error message');
-  //   const stub = sinon.stub(readerStats, 'findOrCreate').rejects(err);
-  //   const spy = sinon.spy(StatusResponse, 'internalServerError');
-
-  //   const res = await chai.request(app)
-  //     .get(getArticle)
-  //     .set('access-token', userToken);
-  //   res.status.should.equal(500);
-  //   // res.body.message.should.equal('something went wrong, please try again.... Dummy error message');
-  //   assertEqual(spy.calledOnce, true);
-  //   const message = {
-  //     message: `something went wrong, please try again.... ${err}`
-  //   };
-  //   assertEqual(spy.getCall(0).args[1], message);
-  //   spy.restore();
-  //   stub.restore();
-  // });
 });

@@ -21,7 +21,8 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
     });
     ReaderStats.belongsTo(models.articles, {
-      foreignKey: 'articleId'
+      foreignKey: 'articleId',
+      // as: 'article'
     });
   };
   return ReaderStats;

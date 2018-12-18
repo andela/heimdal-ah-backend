@@ -3,6 +3,7 @@
  */
 
 import './middlewares/userValidation.test';
+import './middlewares/reportValidation.test';
 import './users';
 import './passport';
 import './profiles';
@@ -16,3 +17,4 @@ import './ratings';
 import './helpers/articleHelpers';
 import './follows';
 import './readerStats';
+import './search';
