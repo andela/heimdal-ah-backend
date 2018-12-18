@@ -4,7 +4,6 @@ import ReaderStatsController from '../controllers/ReaderStatsController';
 
 const { getReadingStatistics } = ReaderStatsController;
 const router = express.Router();
-router.get('/stats', checkAuthentication, getReadingStatistics);
-
+router.get('/readerstats', checkAuthentication, getReadingStatistics);
 
 export default router;

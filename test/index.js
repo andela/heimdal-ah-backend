@@ -3,6 +3,7 @@
  */
 
 import './middlewares/userValidation.test';
+import './middlewares/reportValidation.test';
 import './users';
 import './passport';
 import './profiles';

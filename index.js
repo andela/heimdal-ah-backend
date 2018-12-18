@@ -14,6 +14,8 @@ import {
   comment,
   bookmarks,
   ratings,
+  readStats,
+  reports,
   likes,
   readStats,
   search
@@ -40,6 +42,7 @@ app.use('/api/v1/password', password);
 app.use('/api/v1/users', user);
 app.use('/api/v1/articles', articles);
 app.use('/api/v1/articles', bookmarks);
+app.use('/api/v1/articles', reports);
 app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);

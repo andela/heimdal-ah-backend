@@ -16,22 +16,32 @@ class ReadingStatsController {
    */
   static async getReadingStatistics(req, res) {
     const { userId } = req.app.locals.user;
-    const userStats = await getUserReadingStats(userId, res);
-    if (!userStats) {
+    try {
+      const userStats = await getUserReadingStats(userId);
+      if (!userStats) {
+        const payload = {
+          message: 'Statistics not found for this user',
+        };
+        return StatusResponse.notfound(res, payload);
+      }
+      const { username } = userStats.rows[0].profile;
+      const articles = userStats.rows.map(stat => stat.article);
       const payload = {
-        message: 'Statistics not found for this user',
+        username,
+        message: 'Number of articles read:',
+        readerStat: userStats.count,
+        articles
       };
-      return StatusResponse.notfound(res, payload);
+      return StatusResponse.success(res, payload);
+    } catch (error) {
+      const payload = {
+        message: 'Cannot succesfully list out reader stats',
+        error: {
+          body: [`Internal server error => ${error}`]
+        }
+      };
+      return StatusResponse.internalServerError(res, payload);
     }
-    const userData = userStats.rows[0];
-    const { username } = userData.profile;
-    const payload = {
-      message: `Number of articles read:${userStats.count} by ${username}`,
-      readerStat: userStats.count,
-      username,
-      userData
-    };
-    return StatusResponse.success(res, payload);
   }
 }
 
