@@ -18,3 +18,4 @@ import './helpers/articleHelpers';
 import './follows';
 import './readerStats';
 import './search';
+import './roles';

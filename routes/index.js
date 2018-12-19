@@ -11,6 +11,7 @@ import likes from './likes';
 import ratings from './ratings';
 import readStats from './readerStats';
 import reports from './reports';
+import admin from './admin';
 
 
 export {
@@ -26,5 +27,6 @@ export {
   ratings,
   readStats,
   likes,
-  reports
+  reports,
+  admin
 };

@@ -13,7 +13,7 @@ class ArticleValidation {
   static async validateInput(req, res, next) {
     req.checkBody('title', 'title cannot be empty').notEmpty();
     req.checkBody('description', 'description cannot be empty').notEmpty();
-    req.checkBody('image', 'image cannot be empty').notEmpty();
+    // req.checkBody('image', 'image cannot be empty').notEmpty();
     req.checkBody('body', 'body cannot be empty').notEmpty();
 
     try {

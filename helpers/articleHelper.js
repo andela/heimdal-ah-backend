@@ -9,13 +9,10 @@ const checkIdentifier = identifier => (
 );
 
 const checkTitle = (title, articleTitle) => {
-  let articleSlug;
-  if (articleTitle === null) {
-    articleSlug = slugify(title);
-  } else {
-    articleSlug = `${slugify(title)}-${Math.floor(Math.random() * (25 ** 6)).toString(36)}`;
+  if (articleTitle !== null) {
+    return `${slugify(title)}-${Math.floor(Math.random() * (25 ** 6)).toString(36)}`;
   }
-  return articleSlug;
+  return slugify(title);
 };
 
 const checkUser = (article, userId) => article.userId === userId;

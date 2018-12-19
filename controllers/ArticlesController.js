@@ -77,9 +77,11 @@ class ArticlesController {
             attributes: []
           }
         },
+        offset,
+        limit: size,
         order: [[orderBy, order]]
       });
-      if (articles.length === 0) {
+      if (articles.rows.length === 0) {
         return StatusResponse.success(res, {
           message: 'No article found'
         });
