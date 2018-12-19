@@ -76,7 +76,7 @@ class HighlightsController {
         message: 'All highlights belonging to this article has been fetched successfully',
         highlightedPortions
       };
-      return StatusResponse.created(res, payload);
+      return StatusResponse.success(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {
         message: `Something went wrong, please try again.... ${error}`
