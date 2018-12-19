@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize';
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import pagination from '../helpers/pagination';
@@ -5,6 +6,9 @@ import pagination from '../helpers/pagination';
 const {
   articles,
   ArticleTag,
+  tags,
+  users,
+  profiles
 } = model;
 
 /**
@@ -22,32 +26,33 @@ class SearchArticlesController {
    */
   static async byAuthor(req, res) {
     const {
-      size, page = 1, order = 'DESC', orderBy = 'id'
+      size = 20, order = 'DESC', orderBy = 'id', offset = 0
     } = req.query;
     try {
       const articlesByAuthor = await articles.findAndCountAll({
         where: {
-          userId: req.app.locals.user.userId,
+          userId: {
+            [Sequelize.Op.or]: req.app.locals.user.userIds
+          }
         },
+        attributes: { exclude: ['userId'] },
+        include: {
+          model: users,
+          attributes: { exclude: ['email', 'password', 'emailVerification', 'resettingPassword', 'createdAt', 'updatedAt', 'roleId'], },
+          include: {
+            model: profiles,
+            attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'image', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
+          },
+        },
+        offset,
+        limit: size,
         order: [[orderBy, order]]
       });
-      const {
-        limit, offset, totalPages, currentPage
-      } = pagination(page, size, articlesByAuthor.count);
-      const fetchedArticles = articlesByAuthor.rows.slice(offset, parseInt(offset, 10)
-      + parseInt(limit, 10));
-
-      if (fetchedArticles.length >= 1) {
+      if (articlesByAuthor.count >= 1) {
         StatusResponse.success(res, {
-          message: 'All Articles by this author returned succesfully',
-          articles: fetchedArticles,
-          metadata: {
-            count: articlesByAuthor.count,
-            currentPage,
-            articleCount: fetchedArticles.length,
-            limit,
-            totalPages
-          }
+          message: 'All Articles returned succesfully',
+          articles: articlesByAuthor,
+          ...pagination(articlesByAuthor, offset, size),
         });
       } else {
         StatusResponse.notfound(res, {
@@ -75,7 +80,7 @@ class SearchArticlesController {
     try {
       const articlesByTitle = await articles.findAndCountAll({
         where: {
-          title: req.query.title,
+          title: { $ilike: `%${req.query.title}%` }
         }
       });
       if (articlesByTitle.count >= 1) {
@@ -109,11 +114,18 @@ class SearchArticlesController {
     try {
       const articlesByTags = await ArticleTag.findAndCountAll({
         where: {
-          tagId: req.app.locals.tag.tagId
+          tagId: {
+            [Sequelize.Op.or]: req.app.locals.tag.tagIds
+          }
         },
-        include: {
-          model: articles,
-        },
+        include: [
+          {
+            model: articles
+          },
+          {
+            model: tags
+          }
+        ],
         attributes: { exclude: ['createdAt', 'updatedAt', 'tagId', 'articleId'] }
       });
       if (articlesByTags.count >= 1) {
