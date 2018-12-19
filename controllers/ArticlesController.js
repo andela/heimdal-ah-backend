@@ -9,6 +9,7 @@ import {
   createNewTags,
   calcReadingTime
 } from '../helpers/articleHelper';
+import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
 
 import highlightsLogic from '../lib/highlightsLogic';
 
@@ -143,13 +144,21 @@ class ArticlesController {
           }
         ]
       });
+      if (req.app.locals.user) {
+        const { userId } = req.app.locals.user;
+        const readInfo = {
+          articleId: fetchArticle.id,
+          userId
+        };
+        await ReadingStatsModelQuery.createReaderStats(readInfo);
+      }
       return StatusResponse.success(res, {
         message: 'success',
-        article: fetchArticle
+        article: fetchArticle,
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
-        message: `something went wrong, please try again.... ${error}`
+        message: `something went wrong, please try again.... ${error.message}`
       });
     }
   }

@@ -10,6 +10,9 @@ import search from './search';
 import likes from './likes';
 import ratings from './ratings';
 import highlights from './highlights';
+import readStats from './readerStats';
+import reports from './reports';
+
 
 export {
   auth,
@@ -23,5 +26,7 @@ export {
   ratings,
   highlights,
   search,
-  likes
+  readStats,
+  likes,
+  reports
 };
