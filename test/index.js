@@ -19,3 +19,4 @@ import './helpers/mailer';
 import './follows';
 import './readerStats';
 import './search';
+import './highlights';

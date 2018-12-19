@@ -154,7 +154,7 @@ class ArticlesController {
       }
       return StatusResponse.success(res, {
         message: 'success',
-        article: fetchArticle,
+        article: fetchArticle
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -201,9 +201,11 @@ class ArticlesController {
         updatedArticle['1']['0'].dataValues.tags = tags;
       }
 
+      // Use an event emitter to call updateHighlights
       const updatedHighlights = await updateHighlights(
         article.highlightedPortions,
-        updatedArticle[1][0].body, userId
+        updatedArticle[1][0].body,
+        userId
       );
 
       if (!updatedHighlights) {

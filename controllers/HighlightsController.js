@@ -26,7 +26,7 @@ class HighlightsController {
     const { body } = req.app.locals.article;
 
     const startIndex = req.body.startIndex || body.indexOf(highlightedText);
-    const stopIndex = req.body.startIndex || startIndex + highlightedText.length;
+    const stopIndex = req.body.stopIndex || startIndex + highlightedText.length;
     const highlightId = `${startIndex}-${stopIndex}`;
 
     try {
