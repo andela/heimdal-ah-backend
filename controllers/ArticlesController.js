@@ -69,7 +69,7 @@ class ArticlesController {
    */
   static async list(req, res) {
     const {
-      size, page = 1, order = 'ASC', orderBy = 'id'
+      size = 20, order = 'ASC', orderBy = 'id', offset = 0
     } = req.query;
     try {
       const articles = await Article.findAndCountAll({
@@ -85,15 +85,6 @@ class ArticlesController {
         ],
         order: [[orderBy, order]]
       });
-      const {
-        limit, offset, totalPages, currentPage
-      } = pagination(page, size, articles.count);
-
-      const fetchedArticles = articles.rows.slice(
-        offset,
-        parseInt(offset, 10) + parseInt(limit, 10)
-      );
-
       if (articles.length === 0) {
         return StatusResponse.success(res, {
           message: 'No article found'
@@ -101,14 +92,8 @@ class ArticlesController {
       }
       return StatusResponse.success(res, {
         message: 'List of articles',
-        articles: fetchedArticles,
-        metadata: {
-          count: articles.count,
-          currentPage,
-          articleCount: articles.length,
-          limit,
-          totalPages
-        }
+        articles,
+        ...pagination(articles, offset, size)
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
