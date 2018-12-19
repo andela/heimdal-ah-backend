@@ -45,6 +45,7 @@ describe('Test For HighLights', () => {
         'You can not highlight or comment on this text as it does not exist within the article'
       );
     });
+
     it('should return 200 when the highlighted text is contained in the body of the article', async () => {
       const data = {
         highlightedText: bodyHelper.article.body
@@ -62,6 +63,7 @@ describe('Test For HighLights', () => {
       bodyHelper.highlights = res.body.createdHighlight;
     });
   });
+
   describe('GET /api/v1/articles/:articleId/highlights', () => {
     it('should return all the highlights belonging to an article', async () => {
       const res = await chai
@@ -75,6 +77,7 @@ describe('Test For HighLights', () => {
       );
     });
   });
+
   describe('GET /api/v1/articles/:articleId/highlights/:highlightId/comments', () => {
     it('should return all the highlights belonging to an article', async () => {
       const res = await chai
@@ -93,6 +96,7 @@ describe('Test For HighLights', () => {
       );
     });
   });
+
   describe('PUT /api/v1/articles/:articleId/highlights', () => {
     it('should return 400 when the highlightedPortions and/or body is not supplied', async () => {
       const data = {};
