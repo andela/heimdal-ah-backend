@@ -82,11 +82,7 @@ describe('Test For HighLights', () => {
     it('should return all the highlights belonging to an article', async () => {
       const res = await chai
         .request(app)
-        .get(
-          `/api/v1/articles/${bodyHelper.article.id}/highlights/${
-            bodyHelper.highlights.highlightId
-          }/comments`
-        );
+        .get(`/api/v1/articles/${bodyHelper.article.id}/highlights/${bodyHelper.highlights.highlightId}/comments`);
 
       res.status.should.equal(200);
       res.body.should.be.a('object');
