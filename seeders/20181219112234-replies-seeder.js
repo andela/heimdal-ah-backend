@@ -32,7 +32,7 @@ export default {
     updatedAt: new Date()
   },
   {
-    content: 'Mourinho has been sacked from United',
+    content: 'Mourinho has been sacked from United. ',
     userId: 5,
     commentId: 2,
     isArchived: false,

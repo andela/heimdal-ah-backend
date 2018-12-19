@@ -2,11 +2,11 @@ import StatusResponse from '../helpers/StatusResponse';
 import ReplyQueryModel from '../lib/ReplyQueryModel';
 
 /**
- * @description CommentController class
+ * @description RepliesController class
  */
 class RepliesController {
   /**
-   * @description Fetch all the users
+   * @description CRUD on replies
    * @param {Object} req - HTTP Request
    * @param {Object} res - HTTP Response
    * @return {Object} Returned object
