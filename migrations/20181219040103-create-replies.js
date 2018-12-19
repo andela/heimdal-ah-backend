@@ -24,10 +24,6 @@ export default {
       type: Sequelize.BOOLEAN,
       defaultValue: false
     },
-    isPrivate: {
-      type: Sequelize.BOOLEAN,
-      defaultValue: false
-    },
     commentId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',

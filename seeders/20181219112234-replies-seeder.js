@@ -4,7 +4,6 @@ export default {
     userId: 1,
     commentId: 1,
     isArchived: false,
-    isPrivate: false,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -13,7 +12,6 @@ export default {
     userId: 5,
     commentId: 1,
     isArchived: false,
-    isPrivate: false,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -22,7 +20,6 @@ export default {
     userId: 5,
     commentId: 1,
     isArchived: false,
-    isPrivate: false,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -31,7 +28,6 @@ export default {
     userId: 1,
     commentId: 1,
     isArchived: false,
-    isPrivate: false,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -40,7 +36,6 @@ export default {
     userId: 5,
     commentId: 2,
     isArchived: false,
-    isPrivate: false,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -49,7 +44,6 @@ export default {
     userId: 1,
     commentId: 4,
     isArchived: false,
-    isPrivate: false,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
