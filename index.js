@@ -17,7 +17,6 @@ import {
   readStats,
   reports,
   likes,
-  readStats,
   search
 } from './routes';
 
