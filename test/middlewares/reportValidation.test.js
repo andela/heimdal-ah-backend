@@ -31,7 +31,7 @@ describe('Heimdal Middleware Report Controller Test', () => {
       .post('/api/v1/articles/1/reports')
       .set('access-token', userToken)
       .send({
-        context: ['helo'],
+        context: ['hello'],
         reportType: 'spam',
       });
     res.status.should.equal(500);
