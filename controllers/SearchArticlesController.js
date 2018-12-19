@@ -18,49 +18,6 @@ const {
  * @returns {class} Articles searched for
  */
 class SearchArticlesController {
-  // static async search(req, res) {
-  //   const {
-  //     size, offset, order, orderBy, author, title, tag
-  //   } = req.query;
-  //   const whereQuery = {};
-  //   // if (author) {
-  //   //   whereQuery.author = `%${author}%`
-  //   // }
-  //   if (title) {
-  //     whereQuery.title = `%${title}%`;
-  //   }
-  //   // if (tag) {
-  //   //   if (Array.isArray(tag)) {
-  //   //     whereQuery.tags = tag.map((cur) => `%${cur}%`);
-  //   //   } else {
-  //   //     whereQuery.tags = tag.split(',').map((cur) => `%${cur}%`);
-  //   //   }
-  //   // }
-
-  //   console.log(whereQuery)
-
-  //   try {
-  //     const foundArticles = await articles.findAndCountAll({
-  //       where: {
-  //        title
-  //       },
-  //       offset,
-  //       limit: size,
-  //       order: [[orderBy, order]]
-  //     });
-
-  //     return StatusResponse.success(res, { msg: 'success' });
-  //   } catch (error) {
-  //     return StatusResponse.internalServerError(res, {
-  //       message: 'An error occured, Articles not returned succesfully, please try again',
-  //       error: {
-  //         body: [`Internal server error => ${error}`]
-  //       }
-  //     });
-  //   }
-  // }
-
-
   /**
    * @description - This method takes care of retrieving articles by authors
    * @param {object} req
@@ -87,13 +44,6 @@ class SearchArticlesController {
             attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'image', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
           },
         },
-        // include: [{
-        //   model: users,
-        // },
-        // {
-        //   model: profiles,
-        // }],
-        // attributes: { exclude: ['user'] },
         offset,
         limit: size,
         order: [[orderBy, order]]
@@ -127,7 +77,6 @@ class SearchArticlesController {
    * @returns {object} Articles by title
    */
   static async byTitle(req, res) {
-    // const searchSplitTitles = req.query.title.split('').map(eachString => `%${eachString}%`);
     try {
       const articlesByTitle = await articles.findAndCountAll({
         where: {
