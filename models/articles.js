@@ -57,6 +57,11 @@ export default (sequelize, DataTypes) => {
       as: 'tags',
       foreignKey: 'articleId'
     });
+    Articles.belongsToMany(models.profiles, {
+      as: 'Readers',
+      foreignKey: 'articleId',
+      through: 'ReadingStat',
+    });
     // Articles.hasMany(models.report, {
     //   foreignKey: 'articleId',
     //   as: 'report',
