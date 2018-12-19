@@ -7,7 +7,8 @@ export default {
       type: Sequelize.INTEGER
     },
     content: {
-      type: Sequelize.STRING
+      type: Sequelize.TEXT,
+      allowNull: false,
     },
     userId: {
       type: Sequelize.INTEGER,

@@ -1,6 +1,9 @@
 export default(sequelize, DataTypes) => {
   const Replies = sequelize.define('replies', {
-    content: DataTypes.STRING,
+    content: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
     isArchived: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

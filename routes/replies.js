@@ -14,11 +14,13 @@ const { checkCommentParams } = CommentValidation;
 const {
   create,
   list,
-  archive
+  archive,
+  update
 } = RepliesController;
 
 router.get('/:commentId/reply', checkAuthentication, checkCommentId, checkCommentParams, list);
 router.post('/:commentId/reply', checkAuthentication, checkCommentId, checkCommentParams, checkReplyContent, create);
+router.put('/:commentId/reply/:replyId', checkAuthentication, checkReplyId, checkReplyExist, checkReplyContent, update);
 router.delete('/:commentId/reply/:replyId', checkAuthentication, checkReplyId, checkReplyExist, archive);
 
 export default router;

@@ -76,6 +76,46 @@ class RepliesController {
    * @param {Object} res - HTTP Response
    * @return {Object} Returned object
    */
+  static async update(req, res) {
+    const { commentId, replyId } = req.params;
+    const { content } = req.body;
+    const { userId } = req.app.locals.user;
+    const updateData = {
+      commentId,
+      replyId,
+      content,
+      userId
+    };
+    try {
+      const result = await ReplyQueryModel.updateReply(updateData);
+
+      if (result[0] === 0) {
+        const payload = {
+          message: 'Cannot Successfully update the reply'
+        };
+        return StatusResponse.notfound(res, payload);
+      }
+      const payload = {
+        message: 'Succesfully updated the reply'
+      };
+      return StatusResponse.success(res, payload);
+    } catch (error) {
+      const payload = {
+        message: 'Cannot succesfully update the reply',
+        error: {
+          body: [`Internal server error => ${error.message}`]
+        }
+      };
+      return StatusResponse.internalServerError(res, payload);
+    }
+  }
+
+  /**
+   * @description Fetch all the users
+   * @param {Object} req - HTTP Request
+   * @param {Object} res - HTTP Response
+   * @return {Object} Returned object
+   */
   static async archive(req, res) {
     const { replyId } = req.params;
     try {

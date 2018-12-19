@@ -160,6 +160,43 @@ describe('Replies Validation and Creation', () => {
     res.body.errors.commentId.msg.should.equal('Comment Id must be an Integer');
   });
 
+  it('it should return an error when it cannot update a reply', async () => {
+    const data = {
+      content: 'This is Andela'
+    };
+    const res = await chai.request(app)
+      .put('/api/v1/comments/1/reply/1')
+      .set('access-token', userToken)
+      .send(data);
+    res.status.should.equal(404);
+    res.body.should.be.a('object');
+    res.body.should.have.property('message');
+    res.body.message.should.equal('Cannot Successfully update the reply');
+  });
+
+  it('it should return an a success when it updates a reply', async () => {
+    const user = {
+      email: 'admin@heimdal.com',
+      password: '12345678heimdal'
+    };
+    const userResponse = await chai
+      .request(app)
+      .post('/api/v1/auth/login')
+      .send(user);
+    const { token } = userResponse.body;
+    const data = {
+      content: 'This is Andela'
+    };
+    const res = await chai.request(app)
+      .put('/api/v1/comments/1/reply/1')
+      .set('access-token', token)
+      .send(data);
+    res.status.should.equal(200);
+    res.body.should.be.a('object');
+    res.body.should.have.property('message');
+    res.body.message.should.equal('Succesfully updated the reply');
+  });
+
   it('it should return a success for successful deletion of a comment', async () => {
     const data = {
       isArchived: true
