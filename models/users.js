@@ -42,6 +42,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Users.hasMany(models.likes, {});
+    Users.hasMany(models.notifications, {});
     Users.hasMany(models.ratings);
   };
   return Users;

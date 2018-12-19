@@ -17,13 +17,14 @@ class LikesController {
   static async likesArticles(req, res) {
     const { articleId } = req.params;
     const { userId } = req.app.locals.user;
-    const payload = {
-      articleId,
-      userId,
-      commentId: null
-    };
-
     try {
+      const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
+      const payload = {
+        articleOwner,
+        articleId,
+        userId,
+        commentId: null
+      };
       await like(res, payload);
     } catch (error) {
       StatusResponse.internalServerError(res, { message: 'server error' });

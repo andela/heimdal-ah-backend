@@ -21,7 +21,6 @@ const mailer = {
       subject: emailSubject,
       html: emailBody
     };
-
     return sgMail
       .send(msg)
       .then(() => true)
@@ -47,6 +46,26 @@ const mailer = {
 
     const emailContent = { emailSubject, emailBody };
     mailer.sendCustomMail(emailAddress, emailContent);
+  },
+  /**
+   * @description This method is used to send a verification mail to a user
+   * @param {String} emailAddress
+   * @param {string} username
+   * @param {string} info
+   * @returns {Boolen} Status of sent email
+   */
+  sendNotificationMail(emailAddress, username, info) {
+    const { type, link, title } = info;
+    const emailSubject = `${emailAddress}`;
+    const emailBody = `
+      <div>
+          <h3 style="color:blue;"> Hi!!! ${username} added a ${type} to your Article</h3> <div style="border:1px solid black; padding:5px;"><h1>${title}</h1></div> 
+          <p> checkout link ${link}</p>
+      </div>
+    `;
+    const emailContent = { emailSubject, emailBody };
+    mailer.sendCustomMail(emailAddress, emailContent);
+    return true;
   }
 };
 

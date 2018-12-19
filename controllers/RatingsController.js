@@ -1,5 +1,7 @@
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
+import ArticleQueryModel from '../lib/ArticleQueryModel';
+import myEmitter from '../helpers/MyEmitter';
 
 const { ratings } = model;
 
@@ -23,6 +25,17 @@ class RatingsController {
         articleId: req.params.articleId,
         stars: req.body.stars
       });
+
+      const articleOwner = await ArticleQueryModel.getArticleByIdentifier({
+        id: req.params.articleId
+      });
+      myEmitter.emit('ratingsNotification', {
+        to: articleOwner.dataValues,
+        from: req.userId,
+        articleId: req.params.articleId,
+        type: 'rating'
+      });
+
       StatusResponse.created(res, {
         message: 'Users ratings on this article recorded succesfully',
         ratings: usersRatings
