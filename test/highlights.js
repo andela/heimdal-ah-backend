@@ -41,9 +41,7 @@ describe('Test For HighLights', () => {
       res.status.should.equal(400);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
-      res.body.message.should.equal(
-        'You can not highlight or comment on this text as it does not exist within the article'
-      );
+      res.body.message.should.equal('You can not highlight or comment on this text as it does not exist within the article');
     });
 
     it('should return 200 when the highlighted text is contained in the body of the article', async () => {
@@ -72,9 +70,7 @@ describe('Test For HighLights', () => {
       res.status.should.equal(200);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
-      res.body.message.should.equal(
-        'All highlights belonging to this article has been fetched successfully'
-      );
+      res.body.message.should.equal('All highlights belonging to this article has been fetched successfully');
     });
   });
 
@@ -118,7 +114,6 @@ describe('Test For HighLights', () => {
       res.body.message.should.be.an('array');
       res.body.message[0].should.equal('Highlighted portions supplied must be an array');
     });
-
     it('should return 200 when the updatedPortions is a valid array with all the necessary parameters', async () => {
       const data = { highlightedPortions: [bodyHelper.highlights] };
       const res = await chai
