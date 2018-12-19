@@ -54,9 +54,13 @@ class CommentController {
     const { userId } = req.app.locals.user;
     // const userId = 1;
     const articleUser = article.userId;
+    const commentInfo = {
+      userId,
+      articleId
+    };
     try {
       if (articleUser === userId) {
-        const comment = await CommentQueryModel.getPrivateComment(articleId);
+        const comment = await CommentQueryModel.getPrivateComment(commentInfo);
         if (!comment) {
           const payload = {
             message: 'No Comment exist'
@@ -69,7 +73,7 @@ class CommentController {
         };
         return StatusResponse.success(res, payload);
       }
-      const comment = await CommentQueryModel.getPublicComment(articleId);
+      const comment = await CommentQueryModel.getPublicComment(commentInfo);
       if (!comment) {
         const payload = {
           message: 'No Comment exist'
