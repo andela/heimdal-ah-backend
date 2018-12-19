@@ -33,7 +33,7 @@ class ArticlesController {
       tags, body, title, description, image
     } = req.body;
     try {
-      const articleTitle = await ArticleQueryModel.getArticleByTitle();
+      const articleTitle = await ArticleQueryModel.getArticleByTitle(req.body.title);
       const articleSlug = checkTitle(req.body.title, articleTitle);
       const readingTime = calcReadingTime(body);
       const newArticle = await Article.create({
@@ -176,7 +176,7 @@ class ArticlesController {
 
       const updatedArticle = await articles.update(req.body, {
         where: { ...whereFilter },
-        fields: ['title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
+        fields: ['slug', 'title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
         returning: true
       });
 
