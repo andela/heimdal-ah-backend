@@ -20,3 +20,4 @@ import './follows';
 import './readerStats';
 import './search';
 import './highlights';
+import './replies';

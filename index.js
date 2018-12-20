@@ -18,7 +18,8 @@ import {
   readStats,
   reports,
   likes,
-  search
+  search,
+  replies
 } from './routes';
 
 import logger from './config/logger';
@@ -52,6 +53,7 @@ app.use('/api/v1/ratings', ratings);
 app.use('/api/v1/articles', highlights);
 app.use('/api/v1/users', readStats);
 app.use('/api/v1/articles', likes);
+app.use('/api/v1/comments', replies);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered
