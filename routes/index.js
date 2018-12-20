@@ -10,6 +10,10 @@ import search from './search';
 import likes from './likes';
 import ratings from './ratings';
 import notifications from './notifications';
+import highlights from './highlights';
+import readStats from './readerStats';
+import reports from './reports';
+import replies from './replies';
 
 
 export {
@@ -21,8 +25,12 @@ export {
   comment,
   articles,
   bookmarks,
-  search,
   ratings,
   likes,
-  notifications
+  notifications,
+  highlights,
+  search,
+  readStats,
+  reports,
+  replies
 };

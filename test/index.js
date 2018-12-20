@@ -3,6 +3,7 @@
  */
 
 import './middlewares/userValidation.test';
+import './middlewares/reportValidation.test';
 import './users';
 import './passport';
 import './profiles';
@@ -14,6 +15,10 @@ import './commentHistory';
 import './likes';
 import './ratings';
 import './helpers/articleHelpers';
+import './helpers/mailer';
 import './follows';
+import './readerStats';
 import './search';
 import './notification';
+import './highlights';
+import './replies';

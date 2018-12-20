@@ -6,6 +6,12 @@ import UserModelQuery from '../lib/UserModelQuery';
 dotenv.config();
 const checkAuthentication = async (req, res, next) => {
   const token = req.headers['access-token'];
+  // const articleUrl = () => {
+  //   const { identifier } = req.params;
+  //   return req.originalUrl === `/api/v1/articles/${identifier}` && req.method === 'GET';
+  // };
+  // const checkArticleUrl = articleUrl();
+
   if (!token) {
     StatusResponse.badRequest(res, {
       message: 'You did not provide any token, please enter token, then retry',

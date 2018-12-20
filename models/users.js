@@ -33,7 +33,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'profile'
     });
-    Users.hasMany(models.articles, {
+    Users.belongsToMany(models.articles, {
+      as: 'ReadArticles',
+      foreignKey: 'userId',
+      through: 'ReaderStat',
     });
     Users.hasOne(models.profiles, {});
     Users.hasMany(models.articles, {});

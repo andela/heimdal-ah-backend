@@ -5,7 +5,8 @@ import StatusResponse from '../helpers/StatusResponse';
 const { articles } = models;
 const checkArticle = async (req, res, next) => {
   try {
-    const identifier = req.params.id || req.params.articleId || req.params.identifier;
+    const identifier = req.params.id || req.params.articleId || req.params.identifier
+      || req.params.articleId;
     const whereFilter = checkIdentifier(identifier);
     const fetchedArticle = await articles.findOne({
       where: {
@@ -19,6 +20,7 @@ const checkArticle = async (req, res, next) => {
       });
     }
     req.app.locals.article = fetchedArticle;
+
     return next();
   } catch (error) {
     return StatusResponse.internalServerError(res, {
@@ -48,9 +50,15 @@ const checkTags = (req, res, next) => {
 const { tags } = models;
 
 const getTagId = async (req, res, next) => {
+  let validTags;
+  if (Array.isArray(req.query.tag)) {
+    validTags = req.query.tag.map(tag => tag.replace(/ /g, ''));
+  } else {
+    validTags = [req.query.tag].map(tag => tag.replace(/ /g, ''));
+  }
   const tag = await tags.findAndCountAll({
     where: {
-      tagName: req.query.tag
+      tagName: { $ilike: { $any: `{%${validTags}%}` } }
     },
   });
   if (tag.count < 1) {
@@ -58,9 +66,9 @@ const getTagId = async (req, res, next) => {
       message: 'No Articles with such tags',
     });
   }
-  req.tagId = tag.rows[0].id;
+  const tagIds = tag.rows.map(val => val.id);
   req.app.locals.tag = {
-    tagId: req.tagId,
+    tagIds,
   };
   return next();
 };

@@ -7,6 +7,10 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         unique: true
       },
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER
+      },
       title: {
         type: DataTypes.STRING,
         allowNull: false
@@ -47,12 +51,25 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'bookmarks'
     });
+    Articles.hasMany(models.HighlightedText, {
+      foreignKey: 'articleId',
+      as: 'highlightedPortions'
+    });
     Articles.hasMany(models.likes, {});
     Articles.belongsToMany(models.tags, {
       through: 'ArticleTag',
       as: 'tags',
       foreignKey: 'articleId'
     });
+    Articles.belongsToMany(models.profiles, {
+      as: 'Readers',
+      foreignKey: 'articleId',
+      through: 'ReadingStat',
+    });
+    // Articles.hasMany(models.report, {
+    //   foreignKey: 'articleId',
+    //   as: 'report',
+    // });
   };
   return Articles;
 };

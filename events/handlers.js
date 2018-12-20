@@ -1,6 +1,9 @@
 import eventEmitter from '../helpers/eventEmitter';
 import Notifications from './Notifications';
 import eventTypes from './eventTypes';
+import highlightsLogic from '../lib/highlightsLogic';
+
+const { updateHighlights } = highlightsLogic;
 
 
 const handlers = {
@@ -16,6 +19,10 @@ const handlers = {
 
     eventEmitter.on(eventTypes.FOLLOW_INTERACTION_EVENT,
       payload => Notifications.followNotification(payload, io));
+
+    eventEmitter.on(eventTypes.UPDATEHIGHLIGHT_EVENT, (highlightedPortions, body, userId) => {
+      updateHighlights(highlightedPortions, body, userId);
+    });
   }
 };
 
