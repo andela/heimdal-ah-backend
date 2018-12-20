@@ -9,6 +9,7 @@ import articles from './articles';
 import search from './search';
 import likes from './likes';
 import ratings from './ratings';
+import highlights from './highlights';
 import readStats from './readerStats';
 import reports from './reports';
 import replies from './replies';
@@ -23,8 +24,9 @@ export {
   comment,
   articles,
   bookmarks,
-  search,
   ratings,
+  highlights,
+  search,
   readStats,
   likes,
   reports,
