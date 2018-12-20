@@ -10,10 +10,7 @@ import {
   calcReadingTime
 } from '../helpers/articleHelper';
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
-
-import highlightsLogic from '../lib/highlightsLogic';
-
-const { updateHighlights } = highlightsLogic;
+import eventEmitter from '../helpers/eventEmitter';
 
 const { articles: Article, tags: Tag, HighlightedText } = models;
 
@@ -187,24 +184,16 @@ class ArticlesController {
       }
 
       // Use an event emitter to call updateHighlights
-      const updatedHighlights = await updateHighlights(
+      eventEmitter.emit(
+        'UPDATEHIGHLIGHT',
         article.highlightedPortions,
         updatedArticle[1][0].body,
         userId
       );
 
-      if (!updatedHighlights) {
-        return StatusResponse.success(res, {
-          message: 'Article updated successfully, no highlights weere adjusted',
-          article: updatedArticle,
-          highlightedPortions: article.dataValues.highlightedPortions
-        });
-      }
-
       return StatusResponse.success(res, {
         message: 'Article updated successfully, some highlights were adjusted or removed',
-        article: updatedArticle,
-        highlightedPortions: updatedHighlights
+        article: updatedArticle
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {

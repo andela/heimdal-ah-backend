@@ -23,6 +23,9 @@ import {
 
 import logger from './config/logger';
 import passportAuth from './config/passportAuth';
+import events from './events';
+
+events.register();
 
 const PORT = process.env.PORT || 4000;
 
