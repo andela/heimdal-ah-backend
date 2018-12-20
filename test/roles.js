@@ -32,6 +32,15 @@ describe('Heimdal Role based access control functionality Test Suite', () => {
       res.body.message.should.equal('success');
     });
 
+    it('should return status code 400 if user id is not an integer', async () => {
+      const res = await chai.request(app)
+        .get('/api/v1/admin/users/nm')
+        .set('access-token', adminToken);
+      res.status.should.equal(400);
+      res.body.should.be.a('object');
+      res.body.should.have.property('errors');
+    });
+
     it('should return status code 200 on returning a specific user', async () => {
       const res = await chai.request(app)
         .get('/api/v1/admin/users/1')

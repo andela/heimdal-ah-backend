@@ -37,6 +37,30 @@ class ArticleValidation {
       return StatusResponse.internalServerError(res, payload);
     }
   }
+
+  /**
+   * @param {object} req Takes comment request
+   * @param {object} res Response to request
+   * @param {object} next Move to the next function
+   * @return {object} User validation response to user
+   */
+  static checkArticleId(req, res, next) {
+    req.checkParams('identifier', 'Article Id must be an Integer').isInt();
+    const errors = req.validationErrors();
+    const err = [];
+
+    if (errors) {
+      errors.forEach(({ param, msg }) => {
+        if (!err[param]) {
+          err[param] = {
+            msg
+          };
+        }
+      });
+      return StatusResponse.badRequest(res, { errors: { ...err } });
+    }
+    return next();
+  }
 }
 
 export default ArticleValidation;

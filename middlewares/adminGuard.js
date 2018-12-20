@@ -3,8 +3,8 @@ const adminGuard = (req, res, next) => {
   if (roleId === 1) {
     return next();
   }
-  return res.status(403).json({
-    message: 'Only available to admin',
+  return res.status(401).json({
+    message: 'Unauthorized',
   });
 };
 

@@ -43,25 +43,15 @@ class RolesController {
    * @return {Object} Returned object
    */
   static async update(req, res) {
-    const { userId } = req.params;
     const { role } = req.body;
-
-    const { id: roleId } = await roles.findOne({
-      where: { name: role }
-    });
+    const { roleId, user } = req.app.locals;
 
     try {
-      const updatedUser = await users.update({
-        roleId
-      }, {
-        where: {
-          id: userId,
-        },
-        returning: true
-      });
+      await user.updateAttributes({ roleId });
+      user.dataValues.role = { id: roleId, name: role };
       return StatusResponse.success(res, {
         message: 'success',
-        user: updatedUser
+        user,
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -76,33 +66,12 @@ class RolesController {
    * @param {Object} res - HTTP Response Object
    * @return {Object} Returned object
    */
-  static async getAUser(req, res) {
-    const { userId } = req.params;
-    try {
-      const user = await users.findById(userId, {
-        include: [{
-          model: roles,
-          attributes: ['id', 'name']
-        }, {
-          model: profiles
-        }],
-        attributes: ['id']
-      });
-
-      if (!user) {
-        return StatusResponse.notfound(res, {
-          message: 'User not found'
-        });
-      }
-      return StatusResponse.success(res, {
-        message: 'success',
-        user,
-      });
-    } catch (error) {
-      return StatusResponse.internalServerError(res, {
-        message: 'Something went wrong'
-      });
-    }
+  static getAUser(req, res) {
+    const { user } = req.app.locals;
+    return StatusResponse.success(res, {
+      message: 'success',
+      user,
+    });
   }
 }
 

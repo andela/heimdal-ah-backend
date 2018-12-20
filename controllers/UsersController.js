@@ -33,17 +33,16 @@ class UsersController {
         attributes: { exclude: ['password'] }
       });
       if (authors.length === 0) {
-        StatusResponse.success(res, {
+        return StatusResponse.success(res, {
           message: 'No author found'
         });
-      } else {
-        StatusResponse.success(res, {
-          message: 'List of authors',
-          users: authors
-        });
       }
+      return StatusResponse.success(res, {
+        message: 'List of authors',
+        users: authors
+      });
     } catch (error) {
-      StatusResponse.internalServerError(res, {
+      return StatusResponse.internalServerError(res, {
         message: `Something went wrong..${error}`
       });
     }
