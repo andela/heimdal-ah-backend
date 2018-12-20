@@ -100,11 +100,9 @@ describe('Comment Validation and Creation', () => {
     res.body.message.should.equal('No Comment exist');
   });
 
-  it('it should return a success for successful creation of a comment', async () => {
+  it('it should return a success for successful creation of a public comment', async () => {
     const commentData = {
       content: chance.sentence({ words: 20 }),
-      articleId: 1,
-      userId: 1
     };
     const res = await chai.request(app)
       .post('/api/v1/articles/1/comments')
@@ -114,6 +112,40 @@ describe('Comment Validation and Creation', () => {
     res.body.should.be.a('object');
     res.body.should.have.property('message');
     res.body.message.should.equal('Comment has been successfully created');
+  });
+
+  it('it should return a success for successful creation of a private comment', async () => {
+    const commentData = {
+      content: chance.sentence({ words: 20 }),
+      isPrivate: true
+    };
+    const res = await chai.request(app)
+      .post('/api/v1/articles/1/comments')
+      .set('access-token', userToken)
+      .send(commentData);
+    res.status.should.equal(201);
+    res.body.should.be.a('object');
+    res.body.should.have.property('message');
+    res.body.message.should.equal('Comment has been successfully created');
+  });
+
+  it('it should return a success for listing out comment when the user is the article creator', async () => {
+    const userData = {
+      email: 'admin@heimdal.com',
+      password: '12345678heimdal',
+    };
+    const userResponse = await chai
+      .request(app)
+      .post('/api/v1/auth/login')
+      .send(userData);
+    const { token } = userResponse.body;
+    const res = await chai.request(app)
+      .get('/api/v1/articles/1/comments')
+      .set('access-token', token);
+    res.status.should.equal(200);
+    res.body.should.be.a('object');
+    res.body.should.have.property('message');
+    res.body.message.should.equal('All Comment for the Article');
   });
 
   it('it should return a success for successful listing of the comment', async () => {

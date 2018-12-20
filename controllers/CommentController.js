@@ -1,7 +1,6 @@
 import { Op } from 'sequelize';
 import db from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-// import ArticleQueryModel from '../lib/ArticleQueryModel';
 import CommentQueryModel from '../lib/CommentQueryModel';
 
 const { comments } = db;
@@ -16,7 +15,7 @@ class CommentController {
    * @return {Object} Returned object
    */
   static async create(req, res) {
-    const { content, isPublic } = req.body;
+    const { content, isPrivate } = req.body;
     const { articleId } = req.params;
     const { userId } = req.app.locals.user;
     try {
@@ -24,7 +23,7 @@ class CommentController {
         userId,
         articleId,
         content,
-        isPublic
+        isPrivate
       });
       const payload = {
         message: 'Comment has been successfully created',
@@ -52,7 +51,6 @@ class CommentController {
     const { articleId } = req.params;
     const { article } = req.app.locals;
     const { userId } = req.app.locals.user;
-    // const userId = 1;
     const articleUser = article.userId;
     const commentInfo = {
       userId,
