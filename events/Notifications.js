@@ -14,7 +14,9 @@ class Notifications {
    */
   static async addNotification(payload, io) {
     try {
-      const { to: { userId, title, slug }, type, from: user, event: { createdAt, id } } = payload;
+      const {
+        to: { userId, title, slug }, type, from: user, event: { createdAt, id }
+      } = payload;
       const articleOwner = await UsermodelQuery.getUserById(userId);
       const sender = await UsermodelQuery.getUserById(user);
       const { dataValues: { email } } = articleOwner;

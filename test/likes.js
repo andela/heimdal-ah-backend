@@ -1,12 +1,6 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../index';
-import {
-  createLikes,
-  deleteLikes,
-  findLikes,
-  listOfLikers
-} from '../lib/likes';
 
 chai.use(chaiHttp);
 chai.should();

@@ -1,4 +1,4 @@
-export default(sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Replies = sequelize.define('replies', {
     content: {
       type: DataTypes.TEXT,
