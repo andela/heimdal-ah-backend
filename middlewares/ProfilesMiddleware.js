@@ -38,18 +38,19 @@ const validProfileInput = (req, res, next) => {
 
 // This function checks to see whether a profile exist or not [used in filtering articles by author]
 const getAuthor = async (req, res, next) => {
-  const author = await profiles.findOne({
+  const author = await profiles.findAndCountAll({
     where: {
-      username: req.query.author
+      username: { $ilike: `%${req.query.author}%` }
     },
   });
-  if (!author) {
+  if (author.count < 1) {
     return StatusResponse.notfound(res, {
       message: 'No such author',
     });
   }
+  const userIds = author.rows.map(val => val.id);
   req.app.locals.user = {
-    userId: author.userId,
+    userIds,
   };
   return next();
 };
