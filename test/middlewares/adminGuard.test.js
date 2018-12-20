@@ -7,18 +7,17 @@ import adminGuard from '../../middlewares/adminGuard';
 chai.use(chaiHttp);
 chai.should();
 
-describe('Comment History Tests', () => {
-  const user = httpMocks.createRequest({
-    app: {
-      locals: {
-        user: {
-          roleId: 2
+describe('admin role Tests', () => {
+  describe('GET /api/v1/admin/users/', () => {
+    const user = httpMocks.createRequest({
+      app: {
+        locals: {
+          user: {
+            roleId: 2
+          }
         }
       }
-    }
-  });
-
-  describe('GET /api/v1/admin/users/', () => {
+    });
     let res;
     beforeEach(() => {
       res = httpMocks.createResponse();
