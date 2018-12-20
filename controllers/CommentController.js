@@ -1,8 +1,9 @@
 import { Op } from 'sequelize';
 import db from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import myEmitter from '../helpers/MyEmitter';
+import eventEmitter from '../helpers/eventEmitter';
 import ArticleQueryModel from '../lib/ArticleQueryModel';
+import eventTypes from '../events/eventTypes';
 
 const { comments, profiles } = db;
 /**
@@ -25,13 +26,15 @@ class CommentController {
         articleId,
         content
       });
+      // event emitter
       const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
 
-      myEmitter.emit('commentNotification', {
+      eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {
         to: articleOwner.dataValues,
         from: userId,
-        articleId,
-        type: 'comment'
+        articleId: req.params.articleId,
+        type: 'comment',
+        event: comment.dataValues
       });
 
       const payload = {

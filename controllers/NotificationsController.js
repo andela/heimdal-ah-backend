@@ -1,5 +1,6 @@
 import Model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
+import { findNotificationById } from '../lib/notifications';
 
 const { notifications } = Model;
 /** @description NotificationsController class
@@ -15,8 +16,8 @@ class NotificationsController {
    */
   static async getUsersNotification(req, res) {
     const { userId } = req.params;
-
-    if (req.userId !== userId) {
+    const user = req.app.locals.user.userId;
+    if (user !== parseInt(userId, 10)) {
       return StatusResponse.unauthorized(res, { message: 'access cannot be granted' });
     }
     const findNotifications = await notifications.findAndCountAll({
@@ -38,8 +39,9 @@ class NotificationsController {
    */
   static async getOneNotification(req, res) {
     const { notificationId, userId } = req.params;
+    const user = req.app.locals.user.userId;
 
-    if (req.userId !== userId) {
+    if (user !== parseInt(userId, 10)) {
       return StatusResponse.unauthorized(res, { message: 'access cannot be granted' });
     }
     const findNotifications = await notifications.findOne({
@@ -50,7 +52,33 @@ class NotificationsController {
     if (findNotifications) {
       return StatusResponse.success(res, findNotifications);
     }
-    return StatusResponse.notfound(res, { message: 'no notificationa found' });
+    return StatusResponse.notfound(res, { message: 'notification was found' });
+  }
+
+  /** @description function get one notification
+   * @param {string} req is the request parameter
+   * @param {string} res is the response parameter
+   * @return {object} the response object
+   * @public
+   */
+  static async updateNotification(req, res) {
+    const { notificationId, userId } = req.params;
+    const user = req.app.locals.user.userId;
+    try {
+      if (user !== parseInt(userId, 10)) {
+        return StatusResponse.unauthorized(res, { message: 'access cannot be granted' });
+      }
+      const notification = await findNotificationById(notificationId);
+      if (notification) {
+        await notification.update({
+          isRead: true
+        });
+        return StatusResponse.success(res, { message: 'notification was updated successfully' });
+      }
+      return StatusResponse.notfound(res, { message: 'no notification found' });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, { message: 'server error' });
+    }
   }
 }
 

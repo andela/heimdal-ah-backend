@@ -16,4 +16,10 @@ router.get(
   checkAuthentication,
   NotificationsController.getOneNotification
 );
+
+router.put(
+  '/:userId/:notificationId/notifications',
+  checkAuthentication,
+  NotificationsController.updateNotification
+);
 export default router;

@@ -23,6 +23,10 @@ export default {
     message: {
       type: Sequelize.STRING
     },
+    isRead: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

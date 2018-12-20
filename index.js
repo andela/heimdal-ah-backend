@@ -3,7 +3,6 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import validator from 'express-validator';
 import passport from 'passport';
-
 import {
   auth,
   profiles,
@@ -21,9 +20,7 @@ import {
 
 import logger from './config/logger';
 import passportAuth from './config/passportAuth';
-import services from './services';
-
-services();
+import events from './events';
 
 const PORT = process.env.PORT || 4000;
 
@@ -50,12 +47,14 @@ app.use('/api/v1/ratings', ratings);
 app.use('/api/v1/articles', likes);
 passportAuth();
 
+
 // Default to here when an invalid endpoint is entered
 
 app.use('/*', (req, res) => res.status(404).json({ message: 'not found' }));
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);
+  events.start(server);
 });
 
 export default app;

@@ -31,8 +31,8 @@ const checkAuthentication = async (req, res, next) => {
       req.userId = decoded.userId;
       req.username = decoded.username;
       req.app.locals.user = {
-        userId: req.userId,
-        username: req.username
+        userId: decoded.userId,
+        username: decoded.username
       };
       return next();
     });

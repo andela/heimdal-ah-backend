@@ -16,3 +16,4 @@ import './ratings';
 import './helpers/articleHelpers';
 import './follows';
 import './search';
+import './notification';
