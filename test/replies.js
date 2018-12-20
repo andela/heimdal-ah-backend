@@ -171,7 +171,7 @@ describe('Replies Validation and Creation', () => {
     res.status.should.equal(404);
     res.body.should.be.a('object');
     res.body.should.have.property('message');
-    res.body.message.should.equal('Cannot Successfully update the reply');
+    res.body.message.should.equal('Cannot update the reply');
   });
 
   it('it should return an a success when it updates a reply', async () => {

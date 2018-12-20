@@ -29,7 +29,7 @@ class RepliesController {
       return StatusResponse.created(res, payload);
     } catch (error) {
       const payload = {
-        message: 'Cannot succesfully create a reply',
+        message: 'Cannot create a reply',
         error: {
           body: [`Internal server error => ${error}`]
         }
@@ -61,7 +61,7 @@ class RepliesController {
       return StatusResponse.success(res, payload);
     } catch (error) {
       const payload = {
-        message: 'Cannot succesfully list out Comments',
+        message: 'Cannot list out Comments',
         error: {
           body: [`Internal server error => ${error.message}`]
         }
@@ -91,7 +91,7 @@ class RepliesController {
 
       if (result[0] === 0) {
         const payload = {
-          message: 'Cannot Successfully update the reply'
+          message: 'Cannot update the reply'
         };
         return StatusResponse.notfound(res, payload);
       }
@@ -101,7 +101,7 @@ class RepliesController {
       return StatusResponse.success(res, payload);
     } catch (error) {
       const payload = {
-        message: 'Cannot succesfully update the reply',
+        message: 'Cannot update the reply',
         error: {
           body: [`Internal server error => ${error.message}`]
         }
@@ -126,7 +126,7 @@ class RepliesController {
       return StatusResponse.success(res, payload);
     } catch (error) {
       const payload = {
-        message: 'Cannot succesfully delete the reply',
+        message: 'Cannot delete the reply',
         error: {
           body: [`Internal server error => ${error}`]
         }
