@@ -79,7 +79,6 @@ describe('Test For HighLights', () => {
       const res = await chai
         .request(app)
         .get(`/api/v1/articles/${bodyHelper.article.id}/highlights/${bodyHelper.highlights.highlightId}/comments`);
-
       res.status.should.equal(200);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
