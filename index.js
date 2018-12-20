@@ -14,15 +14,20 @@ import {
   comment,
   bookmarks,
   ratings,
+  highlights,
   readStats,
   reports,
   likes,
   search,
-  admin
+  admin,
+  replies
 } from './routes';
 
 import logger from './config/logger';
 import passportAuth from './config/passportAuth';
+import events from './events';
+
+events.register();
 
 const PORT = process.env.PORT || 4000;
 
@@ -46,14 +51,16 @@ app.use('/api/v1/articles', reports);
 app.use('/api/v1/articles', comment);
 app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);
+app.use('/api/v1/articles', highlights);
 app.use('/api/v1/users', readStats);
 app.use('/api/v1/articles', likes);
 app.use('/api/v1/admin', admin);
+app.use('/api/v1/comments', replies);
 passportAuth();
 
 // Default to here when an invalid endpoint is entered
 
-app.use('/*', (req, res) => res.status(404).json({ message: 'not found' }));
+app.use('/*', (req, res) => res.status(404).json({ message: 'This endpoint does not exist' }));
 
 app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);

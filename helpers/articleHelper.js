@@ -2,11 +2,9 @@ import slugify from 'slugify';
 import models from '../models';
 
 const { tags: Tag } = models;
-const checkIdentifier = identifier => (
-  Number.isInteger(parseInt(identifier, 10))
-    ? { id: identifier }
-    : { slug: identifier }
-);
+const checkIdentifier = identifier => (Number.isInteger(parseInt(identifier, 10))
+  ? { id: identifier }
+  : { slug: identifier });
 
 const checkTitle = (title, articleTitle) => {
   if (articleTitle !== null) {
@@ -24,7 +22,7 @@ const checkUser = (article, userId) => article.userId === userId;
  * @returns {Object} object - the sequelize object of article tags
  */
 const createNewTags = async (tags) => {
-  let tagList = tags.map(async thisTag => Tag.findOrCreate({
+  let tagList = await tags.map(async thisTag => Tag.findOrCreate({
     where: {
       tagName: thisTag
     }
@@ -36,12 +34,11 @@ const createNewTags = async (tags) => {
   return tagIds;
 };
 
-
 const calcReadingTime = (bodyText) => {
   const matches = bodyText.match(/\S+/g);
   const numberOfWords = matches ? matches.length : 0;
-  const averageWPM = 225;
-  const readingTime = Math.ceil(numberOfWords / averageWPM);
+  const averageWordsPerMinute = 225;
+  const readingTime = Math.ceil(numberOfWords / averageWordsPerMinute);
 
   return readingTime > 1 ? `${readingTime} mins read` : `${readingTime} min read`;
 };

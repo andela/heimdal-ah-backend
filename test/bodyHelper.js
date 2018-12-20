@@ -16,6 +16,7 @@ const bodyHelper = {
   userToken: undefined,
   articleId: undefined,
   article: undefined,
+  highlights: {}
 };
 
 export default bodyHelper;

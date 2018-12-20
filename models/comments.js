@@ -28,6 +28,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'commentId',
       onDelete: 'CASCADE',
     });
+    Comments.hasMany(models.comments, {
+      foreignKey: 'commentId',
+      as: 'comments'
+    });
   };
   return Comments;
 };
