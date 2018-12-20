@@ -82,7 +82,8 @@ describe('Test For HighLights', () => {
       res.status.should.equal(200);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
-      res.body.message.should.equal('All comments belonging to this highlight has been fetched successfully');
+      res.body.message.should
+        .equal('All comments belonging to this highlight has been fetched successfully');
     });
   });
 
