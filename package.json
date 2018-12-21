@@ -17,8 +17,8 @@
     "db:seed": "node_modules/.bin/sequelize db:seed:all",
     "db:seed:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:seed:all",
     "lint:fix": "eslint --fix ./ --ext .js --color",
-    "start": "node dist/index.js",
-    "build": "npm run clean && babel . --ignore node_modules,test,coverage,dist -d dist/ && cp swagger.json dist/",
+    "start": "npm run build && node dist/index.js",
+    "build": "npm run clean && babel ./ --ignore node_modules,test,coverage,dist -d dist/ && cp swagger.json dist/",
     "clean": "rimraf ./dist"
   },
   "nyc": {
