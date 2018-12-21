@@ -101,11 +101,8 @@ class AuthController {
         };
         return StatusResponse.notfound(res, payload);
       }
-      const {
-        id,
-        profile: { username }
-      } = user;
-      const token = getToken(id, username);
+      const { id, roleId, profile: { username } } = user;
+      const token = getToken(id, username, roleId);
       user.dataValues.password = undefined;
       const payload = {
         message: 'user logged in succesfully',

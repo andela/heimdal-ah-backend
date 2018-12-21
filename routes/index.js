@@ -13,6 +13,7 @@ import notifications from './notifications';
 import highlights from './highlights';
 import readStats from './readerStats';
 import reports from './reports';
+import admin from './admin';
 import replies from './replies';
 
 
@@ -32,5 +33,6 @@ export {
   search,
   readStats,
   reports,
+  admin,
   replies
 };

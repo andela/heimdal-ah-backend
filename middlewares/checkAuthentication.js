@@ -6,11 +6,6 @@ import UserModelQuery from '../lib/UserModelQuery';
 dotenv.config();
 const checkAuthentication = async (req, res, next) => {
   const token = req.headers['access-token'];
-  // const articleUrl = () => {
-  //   const { identifier } = req.params;
-  //   return req.originalUrl === `/api/v1/articles/${identifier}` && req.method === 'GET';
-  // };
-  // const checkArticleUrl = articleUrl();
 
   if (!token) {
     StatusResponse.badRequest(res, {
@@ -36,9 +31,11 @@ const checkAuthentication = async (req, res, next) => {
 
       req.userId = decoded.userId;
       req.username = decoded.username;
+      req.roleId = decoded.roleId;
       req.app.locals.user = {
         userId: decoded.userId,
-        username: decoded.username
+        username: decoded.username,
+        roleId: req.roleId
       };
       return next();
     });

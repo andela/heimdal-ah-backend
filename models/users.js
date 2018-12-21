@@ -27,7 +27,7 @@ export default (sequelize, DataTypes) => {
     Users.belongsTo(models.roles, {
       foreignKey: 'roleId',
       onDelete: 'CASCADE',
-      as: 'roles',
+      // as: 'roles',
     });
     Users.hasOne(models.profiles, {
       foreignKey: 'userId',

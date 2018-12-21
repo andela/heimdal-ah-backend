@@ -4,8 +4,9 @@ import StatusResponse from '../helpers/StatusResponse';
 import eventEmitter from '../helpers/eventEmitter';
 import ArticleQueryModel from '../lib/ArticleQueryModel';
 import eventTypes from '../events/eventTypes';
+import CommentQueryModel from '../lib/CommentQueryModel';
 
-const { comments, profiles } = db;
+const { comments } = db;
 /**
  * @description CommentController class
  */
@@ -17,14 +18,15 @@ class CommentController {
    * @return {Object} Returned object
    */
   static async create(req, res) {
-    const { content } = req.body;
+    const { content, isPrivate } = req.body;
     const { articleId } = req.params;
     const { userId } = req.app.locals.user;
     try {
       const comment = await comments.create({
         userId,
         articleId,
-        content
+        content,
+        isPrivate
       });
 
       const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
@@ -61,18 +63,30 @@ class CommentController {
    */
   static async list(req, res) {
     const { articleId } = req.params;
+    const { article } = req.app.locals;
+    const { userId } = req.app.locals.user;
+    const articleUser = article.userId;
+    const commentInfo = {
+      userId,
+      articleId
+    };
     try {
-      const comment = await comments.findAll({
-        include: [
-          profiles,
-        ],
-        where: {
-          articleId,
-          isArchived: false,
-          commentId: null
+      if (articleUser === userId) {
+        const comment = await CommentQueryModel.getPrivateComment(commentInfo);
+        if (!comment) {
+          const payload = {
+            message: 'No Comment exist'
+          };
+          return StatusResponse.notfound(res, payload);
         }
-      });
-      if (comment.length === 0) {
+        const payload = {
+          message: 'All Comment for the Article',
+          comment
+        };
+        return StatusResponse.success(res, payload);
+      }
+      const comment = await CommentQueryModel.getPublicComment(commentInfo);
+      if (!comment) {
         const payload = {
           message: 'No Comment exist'
         };
@@ -87,7 +101,7 @@ class CommentController {
       const payload = {
         message: 'Cannot succesfully list out Comments',
         error: {
-          body: [`Internal server error => ${error}`]
+          body: [`Internal server error => ${error.message}`]
         }
       };
       return StatusResponse.internalServerError(res, payload);
