@@ -26,7 +26,7 @@ class CommentController {
         articleId,
         content
       });
-      // event emitter
+
       const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
 
       eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {

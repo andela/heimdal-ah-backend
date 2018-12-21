@@ -26,7 +26,7 @@ class RepliesController {
         userId
       };
       const replies = await ReplyQueryModel.createReplies(info);
-      // event emitter
+
       const commentOwner = await ArticleQueryModel.getArticleByIdentifier({ id: commentId });
 
       eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {

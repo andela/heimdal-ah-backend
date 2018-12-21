@@ -5,7 +5,6 @@ import app from '../index';
 chai.use(chaiHttp);
 chai.should();
 
-
 chai.use(chaiHttp);
 
 describe('/Notifications', () => {
