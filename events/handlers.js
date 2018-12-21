@@ -29,9 +29,8 @@ const handlers = {
     );
 
     eventEmitter.on(
-      eventTypes.UPDATEHIGHLIGHT_EVENT, (
-        highlightedPortions, body, userId
-      ) => updateHighlights(highlightedPortions, body, userId)
+      eventTypes.UPDATEHIGHLIGHT_EVENT,
+      (highlightedPortions, body, userId) => updateHighlights(highlightedPortions, body, userId)
     );
   }
 };
