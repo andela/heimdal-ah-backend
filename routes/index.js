@@ -12,6 +12,7 @@ import ratings from './ratings';
 import highlights from './highlights';
 import readStats from './readerStats';
 import reports from './reports';
+import admin from './admin';
 import replies from './replies';
 
 
@@ -30,5 +31,6 @@ export {
   readStats,
   likes,
   reports,
+  admin,
   replies
 };

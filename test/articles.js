@@ -1,7 +1,5 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-// import jwtDecode from 'jwt-decode';
-
 import app from '../index';
 import bodyHelper from './bodyHelper';
 
@@ -94,11 +92,21 @@ describe('Test for articles controller', () => {
     it('should return 404 if an article is not found', async () => {
       const res = await chai
         .request(app)
-        .get('/api/v1/articles/hello-nnnn-snhjs-as')
+        .get('/api/v1/articles/88')
         .set('access-token', userToken);
       res.status.should.equal(404);
       res.body.should.have.a('object');
       res.body.message.should.equal('Could not find article');
+    });
+
+    it('should return status code 400 if article id is not an integer', async () => {
+      const res = await chai.request(app)
+        .get('/api/v1/articles/nm')
+        .set('access-token', userToken);
+      res.status.should.equal(400);
+      res.body.should.be.a('object');
+      res.body.should.have.property('errors');
+      res.body.errors.identifier.should.have.property('msg');
     });
 
     it('should return 200 on successful retrieval of an article', async () => {
