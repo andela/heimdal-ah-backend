@@ -19,6 +19,7 @@ import {
   reports,
   likes,
   search,
+  admin,
   replies
 } from './routes';
 
@@ -53,6 +54,7 @@ app.use('/api/v1/ratings', ratings);
 app.use('/api/v1/articles', highlights);
 app.use('/api/v1/users', readStats);
 app.use('/api/v1/articles', likes);
+app.use('/api/v1/admin', admin);
 app.use('/api/v1/comments', replies);
 passportAuth();
 

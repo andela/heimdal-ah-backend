@@ -4,6 +4,7 @@
 
 import './middlewares/userValidation.test';
 import './middlewares/reportValidation.test';
+import './middlewares/adminGuard.test';
 import './users';
 import './passport';
 import './profiles';
@@ -19,5 +20,6 @@ import './helpers/mailer';
 import './follows';
 import './readerStats';
 import './search';
+import './roles';
 import './highlights';
 import './replies';
