@@ -17,13 +17,14 @@ class LikesController {
   static async likesArticles(req, res) {
     const { articleId } = req.params;
     const { userId } = req.app.locals.user;
-    const payload = {
-      articleId,
-      userId,
-      commentId: null
-    };
-
     try {
+      const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
+      const payload = {
+        articleOwner,
+        articleId,
+        userId,
+        commentId: null
+      };
       await like(res, payload);
     } catch (error) {
       StatusResponse.internalServerError(res, { message: 'server error' });
@@ -37,12 +38,14 @@ class LikesController {
    * @public
    */
   static async likesComments(req, res) {
-    const { commentId } = req.params;
+    const { commentId, articleId } = req.params;
     const { userId } = req.app.locals.user;
+    const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
     const payload = {
       articleId: null,
       userId,
       commentId,
+      articleOwner
     };
 
     try {
@@ -50,10 +53,10 @@ class LikesController {
       if (!ifExist) {
         return StatusResponse.notfound(res, { message: 'comment was not found' });
       }
-      const likeComment = await like(res, payload);
-      return likeComment;
+      await like(res, payload);
+      return StatusResponse.success(res, { message: 'comment was liked successfully' });
     } catch (error) {
-      return StatusResponse.internalServerError(res, { message: 'server error' });
+      return StatusResponse.internalServerError(res, { message: 'server errorrrr' });
     }
   }
 

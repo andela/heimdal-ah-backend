@@ -1,15 +1,12 @@
-import eventEmitter from '../helpers/eventEmitter';
+import socketIo from './socketIo';
+import handlers from './handlers';
 
-import highlightsLogic from '../lib/highlightsLogic';
-
-const { updateHighlights } = highlightsLogic;
 
 const events = {
-  register() {
-    eventEmitter.on('UPDATEHIGHLIGHT', (highlightedPortions, body, userId) => {
-      updateHighlights(highlightedPortions, body, userId);
-    });
-  }
+  start(server) {
+    socketIo.connect(server, handlers);
+  },
 };
+
 
 export default events;

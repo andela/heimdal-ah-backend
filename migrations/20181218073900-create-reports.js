@@ -1,5 +1,5 @@
 
-export default{
+export default {
   up: (queryInterface, Sequelize) => queryInterface.createTable('reports', {
     id: {
       allowNull: false,

@@ -1,5 +1,9 @@
 import StatusResponse from '../helpers/StatusResponse';
 import ReplyQueryModel from '../lib/ReplyQueryModel';
+import eventEmitter from '../helpers/eventEmitter';
+import eventTypes from '../events/eventTypes';
+import ArticleQueryModel from '../lib/ArticleQueryModel';
+
 
 /**
  * @description RepliesController class
@@ -22,6 +26,16 @@ class RepliesController {
         userId
       };
       const replies = await ReplyQueryModel.createReplies(info);
+
+      const commentOwner = await ArticleQueryModel.getArticleByIdentifier({ id: commentId });
+
+      eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {
+        to: commentOwner.dataValues,
+        from: userId,
+        articleId: req.params.commentId,
+        type: 'comment',
+        event: replies.dataValues
+      });
       const payload = {
         message: 'Reply has been successfully created',
         replies

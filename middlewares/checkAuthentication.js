@@ -33,8 +33,8 @@ const checkAuthentication = async (req, res, next) => {
       req.username = decoded.username;
       req.roleId = decoded.roleId;
       req.app.locals.user = {
-        userId: req.userId,
-        username: req.username,
+        userId: decoded.userId,
+        username: decoded.username,
         roleId: req.roleId
       };
       return next();

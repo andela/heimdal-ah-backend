@@ -11,6 +11,7 @@ import {
 } from '../helpers/articleHelper';
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
 import eventEmitter from '../helpers/eventEmitter';
+import eventTypes from '../events/eventTypes';
 
 const { articles: Article, tags: Tag, HighlightedText } = models;
 
@@ -185,7 +186,7 @@ class ArticlesController {
 
       // Use an event emitter to call updateHighlights
       eventEmitter.emit(
-        'UPDATEHIGHLIGHT',
+        eventTypes.UPDATEHIGHLIGHT_EVENT,
         article.highlightedPortions,
         updatedArticle[1][0].body,
         userId

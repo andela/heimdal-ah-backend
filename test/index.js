@@ -20,6 +20,7 @@ import './helpers/mailer';
 import './follows';
 import './readerStats';
 import './search';
+import './notification';
 import './roles';
 import './highlights';
 import './replies';
