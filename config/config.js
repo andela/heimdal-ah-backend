@@ -1,4 +1,4 @@
-require('@babel/register');
+require('babel-register');
 const dotenv = require('dotenv');
 
 dotenv.config();
