@@ -1,0 +1,22 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API docs for Author's Haven; a destination to share and discover new, inspiring content.  ",
+    "version": "v1",
+    "title": "Author's Haven",
+    "contact": {
+      "email": "heimdal42@gmail.com"
+    }
+  },
+  "host": "heimdal-ah-staging.herokuapp.com",
+  "basePath": "/api/v1",
+  "tags": [
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": { 
+  },
+  "definitions": {
+  }
+}
