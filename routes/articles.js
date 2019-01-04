@@ -15,11 +15,15 @@ router.get('/:identifier', checkArticleId, checkArticle, ArticlesController.get)
 router.put('/:identifier', checkAuthentication, checkArticleId, checkArticle, checkTags, ArticlesController.update);
 router.delete('/:identifier', checkAuthentication, checkArticleId, checkArticle, ArticlesController.archive);
 
-router.put('/:identifier/publish',
+router.put(
+  '/:identifier/publish',
   checkAuthentication, publishAcess,
-  checkArticleId, checkArticle, checkTags, ArticlesController.publish);
-router.put('/:identifier/unpublish',
+  checkArticleId, checkArticle, checkTags, ArticlesController.publish
+);
+router.put(
+  '/:identifier/unpublish',
   checkAuthentication, publishAcess,
-  checkArticleId, checkArticle, checkTags, ArticlesController.unpublish);
+  checkArticleId, checkArticle, checkTags, ArticlesController.unpublish
+);
 
 export default router;
