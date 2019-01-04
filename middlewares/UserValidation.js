@@ -25,7 +25,7 @@ class UserValidation {
    * @return {object} User validation response to user
    */
   static validateUserLogin(req, res, next) {
-    UserValidation.checkUserEmail(req);
+    UserValidation.checkUserLogin(req);
     UserValidation.checkPassword(req);
     UserValidation.showError(req, res, next);
   }
@@ -70,6 +70,31 @@ class UserValidation {
       .checkBody('username', 'please enter a valid username, cannot be more than 20 characters')
       .isLength({ max: 20 });
   }
+
+
+  /**
+   * @param {object} req Takes signup request
+   * @param {object} res Response to request
+   * @return {object} User validation response to user
+   */
+  static checkUserLogin(req) {
+    if (!req.body.email) {
+      req.checkBody('username', 'please enter a valid username or email, it cannot be empty').notEmpty();
+      req
+        .checkBody(
+          'username',
+          'please enter a valid username can contain a letter or mixture of both letter and number'
+        )
+        .isAlphanumeric();
+      req
+        .checkBody('username', 'please enter a valid username or email, Username cannot be more than 20 characters')
+        .isLength({ max: 20 });
+    } else if (!req.body.username) {
+      req.checkBody('email', 'please enter an email').notEmpty();
+      req.checkBody('email', 'please enter a valid email').isEmail();
+    }
+  }
+
 
   /**
    * @param {object} req Takes signup request
