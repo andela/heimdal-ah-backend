@@ -82,4 +82,57 @@ describe('Heimdal Role based access control functionality Test Suite', () => {
       res.body.message.should.equal('success');
     });
   });
+
+  // ===== Publish access ==== //
+  describe('Test for publishing an article PUT/ api/v1/articles:slug', () => {
+    it('should return 404 if article to be published is not found', async () => {
+      const res = await chai
+        .request(app)
+        .put('/api/v1/articles/50/publish')
+        .set('access-token', adminToken)
+        .send();
+      res.status.should.equal(404);
+      res.body.should.have.a('object');
+      res.body.message.should.equal('Could not find article');
+    });
+    it('should return 200 if article is published successfully', async () => {
+      const res = await chai
+        .request(app)
+        .put('/api/v1/articles/2/publish')
+        .set('access-token', adminToken)
+        .send({
+          isPublished: true
+        });
+      res.status.should.equal(200);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('Article published successfully!');
+    });
+  });
+
+  describe('Test for unpublishing an article PUT/ api/v1/articles:slug', () => {
+    it('should return 404 if article to be unpublished is not found', async () => {
+      const res = await chai
+        .request(app)
+        .put('/api/v1/articles/50/unpublish')
+        .set('access-token', adminToken)
+        .send();
+      res.status.should.equal(404);
+      res.body.should.have.a('object');
+      res.body.message.should.equal('Could not find article');
+    });
+    it('should return 200 if article is unpublished successfully', async () => {
+      const res = await chai
+        .request(app)
+        .put('/api/v1/articles/2/unpublish')
+        .set('access-token', adminToken)
+        .send({
+          isPublished: false
+        });
+      res.status.should.equal(200);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('Article unpublished successfully!');
+    });
+  });
 });

@@ -81,6 +81,8 @@ class ArticlesController {
             }
           }
         ],
+        limit: size,
+        offset,
         order: [[orderBy, order]]
       });
       if (articles.rows.length === 0) {
@@ -228,6 +230,58 @@ class ArticlesController {
       });
       return StatusResponse.success(res, {
         message: 'Article deleted(archived) successfully'
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - publish article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async publish(req, res) {
+    const { articles } = models;
+    const whereFilter = checkIdentifier(req.params.identifier);
+    try {
+      const data = { isPublished: true };
+      await articles.update(data, {
+        where: { ...whereFilter },
+        returning: true,
+        plain: true
+      });
+      return StatusResponse.success(res, {
+        message: 'Article published successfully!'
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - publish article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async unpublish(req, res) {
+    const { articles } = models;
+    const whereFilter = checkIdentifier(req.params.identifier);
+    try {
+      const data = { isPublished: false };
+      await articles.update(data, {
+        where: { ...whereFilter },
+        returning: true,
+        plain: true
+      });
+      return StatusResponse.success(res, {
+        message: 'Article unpublished successfully!'
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
