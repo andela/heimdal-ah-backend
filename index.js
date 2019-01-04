@@ -3,6 +3,10 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import validator from 'express-validator';
 import passport from 'passport';
+import swaggerUi from 'swagger-ui-express';
+
+import swaggerDocument from './swagger.json';
+
 import {
   auth,
   profiles,
@@ -38,6 +42,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(validator());
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
