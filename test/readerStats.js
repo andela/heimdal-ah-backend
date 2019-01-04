@@ -23,9 +23,9 @@ describe('Reader Stats', () => {
     const { token } = userResponse.body;
     userToken = token;
   });
-  const getArticle = '/api/v1/articles/this-is-third-pot-title-u87dda';
+  const getArticle = '/api/v1/articles/4';
   const readerStatUrl = '/api/v1/users/readerstats';
-  const articleWrongUrl = '/api/v1/articles/this-is-third-pot-title-u87ddaew';
+  const articleWrongUrl = '/api/v1/articles/88';
 
   it('it should return a 404 if the user has no stats', async () => {
     const user2 = {

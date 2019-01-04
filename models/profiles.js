@@ -38,6 +38,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'profile'
     });
+    Profiles.hasMany(models.replies, {
+      foreignKey: 'userId',
+      as: 'profiles'
+    });
     Profiles.hasMany(models.followers, {
       foreignKey: 'followingId',
     });

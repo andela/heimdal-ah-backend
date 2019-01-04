@@ -9,8 +9,12 @@ import articles from './articles';
 import search from './search';
 import likes from './likes';
 import ratings from './ratings';
+import notifications from './notifications';
+import highlights from './highlights';
 import readStats from './readerStats';
 import reports from './reports';
+import admin from './admin';
+import replies from './replies';
 
 
 export {
@@ -22,9 +26,13 @@ export {
   comment,
   articles,
   bookmarks,
-  search,
   ratings,
-  readStats,
   likes,
-  reports
+  notifications,
+  highlights,
+  search,
+  readStats,
+  reports,
+  admin,
+  replies
 };

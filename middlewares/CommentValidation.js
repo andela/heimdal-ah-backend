@@ -86,6 +86,7 @@ class CommentValidation {
    */
   static async checkCommentParams(req, res, next) {
     const { commentId } = req.params;
+
     try {
       const checkComment = await ArticleQueryModel.getCommentById(commentId);
       if (!checkComment) {

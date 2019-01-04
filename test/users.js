@@ -9,7 +9,6 @@ chai.use(chaiHttp);
 chai.use(chaiHttp);
 chai.should();
 
-
 describe('User Authentication Test', () => {
   describe('GET /', () => {
     it('should return 404 for visiting a random endpoint on the app', async () => {
@@ -57,7 +56,7 @@ describe('User Authentication Test', () => {
     it('should return 200 on sucessfully login in a new user', async () => {
       const data = {
         email: 'testin@test.com',
-        password: 'etydhfkjdkvl1',
+        password: 'etydhfkjdkvl1'
       };
       const res = await chai
         .request(app)
@@ -68,7 +67,7 @@ describe('User Authentication Test', () => {
       res.status.should.equal(200);
     });
 
-    describe('GET api/vi/users/verify-email/:emailToken', () => {
+    describe('Test for verifying a users email address in the database. GET api/vi/users/verify-email/:emailToken', () => {
       it('should return 400 if the emailToken sent is invalid', async () => {
         const res = await chai
           .request(app)
