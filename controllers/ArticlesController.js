@@ -81,6 +81,8 @@ class ArticlesController {
             }
           }
         ],
+        limit: size,
+        offset,
         order: [[orderBy, order]]
       });
       if (articles.rows.length === 0) {
@@ -174,7 +176,7 @@ class ArticlesController {
 
       const updatedArticle = await articles.update(req.body, {
         where: { ...whereFilter },
-        fields: ['slug', 'title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
+        fields: ['slug', 'title', 'body', 'readingTime', 'description', 'image'],
         returning: true
       });
 
