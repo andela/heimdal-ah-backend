@@ -11,6 +11,10 @@ export default (sequelize, DataTypes) => {
     isArchived: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    isPrivate: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {});
   Comments.associate = (models) => {
@@ -27,6 +31,10 @@ export default (sequelize, DataTypes) => {
     Comments.belongsTo(models.comments, {
       foreignKey: 'commentId',
       onDelete: 'CASCADE',
+    });
+    Comments.hasMany(models.comments, {
+      foreignKey: 'commentId',
+      as: 'comments'
     });
   };
   return Comments;

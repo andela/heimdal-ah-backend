@@ -9,8 +9,11 @@ import {
   createNewTags,
   calcReadingTime
 } from '../helpers/articleHelper';
+import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
+import eventEmitter from '../helpers/eventEmitter';
+import eventTypes from '../events/eventTypes';
 
-const { articles: Article, tags: Tag } = models;
+const { articles: Article, tags: Tag, HighlightedText } = models;
 
 /**
  * @description ArticlesController class
@@ -28,8 +31,8 @@ class ArticlesController {
       tags, body, title, description, image
     } = req.body;
     try {
-      const articleTitle = await ArticleQueryModel.getArticleByTitle();
-      const articleSlug = checkTitle(req.body.title, articleTitle);
+      const articleTitle = await ArticleQueryModel.getArticleByTitle(title);
+      const articleSlug = checkTitle(title, articleTitle);
       const readingTime = calcReadingTime(body);
       const newArticle = await Article.create({
         userId,
@@ -38,7 +41,7 @@ class ArticlesController {
         body,
         image,
         readingTime,
-        slug: articleSlug,
+        slug: articleSlug
       });
 
       if (tags) {
@@ -68,17 +71,21 @@ class ArticlesController {
     } = req.query;
     try {
       const articles = await Article.findAndCountAll({
-        include: {
-          model: Tag,
-          as: 'tags',
-          attributes: ['tagName'],
-          through: {
-            attributes: []
+        include: [
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['tagName'],
+            through: {
+              attributes: []
+            }
           }
-        },
+        ],
+        limit: size,
+        offset,
         order: [[orderBy, order]]
       });
-      if (articles.length === 0) {
+      if (articles.rows.length === 0) {
         return StatusResponse.success(res, {
           message: 'No article found'
         });
@@ -107,22 +114,36 @@ class ArticlesController {
     try {
       const fetchArticle = await Article.findOne({
         where: { ...whereFilter },
-        include: {
-          model: Tag,
-          as: 'tags',
-          attributes: ['tagName'],
-          through: {
-            attributes: []
+        include: [
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['tagName'],
+            through: {
+              attributes: []
+            }
+          },
+          {
+            model: HighlightedText,
+            as: 'highlightedPortions'
           }
-        },
+        ]
       });
+      if (req.app.locals.user) {
+        const { userId } = req.app.locals.user;
+        const readInfo = {
+          articleId: fetchArticle.id,
+          userId
+        };
+        await ReadingStatsModelQuery.createReaderStats(readInfo);
+      }
       return StatusResponse.success(res, {
         message: 'success',
         article: fetchArticle
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
-        message: `something went wrong, please try again.... ${error}`
+        message: `something went wrong, please try again.... ${error.message}`
       });
     }
   }
@@ -155,8 +176,8 @@ class ArticlesController {
 
       const updatedArticle = await articles.update(req.body, {
         where: { ...whereFilter },
-        fields: ['title', 'body', 'readingTime', 'description', 'image', 'isPublished'],
-        returning: true,
+        fields: ['slug', 'title', 'body', 'readingTime', 'description', 'image'],
+        returning: true
       });
 
       if (tags) {
@@ -165,8 +186,16 @@ class ArticlesController {
         updatedArticle['1']['0'].dataValues.tags = tags;
       }
 
+      // Use an event emitter to call updateHighlights
+      eventEmitter.emit(
+        eventTypes.UPDATEHIGHLIGHT_EVENT,
+        article.highlightedPortions,
+        updatedArticle[1][0].body,
+        userId
+      );
+
       return StatusResponse.success(res, {
-        message: 'Article updated successfully',
+        message: 'Article updated successfully, some highlights were adjusted or removed',
         article: updatedArticle
       });
     } catch (error) {

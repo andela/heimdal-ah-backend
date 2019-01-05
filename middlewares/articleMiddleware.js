@@ -5,7 +5,8 @@ import StatusResponse from '../helpers/StatusResponse';
 const { articles } = models;
 const checkArticle = async (req, res, next) => {
   try {
-    const identifier = req.params.id || req.params.articleId || req.params.identifier;
+    const identifier = req.params.id || req.params.articleId || req.params.identifier
+      || req.params.articleId;
     const whereFilter = checkIdentifier(identifier);
     const fetchedArticle = await articles.findOne({
       where: {
@@ -19,6 +20,7 @@ const checkArticle = async (req, res, next) => {
       });
     }
     req.app.locals.article = fetchedArticle;
+
     return next();
   } catch (error) {
     return StatusResponse.internalServerError(res, {

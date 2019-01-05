@@ -1,5 +1,6 @@
 export default (sequelize, DataTypes) => {
   const Profiles = sequelize.define('profiles', {
+
     username: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -36,6 +37,10 @@ export default (sequelize, DataTypes) => {
     Profiles.hasMany(models.comments, {
       foreignKey: 'userId',
       as: 'profile'
+    });
+    Profiles.hasMany(models.replies, {
+      foreignKey: 'userId',
+      as: 'profiles'
     });
     Profiles.hasMany(models.followers, {
       foreignKey: 'followingId',
