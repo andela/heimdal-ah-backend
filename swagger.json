@@ -108,7 +108,7 @@
         }
       }
     },
-    "/articles/:articleId/reports": {
+    "/articles/{articleId}/reports": {
       "post": {
         "tags": [
           "Articles"
@@ -122,6 +122,14 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
           {
             "in": "header",
             "name": "access-token",
@@ -167,6 +175,13 @@
         ],
         "parameters": [
           {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
             "in": "path",
             "name": "followingId",
             "description": "Enter folowing ID in params",
@@ -203,6 +218,13 @@
         ],
         "parameters": [
           {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
             "in": "path",
             "name": "followingId",
             "description": "Enter following ID in params",
@@ -234,6 +256,15 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful",
@@ -259,6 +290,15 @@
         "description": "This endpoint get all followers following a user",
         "produces": [
           "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
         ],
         "responses": {
           "200": {
