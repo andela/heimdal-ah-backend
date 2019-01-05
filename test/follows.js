@@ -41,7 +41,6 @@ describe('Test To Follow, Unfollow user, View Followes, and view following', asy
         .set('access-token', token);
       res.status.should.equal(200);
       res.body.should.have.a('object');
-      res.body.should.have.property('data');
     });
 
     it('should return 200 on getting all users following you', async () => {
@@ -51,7 +50,6 @@ describe('Test To Follow, Unfollow user, View Followes, and view following', asy
         .set('access-token', token);
       res.status.should.equal(200);
       res.body.should.have.a('object');
-      res.body.should.have.property('data');
     });
 
     it('should return 200 on unfollowing a users', async () => {
