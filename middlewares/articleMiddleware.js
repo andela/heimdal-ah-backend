@@ -1,5 +1,5 @@
 import models from '../models';
-import { checkIdentifier } from '../helpers/articleHelper';
+import { checkIdentifier, isPublished } from '../helpers/articleHelper';
 import StatusResponse from '../helpers/StatusResponse';
 
 const { articles } = models;
@@ -28,6 +28,17 @@ const checkArticle = async (req, res, next) => {
     });
   }
 };
+
+// const checkArticleIsPublished = async (req, res, next) => {
+//   const { article } = req.app.locals;
+//   if (!article.isPublished) {
+//     return StatusResponse.notfound(res, {
+//       message: 'Could not find article'
+//     });
+//   }
+
+//   return next();
+// };
 
 const checkTags = (req, res, next) => {
   const { tags } = req.body;
@@ -73,4 +84,31 @@ const getTagId = async (req, res, next) => {
   return next();
 };
 
-export { checkArticle, checkTags, getTagId };
+const checkPublished = (req, res, next) => {
+  const isArticlePublished = isPublished(req.app.locals.article);
+  if (isArticlePublished) {
+    return StatusResponse.badRequest(res, {
+      message: 'This article has already been published'
+    });
+  }
+  return next();
+};
+
+const checkNotPublished = (req, res, next) => {
+  const isArticlePublished = isPublished(req.app.locals.article);
+  if (!isArticlePublished) {
+    return StatusResponse.badRequest(res, {
+      message: 'This article has not been published yet'
+    });
+  }
+  return next();
+};
+
+export {
+  checkArticle,
+  checkTags,
+  getTagId,
+  checkPublished,
+  checkNotPublished,
+  // checkArticleIsPublished
+};

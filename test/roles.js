@@ -108,6 +108,19 @@ describe('Heimdal Role based access control functionality Test Suite', () => {
       res.body.should.have.property('message');
       res.body.message.should.equal('Article published successfully!');
     });
+    it('should return 400 when trying to publish a published article', async () => {
+      const res = await chai
+        .request(app)
+        .put('/api/v1/articles/2/publish')
+        .set('access-token', adminToken)
+        .send({
+          isPublished: true
+        });
+      res.status.should.equal(400);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('This article has already been published');
+    });
   });
 
   describe('Test for unpublishing an article PUT/ api/v1/articles:slug', () => {
@@ -133,6 +146,44 @@ describe('Heimdal Role based access control functionality Test Suite', () => {
       res.body.should.have.a('object');
       res.body.should.have.property('message');
       res.body.message.should.equal('Article unpublished successfully!');
+    });
+    it('should return 400 when trying to unpublish an unpublished article', async () => {
+      const res = await chai
+        .request(app)
+        .put('/api/v1/articles/2/unpublish')
+        .set('access-token', adminToken)
+        .send({
+          isPublished: false
+        });
+      res.status.should.equal(400);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('This article has not been published yet');
+    });
+  });
+
+  describe('Test for fetching all archived articles GET/ api/v1/articles', () => {
+    it('should return 200 on successful retrieval of articles', async () => {
+      const res = await chai
+        .request(app)
+        .get('/api/v1/articles/archived')
+        .set('access-token', adminToken);
+      res.status.should.equal(200);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('List of archived articles');
+    });
+  });
+  describe('Test for fetching all unpublished articles GET/ api/v1/articles', () => {
+    it('should return 200 on successful retrieval of articles', async () => {
+      const res = await chai
+        .request(app)
+        .get('/api/v1/articles/unpublished')
+        .set('access-token', adminToken);
+      res.status.should.equal(200);
+      res.body.should.have.a('object');
+      res.body.should.have.property('message');
+      res.body.message.should.equal('List of unpublished articles');
     });
   });
 });

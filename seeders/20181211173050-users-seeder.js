@@ -26,7 +26,7 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 2,
+    roleId: 4,
   },
   {
     email: 'publisherb@heimdal.com',

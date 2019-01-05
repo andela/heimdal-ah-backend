@@ -1,7 +1,7 @@
 
 const publishAcess = (req, res, next) => {
   const { roleId } = req.app.locals.user;
-  if (roleId === 1 || roleId === 2) {
+  if (roleId === 1 || roleId === 4) {
     return next();
   }
   return res.status(401).json({

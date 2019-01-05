@@ -1,7 +1,10 @@
 import models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
+// import pagination from '../helpers/pagination';
 
-const { users, profiles, roles } = models;
+const {
+  users, profiles, roles,
+} = models;
 
 /**
  * @description RolesController class
