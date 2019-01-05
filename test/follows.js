@@ -33,7 +33,6 @@ describe('Test To Follow, Unfollow user, View Followes, and view following', asy
         .set('access-token', token);
       res.status.should.equal(200);
       res.body.should.have.a('object');
-      res.body.should.have.property('message');
     });
     it('should return 200 on getting all followers', async () => {
       const res = await chai
