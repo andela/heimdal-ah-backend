@@ -1,0 +1,711 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "API docs for Author's Haven; a destination to share and discover new, inspiring content.  ",
+      "version": "v1",
+      "title": "Author's Haven",
+      "contact": {
+        "email": "heimdal42@gmail.com"
+      }
+    },
+    "host": "heimdal-ah-staging.herokuapp.com",
+    "basePath": "/api/v1",
+    "tags": [
+      {
+        "name": "Bookmarks",
+        "description": "Bookmarks Endpoints"
+      },
+      {
+        "name": "Likes",
+        "description": "Likes Endpoints for comments and articles"
+      },
+      {
+        "name": "Password",
+        "description": "Reset Password Endpoints"
+      },
+      {
+        "name": "Notifications",
+        "description": "Notifications Endpoints"
+      }
+    ],
+    "schemes": [
+      "https"
+    ],
+    "paths": {
+      "/articles/:articleId/bookmarks": {
+        "post": {
+          "tags": [
+            "Bookmarks"
+          ],
+          "summary": "create new bookmark",
+          "description": "This endpoint creates a new bookmark",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "New bookmark credentials",
+              "required": false,
+              "schema": {
+                "$ref": "#/definitions/PostBookmarks"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "bookmark was added successfully"
+            },
+            "400": {
+              "description": "error posting bookmark"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/bookmarks/all": {
+        "get": {
+          "tags": [
+            "Bookmarks"
+          ],
+          "summary": "Get all bookmark",
+          "description": "This endpoint gets all Bookmarks for a particular User",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "success",
+              "schema": {
+                "$ref": "#/definitions/Bookmarks"
+              }
+            },
+            "404": {
+              "description": "no bookmark found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/bookmarks/search": {
+        "get": {
+          "tags": [
+            "Bookmarks"
+          ],
+          "summary": "Search for avalaible bookmarks",
+          "description": "This endpoint is used to search for avalaible bookmarks",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "q",
+              "in": "path",
+              "description": "the value of q in the params has to be a valid slug, example... /api/v1/articles/bookmarks/search?q=this-is-trd-post-title-u87ddsa",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful",
+              "schema": {
+                "$ref": "#/definitions/Bookmarks"
+              }
+            },
+            "404": {
+              "description": "user not avalaible"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/bookmarks/:bookmarkId": {
+        "delete": {
+          "tags": [
+            "Bookmarks"
+          ],
+          "summary": "delete Bookmark",
+          "description": "This can only be done by the owner of the bookmark",
+          "operationId": "deleteUser",
+          "produces": [
+            "application/xml",
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "bookmarkId",
+              "in": "path",
+              "description": "you need a valid bookmark Id to delete a bookmark",
+              "required": true,
+              "type": "integer"
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "bookmark was deleted successfully"
+            },
+            "404": {
+              "description": "bookmark was not found"
+            },
+            "500": {
+              "description": "server error"
+            }
+          }
+        }
+      },
+      "/articles/:articleId/likes": {
+        "post": {
+          "tags": [
+            "Likes"
+          ],
+          "summary": "like an Article",
+          "description": "This endpoint should like an Article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "articleId",
+              "description": "article id is needed to like an article",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "liked successfully || Unlike was succesful"
+            },
+            "404": {
+              "description": "Article not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Likes"
+          ],
+          "summary": "Get Likes for a particular article",
+          "description": "This endpoint fetches likes for a particular article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "articleId",
+              "description": "the article you want to like is required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful",
+              "schema": {
+                "$ref": "#/definitions/likes"
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/:articleId/comments/:commentId/likes": {
+        "post": {
+          "tags": [
+            "Likes"
+          ],
+          "summary": "like a comment",
+          "description": "This endpoint should like a comment",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "commentId",
+              "description": "comments Id required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "path",
+              "name": "articleId",
+              "description": "articles Id required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "liked successfully || Unlike was succesful"
+            },
+            "404": {
+              "description": "Comment not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Likes"
+          ],
+          "summary": "Get likes for a particular comment",
+          "description": "This endpoint Gets all the likes for a particular comments",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "commentId",
+              "description": "comments Id required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "path",
+              "name": "articleId",
+              "description": "articles Id required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful",
+              "schema": {
+                "$ref": "#/definitions/likes"
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/password/forgot": {
+        "post": {
+          "tags": [
+            "Password"
+          ],
+          "summary": "User Reset Password",
+          "description": "This endpoint sends an email to the user to Reset their password",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "User has to provide the email that was used during the sign up process",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Password"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Email was sent successfully"
+            },
+            "404": {
+              "description": "user not avalaible"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/password/reset/:token": {
+        "put": {
+          "tags": [
+            "Password"
+          ],
+          "summary": "Update Notification",
+          "description": "This endpoint updates Notification",
+          "operationId": "updateNotification",
+          "produces": [
+            "application/xml",
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "token",
+              "in": "path",
+              "description": "user a valid user token is to be inserted in the params(path). this token is to be gotten from the User's Email, a User that have requested for a password reset",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated Password",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/ResetPassword"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "password update was successful"
+            },
+            "400": {
+              "description": "password and comfirmPassword are not the same"
+            },
+            "404": {
+              "description": "user not avalaible"
+            }
+          }
+        }
+      },
+      "/users/:userId/notifications": {
+        "get": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Get a particular User Notification",
+          "description": "This endpoint to get all notifications of a particular User",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "userId",
+              "description": "user Id required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "success",
+              "schema": {
+                "$ref": "#/definitions/Notifications"
+              }
+            },
+            "404": {
+              "description": "user not avalaible"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/users/:userId/:notificationId/notifications": {
+        "get": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Get a particular User Notification",
+          "description": "This endpoint sends an email to the user to Reset their password",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "userId",
+              "description": "user Id required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "path",
+              "name": "notificationId",
+              "description": "a valid notification Id required in the params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "You have succesfully reported an article",
+              "schema": {
+                "$ref": "#/definitions/Notifications"
+              }
+            },
+            "404": {
+              "description": "user not avalaible"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Update Notification",
+          "description": "This endpoint updates Notification. it registers that a user has read a particular notification",
+          "produces": [
+            "application/xml",
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "name": "notificationId",
+              "in": "path",
+              "description": "notificationId is required in the params(path)",
+              "required": true,
+              "type": "integer"
+            },
+            {
+              "name": "userId",
+              "in": "path",
+              "description": "userId is required in the params(path)",
+              "required": true,
+              "type": "integer"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "notification was updated successfully"
+            },
+            "401": {
+              "description": "access cannot be granted"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "PostBookmarks": {
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "Password": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "heimdal42@gmail.com"
+          }
+        }
+      },
+      "Bookmarks": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "createdAt": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "integer"
+          },
+          "article": {
+            "type": "object"
+          }
+        }
+      },
+      "likes": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "userId": {
+            "type": "integer"
+          },
+          "articleId'": {
+            "type": "integer"
+          },
+          "commentId'": {
+            "type": "integer"
+          }
+        }
+      },
+      "ResetPassword": {
+        "type": "object",
+        "required": [
+          "password",
+          "confirmPassword"
+        ],
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "confirmPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "Notifications": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "senderId": {
+            "type": "integer"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
