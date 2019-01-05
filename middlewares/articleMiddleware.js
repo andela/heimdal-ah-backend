@@ -29,16 +29,16 @@ const checkArticle = async (req, res, next) => {
   }
 };
 
-// const checkArticleIsPublished = async (req, res, next) => {
-//   const { article } = req.app.locals;
-//   if (!article.isPublished) {
-//     return StatusResponse.notfound(res, {
-//       message: 'Could not find article'
-//     });
-//   }
+const checkArticleIsPublished = async (req, res, next) => {
+  const { article } = req.app.locals;
+  if (!article.isPublished) {
+    return StatusResponse.notfound(res, {
+      message: 'Could not find article'
+    });
+  }
 
-//   return next();
-// };
+  return next();
+};
 
 const checkTags = (req, res, next) => {
   const { tags } = req.body;
@@ -110,5 +110,5 @@ export {
   getTagId,
   checkPublished,
   checkNotPublished,
-  // checkArticleIsPublished
+  checkArticleIsPublished
 };

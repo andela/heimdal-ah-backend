@@ -53,9 +53,6 @@ const checkUserRole = (roleId, userId) => {
   if (roleId === 1) {
     where = {};
   }
-  // if (roleId === 4 || roleId === 3) {
-  //   where = { isArchived: false };
-  // }
   if (!userId) {
     where = {
       isArchived: false,
