@@ -13,14 +13,14 @@ chai.use(chaiHttp);
 chai.should();
 
 describe('Test For HighLights', () => {
-  describe('POST /api/v1/articles/:articleId/highlight', () => {
+  describe('POST /api/v1/articles/:articleId/highlights', () => {
     it('should return 400 when the highlighted text is undefined', async () => {
       const data = {
         highlightedText: undefined
       };
       const res = await chai
         .request(app)
-        .post(`/api/v1/articles/${bodyHelper.article.id}/highlight`)
+        .post(`/api/v1/articles/${bodyHelper.article.id}/highlights`)
         .send(data)
         .set('access-token', bodyHelper.userToken);
       res.status.should.equal(400);
@@ -34,14 +34,16 @@ describe('Test For HighLights', () => {
       };
       const res = await chai
         .request(app)
-        .post(`/api/v1/articles/${bodyHelper.article.id}/highlight`)
+        .post(`/api/v1/articles/${bodyHelper.article.id}/highlights`)
         .send(data)
         .set('access-token', bodyHelper.userToken);
 
       res.status.should.equal(400);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
-      res.body.message.should.equal('You can not highlight or comment on this text as it does not exist within the article');
+      res.body.message.should.equal(
+        'You can not highlight or comment on this text as it does not exist within the article'
+      );
     });
 
     it('should return 200 when the highlighted text is contained in the body of the article', async () => {
@@ -50,7 +52,7 @@ describe('Test For HighLights', () => {
       };
       const res = await chai
         .request(app)
-        .post(`/api/v1/articles/${bodyHelper.article.id}/highlight`)
+        .post(`/api/v1/articles/${bodyHelper.article.id}/highlights`)
         .send(data)
         .set('access-token', bodyHelper.userToken);
 
@@ -70,7 +72,9 @@ describe('Test For HighLights', () => {
       res.status.should.equal(200);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
-      res.body.message.should.equal('All highlights belonging to this article has been fetched successfully');
+      res.body.message.should.equal(
+        'All highlights belonging to this article has been fetched successfully'
+      );
     });
   });
 
@@ -78,12 +82,17 @@ describe('Test For HighLights', () => {
     it('should return all the highlights belonging to an article', async () => {
       const res = await chai
         .request(app)
-        .get(`/api/v1/articles/${bodyHelper.article.id}/highlights/${bodyHelper.highlights.highlightId}/comments`);
+        .get(
+          `/api/v1/articles/${bodyHelper.article.id}/highlights/${
+            bodyHelper.highlights.highlightId
+          }/comments`
+        );
       res.status.should.equal(200);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
-      res.body.message.should
-        .equal('All comments belonging to this highlight has been fetched successfully');
+      res.body.message.should.equal(
+        'All comments belonging to this highlight has been fetched successfully'
+      );
     });
   });
 
