@@ -369,6 +369,64 @@
           }
         }
       }
+    },
+    "/ratings/articles/:articleId": {
+      "post": {
+        "tags": [
+          "Rate articles"
+        ],
+        "summary": "Rate an article",
+        "description": "This endpoint helps users rate articles",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "Valid auth token required",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter articleId in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Articles rating by stars",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RatingsBody"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Users ratings on this article recorded succesfully",
+            "schema": {
+              "$ref": "#/definitions/ArticleRatingsResponse"
+            }
+          },
+          "400": {
+            "description": "You did not provide any token, please enter token, then retry"
+          },
+          "401": {
+            "description": "User token not authenticated, wrong token"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -659,11 +717,39 @@
           "example": {
             "firstName": "Victor",
             "lastName": "Obije",
-            "biodata": "i love design",
+            "biodata": "I love design",
             "image": "mycoolimage",
             "location": "Lagos",
             "twitterUsername": "akpante",
             "facebookUsername": "akpante"
+          }
+        }
+      }
+    },
+    "RatingsBody": {
+      "type": "object",
+      "properties": {
+        "stars": {
+          "type": "integer"
+        }
+      }
+    },
+    "ArticleRatingsResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Users ratings on this article recorded succesfully"
+        },
+        "ratings": {
+          "type": "object",
+          "example": {
+            "id": 1,
+            "userId": 2,
+            "articleId": 1,
+            "stars": 4,
+            "updatedAt": "2019-01-06T04:24:45.375Z",
+            "createdAt": "2019-01-06T04:24:45.375Z"
           }
         }
       }
