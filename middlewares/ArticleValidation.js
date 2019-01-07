@@ -12,7 +12,9 @@ class ArticleValidation {
    */
   static async validateInput(req, res, next) {
     req.checkBody('title', 'title cannot be empty').notEmpty();
+    req.checkBody('title', 'title Length cannot be more than 1500 characters').isLength({ max: 1500 });
     req.checkBody('description', 'description cannot be empty').notEmpty();
+    req.checkBody('description', 'description Length cannot be more than 1500 characters').isLength({ max: 2500 });
     req.checkBody('body', 'body cannot be empty').notEmpty();
 
     try {

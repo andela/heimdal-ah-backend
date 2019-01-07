@@ -15,6 +15,8 @@ const checkTitle = (title, articleTitle) => {
 
 const checkUser = (article, userId) => article.userId === userId;
 
+const userIsOnwerOrAdmin = (article, userId, roleId) => roleId === 1 || article.userId === userId;
+
 /**
  * @description This method is used to create new tags abd return the created tag ids
  * @param {Array} tags - An array of tags <= 5
@@ -43,6 +45,24 @@ const calcReadingTime = (bodyText) => {
   return readingTime > 1 ? `${readingTime} mins read` : `${readingTime} min read`;
 };
 
+const isPublished = article => article.isPublished;
+
+const checkUserRole = (roleId, userId) => {
+  let where = { isArchived: false };
+
+  if (roleId === 1) {
+    where = {};
+  }
+  if (!userId) {
+    where = {
+      isArchived: false,
+      isPublished: true
+    };
+  }
+  return where;
+};
+
 export {
-  checkIdentifier, checkUser, checkTitle, createNewTags, calcReadingTime
+  checkIdentifier, checkUser, checkTitle, createNewTags, calcReadingTime, isPublished,
+  userIsOnwerOrAdmin, checkUserRole
 };
