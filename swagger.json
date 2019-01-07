@@ -11,7 +11,7 @@
   "host": "heimdal-ah-staging.herokuapp.com",
   "basePath": "/api/v1",
   "schemes": [
-    "http"
+    "https"
   ],
   "tags": [
     {
