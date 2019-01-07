@@ -10,13 +10,315 @@
   },
   "host": "heimdal-ah-staging.herokuapp.com",
   "basePath": "/api/v1",
-  "tags": [
-  ],
   "schemes": [
     "https"
   ],
-  "paths": { 
+  "tags": [
+    {
+      "name": "Comment Edit History",
+      "description": "Comment Edit History Endpoints"
+    }
+  ],
+  "paths": {
+    "/articles/{articleId}/comments/{commentId}": {
+      "get": {
+        "tags": [
+          "Comment Edit History"
+        ],
+        "summary": "Gets all previous edits of a particular comment",
+        "description": "This endpoint get edit history of a particular comment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "The article's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/GetACommentHistoryResponse"
+            }
+          },
+          "400": {
+            "description": "Token not supplied, Invalid article's or comment's id"
+          },
+          "401": {
+            "description": "Invalid token or user does not exist"
+          },
+          "404": {
+            "description": "No comment edit history"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comment Edit History"
+        ],
+        "summary": "Edits a comment",
+        "description": "This endpoint edits an article's comment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "The article's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "content",
+            "description": "The new comment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateACommentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/UpdateACommentResponse"
+            }
+          },
+          "400": {
+            "description": "Token not supplied, Invalid article's or comment's id, Comment content is empty or is more than 1500 characters"
+          },
+          "401": {
+            "description": "Invalid token or user does not exist"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Article not found, Comment not found, No comment Edit history"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "auth/google": {
+      "get": {
+        "tags": [
+          "Social Media Authentication"
+        ],
+        "summary": "Authenticates a user using goole account",
+        "description": "This endpoint authenticates a user using google account",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "auth/facebook": {
+      "get": {
+        "tags": [
+          "Social Media Authentication"
+        ],
+        "summary": "Authenticate a user using facebook account",
+        "description": "This endpoint authenticate a user using facebook account",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "auth_twitter/twitter": {
+      "get": {
+        "tags": [
+          "Social Media Authentication"
+        ],
+        "summary": "Authenticate a user using twitter account",
+        "description": "This endpoint authenticate a user using twitter account",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    }
   },
   "definitions": {
+    "SocialMediaAuthResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "user logged in successfully'"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "GetACommentHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Success"
+        },
+        "commentHistory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "articleId": {
+                "type": "integer"
+              },
+              "commentId": {
+                "type": "integer"
+              },
+              "content": {
+                "type": "string"
+              },
+              "isArchived": {
+                "type": "boolean"
+              },
+              "isPrivate": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "UpdateACommentRequest": {
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateACommentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Success"
+        },
+        "comment": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "userId": {
+              "type": "integer"
+            },
+            "articleId": {
+              "type": "integer"
+            },
+            "content": {
+              "type": "string"
+            },
+            "isArchived": {
+              "type": "boolean"
+            },
+            "isPrivate": {
+              "type": "boolean"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    }
   }
 }
