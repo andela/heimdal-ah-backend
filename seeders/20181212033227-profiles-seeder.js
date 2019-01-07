@@ -2,12 +2,6 @@
 
 export default {
   up: (queryInterface, Sequelize) => queryInterface.bulkInsert('profiles', [{
-    username: 'wale',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    userId: 1,
-  },
-  {
     username: 'segun',
     createdAt: new Date(),
     updatedAt: new Date(),
