@@ -18,7 +18,7 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 3,
+    roleId: 2,
   },
   {
     email: 'publisher@heimdal.com',
@@ -26,7 +26,7 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 4,
+    roleId: 3,
   },
   {
     email: 'publisherb@heimdal.com',
@@ -34,7 +34,7 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 3,
+    roleId: 2,
   },
   {
     email: 'usertest@heimdal.com',
@@ -42,7 +42,7 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 3,
+    roleId: 2,
   },
   {
     email: 'usertest@heimdal.com',
@@ -50,7 +50,7 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 3,
+    roleId: 2,
   },
   {
     email: 'usertest@heimdal.com',
@@ -58,7 +58,7 @@ export default {
     emailVerification: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    roleId: 3,
+    roleId: 2,
   }
   ], {}),
   down: (queryInterface, Sequelize) => queryInterface.bulkDelete('users', null, {})

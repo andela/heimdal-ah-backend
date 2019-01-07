@@ -249,7 +249,7 @@ class ArticlesController {
         await ReadingStatsModelQuery.createReaderStats(readInfo);
       }
       if ((fetchArticle.userId === userId)
-       || (roleId === 4 || (userId && fetchArticle.isPublished))) {
+       || (roleId === 3 || (userId && fetchArticle.isPublished))) {
         return StatusResponse.success(res, {
           message: 'success',
           article: fetchArticle
