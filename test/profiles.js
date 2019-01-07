@@ -33,12 +33,12 @@ describe('Heimdal Test Suite', () => {
     it('should return status code 401 if user token is invalid', async () => {
       const res = await chai.request(app)
         .put('/api/v1/profiles/john')
+        .set('access-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJKb2huRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.wvle5egYbTJBalR2fcDS6G5j5IYAv4psTF77MUa7dE0')
         .send({
           biodata: 'I love graphics design so much',
           image: 'https://res.cloudinary.com/pato/image/upload/v1539986467/n9usp2sumwxxmgiaogbd.png',
           address: 'Surulere, lagos',
           dateofbirth: '09-10-1990',
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJKb2huRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.wvle5egYbTJBalR2fcDS6G5j5IYAv4psTF77MUa7dE0'
         });
       res.status.should.equal(401);
       res.body.should.be.a('object');
@@ -50,12 +50,12 @@ describe('Heimdal Test Suite', () => {
     it('should return status code 200 on updating a users profile', async () => {
       const res = await chai.request(app)
         .put('/api/v1/profiles/wale')
+        .set('access-token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJ3YWxlIiwiaWF0IjoxNTE2MjM5MDIyfQ.YnlHau7peuwPE-XG5iwH7myUfuSpJyQwCOogSfLyylU')
         .send({
           biodata: 'I love graphics design so much',
           image: 'https://res.cloudinary.com/pato/image/upload/v1539986467/n9usp2sumwxxmgiaogbd.png',
           address: 'Surulere, lagos',
           dateofbirth: '09-10-1990',
-          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ3YWxlIiwiaWF0IjoxNTQ0NTQ2ODAyfQ.q0X2FFO1ieBSIMGrvcVPdb-G_uSrglyJwrUssNUvG_I'
         });
       res.status.should.equal(200);
       res.body.should.be.a('object');

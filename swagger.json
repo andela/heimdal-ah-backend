@@ -22,10 +22,6 @@
     {
       "name": "Articles",
       "description": "All user related routes"
-    },
-    {
-      "name": "Profiles",
-      "description": "Users profile"
     }
   ],
   "schemes": [
@@ -427,6 +423,120 @@
           }
         }
       }
+    },
+    "/articles_search/author": {
+      "get": {
+        "tags": [
+          "Search articles by author"
+        ],
+        "summary": "Search and filter articles by author",
+        "description": "This endpoint helps users search and filters articles by author",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "author",
+            "description": "Enter author in query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Articles returned succesfully",
+            "schema": {
+              "$ref": "#/definitions/ArticlesByAuthorResponse"
+            }
+          },
+          "404": {
+            "description": "No such author"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles_search/title": {
+      "get": {
+        "tags": [
+          "Search articles by title"
+        ],
+        "summary": "Search and filter articles by title",
+        "description": "This endpoint helps users search and filters articles by title",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "title",
+            "description": "Enter title in query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Articles with this title returned succesfully",
+            "schema": {
+              "$ref": "#/definitions/ArticlesByTitleResponse"
+            }
+          },
+          "404": {
+            "description": "No Articles with such title"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles_search/tag": {
+      "get": {
+        "tags": [
+          "Search articles by tag"
+        ],
+        "summary": "Search and filter articles by tag",
+        "description": "This endpoint helps users search and filters articles by tag",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "tag",
+            "description": "Enter tag in query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All Articles using these tags returned succesfully",
+            "schema": {
+              "$ref": "#/definitions/ArticlesByTagResponse"
+            }
+          },
+          "404": {
+            "description": "No Articles with such tags"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -730,7 +840,8 @@
       "type": "object",
       "properties": {
         "stars": {
-          "type": "integer"
+          "type": "integer",
+          "example": 1
         }
       }
     },
@@ -750,6 +861,154 @@
             "stars": 4,
             "updatedAt": "2019-01-06T04:24:45.375Z",
             "createdAt": "2019-01-06T04:24:45.375Z"
+          }
+        }
+      }
+    },
+    "ArticlesByAuthorResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "All Articles returned succesfully"
+        },
+        "articles": {
+          "type": "object",
+          "example": {
+            "count": 1,
+            "rows": [
+              {
+                "id": 3,
+                "slug": "this-is-third-post-title-u87ddsa",
+                "title": "This is the third post title",
+                "description": "Third descriptive title",
+                "image": null,
+                "isArchived": false,
+                "body": "Content from article creation",
+                "isPublished": false,
+                "readingTime": null,
+                "createdAt": "2019-01-06T23:19:49.361Z",
+                "updatedAt": "2019-01-06T23:19:49.361Z",
+                "user": {
+                  "id": 3,
+                  "profile": {
+                    "username": "john"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ArticlesByTitleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Articles with this title returned succesfully"
+        },
+        "articles": {
+          "type": "object",
+          "example": {
+            "count": 4,
+            "rows": [
+              {
+                "id": 2,
+                "slug": "this-is-the-second-post-title-mbjb7y",
+                "userId": 2,
+                "title": "This is the second post title",
+                "description": "Second descriptive title",
+                "image": null,
+                "isArchived": false,
+                "body": "Content from article creation",
+                "isPublished": false,
+                "readingTime": null,
+                "createdAt": "2019-01-06T23:19:49.361Z",
+                "updatedAt": "2019-01-06T23:19:49.361Z"
+              },
+              {
+                "id": 3,
+                "slug": "this-is-third-post-title-u87ddsa",
+                "userId": 3,
+                "title": "This is the third post title",
+                "description": "Third descriptive title",
+                "image": null,
+                "isArchived": false,
+                "body": "Content from article creation",
+                "isPublished": false,
+                "readingTime": null,
+                "createdAt": "2019-01-06T23:19:49.361Z",
+                "updatedAt": "2019-01-06T23:19:49.361Z"
+              },
+              {
+                "id": 4,
+                "slug": "this-is-third-pot-title-u87dda",
+                "userId": 4,
+                "title": "This is the third post title",
+                "description": "Third descriptive title",
+                "image": null,
+                "isArchived": false,
+                "body": "Content from article creation",
+                "isPublished": false,
+                "readingTime": null,
+                "createdAt": "2019-01-06T23:19:49.361Z",
+                "updatedAt": "2019-01-06T23:19:49.361Z"
+              },
+              {
+                "id": 5,
+                "slug": "this-is-trd-post-title-u87ddsa",
+                "userId": 5,
+                "title": "This is the thir post title",
+                "description": "Third descriptive title",
+                "image": null,
+                "isArchived": false,
+                "body": "Content from article creation",
+                "isPublished": false,
+                "readingTime": null,
+                "createdAt": "2019-01-06T23:19:49.361Z",
+                "updatedAt": "2019-01-06T23:19:49.361Z"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ArticlesByTagResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "All Articles using these tags returned succesfully"
+        },
+        "articles": {
+          "type": "object",
+          "example": {
+            "count": 1,
+            "rows": [
+              {
+                "article": {
+                  "id": 4,
+                  "slug": "this-is-third-pot-title-u87dda",
+                  "userId": 4,
+                  "title": "This is the third post title",
+                  "description": "Third descriptive title",
+                  "image": null,
+                  "isArchived": false,
+                  "body": "Content from article creation",
+                  "isPublished": false,
+                  "readingTime": null,
+                  "createdAt": "2019-01-06T23:19:49.361Z",
+                  "updatedAt": "2019-01-06T23:19:49.361Z"
+                },
+                "tag": {
+                  "id": 2,
+                  "tagName": "react",
+                  "createdAt": "2019-01-06T23:19:49.811Z",
+                  "updatedAt": "2019-01-06T23:19:49.811Z"
+                }
+              }
+            ]
           }
         }
       }
