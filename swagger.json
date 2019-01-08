@@ -8,7 +8,7 @@
       "email": "heimdal42@gmail.com"
     }
   },
-  "host": "heimdal-ah-staging.herokuapp.com",
+  "host": "localhost:4000",
   "basePath": "/api/v1",
   "tags": [
     {
@@ -29,7 +29,7 @@
     }
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
     "/auth/signup": {
@@ -258,6 +258,15 @@
             "description": "You must have a valid Authentication token",
             "type": "string",
             "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Creating a new article",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Article"
+            }
           }
         ],
         "responses": {
@@ -850,9 +859,6 @@
         "body"
       ],
       "properties": {
-        "slug": {
-          "type": "string"
-        },
         "title": {
           "type": "string"
         },
