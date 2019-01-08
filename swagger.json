@@ -632,6 +632,35 @@
         }
       }
     },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "get all users",
+        "description": "This endpoint get all users",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/users/{followingId}/follow": {
       "post": {
         "tags": [
