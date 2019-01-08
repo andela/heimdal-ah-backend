@@ -17,6 +17,10 @@
     {
       "name": "Comment Edit History",
       "description": "Comment Edit History Endpoints"
+    },
+    {
+      "name": "Social Media Authentication",
+      "description": "Social Media Authentication"
     }
   ],
   "paths": {
@@ -140,7 +144,7 @@
         }
       }
     },
-    "auth/google": {
+    "/auth/google": {
       "get": {
         "tags": [
           "Social Media Authentication"
@@ -163,7 +167,7 @@
         }
       }
     },
-    "auth/facebook": {
+    "/auth/facebook": {
       "get": {
         "tags": [
           "Social Media Authentication"
@@ -186,7 +190,7 @@
         }
       }
     },
-    "auth_twitter/twitter": {
+    "/auth_twitter/twitter": {
       "get": {
         "tags": [
           "Social Media Authentication"
