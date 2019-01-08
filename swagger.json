@@ -12,6 +12,26 @@
   "basePath": "/api/v1",
   "tags": [
     {
+      "name": "Auth",
+      "description": "Signup and Login Endpoints"
+    },
+    {
+      "name": "Users",
+      "description": "All user related routes"
+    },
+    {
+      "name": "Articles",
+      "description": "All user related routes"
+    },
+    {
+      "name": "Comment Edit History",
+      "description": "Comment Edit History Endpoints"
+    },
+    {
+      "name": "Social Media Authentication",
+      "description": "Social Media Authentication"
+    },
+    {
       "name": "Comment",
       "description": "Users should be able to comment on articles"
     },
@@ -28,7 +48,139 @@
     "https"
   ],
   "paths": {
-    "/{articleId}/comments": {
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Add a new user",
+        "description": "This endpoint registers a new user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New user's signup credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserSignUp"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/UserSignUpResponse"
+            }
+          },
+          "409": {
+            "description": "Email or username already taken"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "logins in a user",
+        "description": "This endpoint logins in a registered user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Registered user's login credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLogin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully login",
+            "schema": {
+              "$ref": "#/definitions/UserLogInResponse"
+            }
+          },
+          "404": {
+            "description": "Invalid credentials"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/reports": {
+      "post": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Report an article",
+        "description": "This endpoint Reports an article",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must have a valid Authentication token, context and reportType to report an article",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "You have succesfully reported an article",
+            "schema": {
+              "$ref": "#/definitions/UserLogInResponse"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+     "/{articleId}/comments": {
       "post": {
         "tags": [
           "Comment"
@@ -170,7 +322,7 @@
         }
       }
     },
-    "/{commentId}/reply": {
+     "/{commentId}/reply": {
       "post": {
         "tags": [
           "Replies"
@@ -332,7 +484,7 @@
         }
       }
     },
-    "/readerstats": {
+     "/readerstats": {
       "get": {
         "tags": [
           "ReaderStats"
@@ -401,10 +553,605 @@
           }
         }
       }
+    },
+    "/users/{followingId}/follow": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "follows a user",
+        "description": "This endpoint follows a user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "followingId",
+            "description": "Enter folowing ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User followed successfully"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users/{followingId}/unfollow": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Unfollow a user",
+        "description": "This endpoint unfollows a user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "followingId",
+            "description": "Enter following ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User unfollowed successfully"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users/followers": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "get all Followers",
+        "description": "This endpoint get all followers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/getAllFollowers"
+            }
+          },
+          "404": {
+            "description": "You currently do not have any followers"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users/following": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "get all Followers following a user",
+        "description": "This endpoint get all followers following a user",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/getAllFollowing"
+            }
+          },
+          "404": {
+            "description": "You currently have no followers following you"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/comments/{commentId}": {
+      "get": {
+        "tags": [
+          "Comment Edit History"
+        ],
+        "summary": "Gets all previous edits of a particular comment",
+        "description": "This endpoint get edit history of a particular comment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "The article's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/GetACommentHistoryResponse"
+            }
+          },
+          "400": {
+            "description": "Token not supplied, Invalid article's or comment's id"
+          },
+          "401": {
+            "description": "Invalid token or user does not exist"
+          },
+          "404": {
+            "description": "No comment edit history"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comment Edit History"
+        ],
+        "summary": "Edits a comment",
+        "description": "This endpoint edits an article's comment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "The article's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "content",
+            "description": "The new comment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateACommentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/UpdateACommentResponse"
+            }
+          },
+          "400": {
+            "description": "Token not supplied, Invalid article's or comment's id, Comment content is empty or is more than 1500 characters"
+          },
+          "401": {
+            "description": "Invalid token or user does not exist"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Article not found, Comment not found, No comment Edit history"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": [
+          "Social Media Authentication"
+        ],
+        "summary": "Authenticates a user using goole account",
+        "description": "This endpoint authenticates a user using google account",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "/auth/facebook": {
+      "get": {
+        "tags": [
+          "Social Media Authentication"
+        ],
+        "summary": "Authenticate a user using facebook account",
+        "description": "This endpoint authenticate a user using facebook account",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    
+    "/auth_twitter/twitter": {
+      "get": {
+        "tags": [
+          "Social Media Authentication"
+        ],
+        "summary": "Authenticate a user using twitter account",
+        "description": "This endpoint authenticate a user using twitter account",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
     }
   },
   "definitions": {
-    "Comments": {
+    "UserSignUp": {
+      "type": "object",
+      "required": [
+        "username",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserSignUpResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "user created succesfully"
+        },
+        "token": {
+          "type": "string"
+        },
+        "emailToken": {
+          "type": "string"
+        }
+      }
+    },
+    "UserLogin": {
+      "type": "object",
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserLogInResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "user logged in successfully'"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "Report": {
+      "type": "object",
+      "required": [
+        "context",
+        "reportType"
+      ],
+      "enum": [
+        "spam",
+        "plagarism",
+        "others"
+      ],
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "reportType": {
+          "type": "string"
+        }
+      }
+    },
+    "getAllFollowers": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followerId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followingId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "follow": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "biodata": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "twitterUsername": {
+                    "type": "string"
+                  },
+                  "facebookUsername": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "getAllFollowing": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followerId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followingId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "follow": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "biodata": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "twitterUsername": {
+                    "type": "string"
+                  },
+                  "facebookUsername": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "SocialMediaAuthResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "user logged in successfully'"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+     "Comments": {
       "type": "object",
       "required": [
         "content",
@@ -499,6 +1246,105 @@
           "type": "string"
         }
       }
-    }
+    },
+    "GetACommentHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Success"
+        },
+        "commentHistory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "articleId": {
+                "type": "integer"
+              },
+              "commentId": {
+                "type": "integer"
+              },
+              "content": {
+                "type": "string"
+              },
+              "isArchived": {
+                "type": "boolean"
+              },
+              "isPrivate": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "UpdateACommentRequest": {
+      "type": "object",
+      "required": [
+        "content"
+      ],
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateACommentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Success"
+        },
+        "comment": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "userId": {
+              "type": "integer"
+            },
+            "articleId": {
+              "type": "integer"
+            },
+            "content": {
+              "type": "string"
+            },
+            "isArchived": {
+              "type": "boolean"
+            },
+            "isPrivate": {
+              "type": "boolean"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "Profile": {},
+    "Article": {}
   }
 }
