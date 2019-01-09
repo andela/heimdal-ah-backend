@@ -4,7 +4,7 @@
 
 import './middlewares/userValidation.test';
 import './middlewares/reportValidation.test';
-import './middlewares/adminGuard.test';
+import './middlewares/authorization.test';
 import './users';
 import './passport';
 import './profiles';

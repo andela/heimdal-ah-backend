@@ -9,11 +9,6 @@ export default {
         updatedAt: new Date()
       },
       {
-        name: 'user',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      },
-      {
         name: 'author',
         createdAt: new Date(),
         updatedAt: new Date()

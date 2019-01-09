@@ -147,13 +147,13 @@ describe('Comment History Tests', () => {
       await CommentHistoriesController.getACommentHistory(nonExistingArticleRequest, res);
       const data = JSON.parse(res._getData());
       res.statusCode.should.equal(404);
-      data.message.should.be.equal('No Edit History Found');
+      data.message.should.be.equal('Article Not Found');
     });
     it('should return status code 404 if comment does not exist', async () => {
       await CommentHistoriesController.getACommentHistory(nonExistingCommentRequest, res);
       const data = JSON.parse(res._getData());
       res.statusCode.should.equal(404);
-      data.message.should.be.equal('No Edit History Found');
+      data.message.should.be.equal('Comment Not Found');
     });
     it('should return status code 404 if article is archived', async () => {
       await CommentHistoriesController.getACommentHistory(archivedArticleRequest, res);
@@ -177,7 +177,7 @@ describe('Comment History Tests', () => {
       await CommentHistoriesController.getACommentHistory(notMostUpdatedCommentRequest, res);
       const data = JSON.parse(res._getData());
       res.statusCode.should.equal(404);
-      data.message.should.be.equal('No Edit History Found');
+      data.message.should.be.equal('Comment Not Found');
     });
     it('should return status code 200 for retrieving a comment history', async () => {
       await CommentHistoriesController.getACommentHistory(commentRequest, res);

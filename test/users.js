@@ -94,7 +94,7 @@ describe('User Authentication Test', () => {
 
     describe('Test for listing all users', () => {
       it('Should return status 200 on successful retrieval of authors', async () => {
-        const response = await chai.request(app).get('/api/v1/users/authors');
+        const response = await chai.request(app).get('/api/v1/users');
         response.status.should.equal(200);
         response.body.should.have.a('object');
         response.body.should.have.property('message');
