@@ -8,7 +8,7 @@
       "email": "heimdal42@gmail.com"
     }
   },
-  "host": "heimdal-ah-staging.herokuapp.com",
+  "host": "localhost:4000",
   "basePath": "/api/v1",
   "tags": [
     {
@@ -22,10 +22,30 @@
     {
       "name": "Articles",
       "description": "All user related routes"
+    },
+    {
+      "name": "Comment Edit History",
+      "description": "Comment Edit History Endpoints"
+    },
+    {
+      "name": "Social Media Authentication",
+      "description": "Social Media Authentication"
+    },
+    {
+      "name": "Comment",
+      "description": "Users should be able to comment on articles"
+    },
+    {
+      "name": "Replies",
+      "description": "All Replies route"
+    },
+    {
+      "name": "ReaderStats",
+      "description": "User reading statistics"
     }
   ],
   "schemes": [
-    "https"
+    "http"
   ],
   "paths": {
     "/auth/signup": {
@@ -109,6 +129,626 @@
       }
     },
     "/articles/:articleId/reports": {
+      "/articles": {
+        "post": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "Create an article",
+          "description": "This endpoint creates an article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Creating a new article",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Article"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Article successfully created",
+              "schema": {
+                "$ref": "#/definitions/ArticleResponse"
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "Get all articles",
+          "description": "This endpoint fetches all articles",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "Provide a valid Authentication token",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of articles",
+              "schema": {
+                "$ref": "#/definitions/getAllArticles"
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/{identifier}": {
+        "get": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "get an article",
+          "description": "This endpoint fetches an article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "identifier",
+              "description": "Enter article ID in params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "success",
+              "schema": {
+                "$ref": "#/definitions/getArticle"
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "Update an article",
+          "description": "This endpoint updates an article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "identifier",
+              "description": "Enter article ID in params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Creating a new article",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Article"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Article successfully updated",
+              "schema": {
+                "$ref": "#/definitions/ArticleUpdateResponse"
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "Archive an article",
+          "description": "This endpoint updates an article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "identifier",
+              "description": "Enter article ID in params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Article successfully archived"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/{identifier}/publish": {
+        "put": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "publish an article",
+          "description": "This endpoint publish an article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "identifier",
+              "description": "Enter article ID in params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Article published successfully"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/{identifier}/unpublish": {
+        "put": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "unpublish an article",
+          "description": "This endpoint unpublish an article",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "identifier",
+              "description": "Enter article ID in params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "You must have a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Article unpublished successfully"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/archived": {
+        "get": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "Get all archived articles",
+          "description": "This endpoint fetches all articles",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "Provide a valid Authentication token",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "List of articles",
+              "schema": {
+                "$ref": "#/definitions/getArchived"
+              }
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles/unpublished": {
+        "get": {
+          "tags": [
+            "Articles"
+          ],
+          "summary": "Get all unpublished articles",
+          "description": "This endpoint fetches all unpublished articles",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful",
+              "schema": {
+                "$ref": "#/definitions/getAllFollowing"
+              }
+            },
+            "404": {
+              "description": "You currently have no followers following you"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/profiles/:username": {
+        "put": {
+          "tags": [
+            "Update profiles"
+          ],
+          "summary": "Update a new users profile",
+          "description": "This endpoint updates a profile for a new user",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "Provide a valid Authentication token",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "username",
+              "description": "Enter username in params",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "New user's profile credentials",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/ProfileBody"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Users profile updated successfully",
+              "schema": {
+                "$ref": "#/definitions/UpdatedProfileResponse"
+              }
+            },
+            "401": {
+              "description": "You cannot edit another persons profile"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        },
+        "get": {
+          "tags": [
+            "Get profiles"
+          ],
+          "summary": "View users profile",
+          "description": "This endpoint helps to view users profile",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "username",
+              "description": "Enter username in params",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Users profile returned succesfully",
+              "schema": {
+                "$ref": "#/definitions/ViewProfileResponse"
+              }
+            },
+            "404": {
+              "description": "Users profile not found"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/ratings/articles/:articleId": {
+        "post": {
+          "tags": [
+            "Rate articles"
+          ],
+          "summary": "Rate an article",
+          "description": "This endpoint helps users rate articles",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "access-token",
+              "description": "Valid auth token required",
+              "type": "string",
+              "required": true
+            },
+            {
+              "in": "path",
+              "name": "articleId",
+              "description": "Enter articleId in params",
+              "required": true,
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Articles rating by stars",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/RatingsBody"
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Users ratings on this article recorded succesfully",
+              "schema": {
+                "$ref": "#/definitions/ArticleRatingsResponse"
+              }
+            },
+            "400": {
+              "description": "You did not provide any token, please enter token, then retry"
+            },
+            "401": {
+              "description": "User token not authenticated, wrong token"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles_search/author": {
+        "get": {
+          "tags": [
+            "Search articles by author"
+          ],
+          "summary": "Search and filter articles by author",
+          "description": "This endpoint helps users search and filters articles by author",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "author",
+              "description": "Enter author in query",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "All Articles returned succesfully",
+              "schema": {
+                "$ref": "#/definitions/ArticlesByAuthorResponse"
+              }
+            },
+            "404": {
+              "description": "No such author"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles_search/title": {
+        "get": {
+          "tags": [
+            "Search articles by title"
+          ],
+          "summary": "Search and filter articles by title",
+          "description": "This endpoint helps users search and filters articles by title",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "title",
+              "description": "Enter title in query",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Articles with this title returned succesfully",
+              "schema": {
+                "$ref": "#/definitions/ArticlesByTitleResponse"
+              }
+            },
+            "404": {
+              "description": "No Articles with such title"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/articles_search/tag": {
+        "get": {
+          "tags": [
+            "Search articles by tag"
+          ],
+          "summary": "Search and filter articles by tag",
+          "description": "This endpoint helps users search and filters articles by tag",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "query",
+              "name": "tag",
+              "description": "Enter tag in query",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "All Articles using these tags returned succesfully",
+              "schema": {
+                "$ref": "#/definitions/ArticlesByTagResponse"
+              }
+            },
+            "404": {
+              "description": "No Articles with such tags"
+            },
+            "description": "List of articles",
+            "schema": {
+              "$ref": "#/definitions/getUnPublished"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/reports": {
       "post": {
         "tags": [
           "Articles"
@@ -122,6 +762,14 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
           {
             "in": "header",
             "name": "access-token",
@@ -152,6 +800,519 @@
         }
       }
     },
+    "/{articleId}/comments": {
+      "post": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Create a comment on an article",
+        "description": "This endpoint allow users to create a comments",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Comment has been successfully created",
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          },
+          "404": {
+            "description": "Please enter the comment content"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{articleId/comments": {
+      "get": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "get an article comments",
+        "description": "This endpoint get all comments on an article",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "All Comment for the Article",
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          },
+          "404": {
+            "description": "No comment exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:articleId/comments/:commentId": {
+      "delete": {
+        "tags": [
+          "Comment"
+        ],
+        "summary": "Delete a specific comments",
+        "description": "This endpoint archives a specific comment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          },
+          "404": {
+            "description": "No comment exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:commentId/reply": {
+      "get": {
+        "tags": [
+          "Replies"
+        ],
+        "summary": "get a comment replies",
+        "description": "This endpoint get all comments replies",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "All replies for the comment",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "No comment exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{commentId}/reply": {
+      "post": {
+        "tags": [
+          "Replies"
+        ],
+        "summary": "Create a reply to a comment",
+        "description": "This endpoint allow users to reply to a comment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Enter comment ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Reply has been successfully created",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "Please enter the reply content"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:commentId/reply/:replyId": {
+      "put": {
+        "tags": [
+          "Replies"
+        ],
+        "summary": "Create a reply to a comment",
+        "description": "This endpoint allow users to reply to a comment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Succesfully updated the reply",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "Please enter the reply content"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{commentId}/reply/{replyId}": {
+      "delete": {
+        "tags": [
+          "Replies"
+        ],
+        "summary": "Delete a specific reply",
+        "description": "This endpoint archives a specific reply",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Enter comment ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "path",
+            "name": "replyId",
+            "description": "Enter reply ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "No Reply exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/readerstats": {
+      "get": {
+        "tags": [
+          "ReaderStats"
+        ],
+        "summary": "get a user reading statistics",
+        "description": "This endpoint gets a user reading stats",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Number of articles read",
+            "schema": {
+              "$ref": "#/definitions/ReaderStats"
+            }
+          },
+          "404": {
+            "description": "Statistics not found for this user"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:identifier": {
+      "get": {
+        "tags": [
+          "ReaderStats"
+        ],
+        "summary": "Create statistics for a user",
+        "description": "This endpoint create a reading statistics for a user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The User must be authenticated for a stat to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReaderStats"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ReaderStats"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "get all users",
+        "description": "This endpoint fetches all users",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/admin/users/{id}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "get a users",
+        "description": "This endpoint fetches a user",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "update a user role",
+        "description": "This endpoint update a user role",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "get all users",
+        "description": "This endpoint get all users",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
     "/users/{followingId}/follow": {
       "post": {
         "tags": [
@@ -166,6 +1327,13 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
           {
             "in": "path",
             "name": "followingId",
@@ -203,6 +1371,13 @@
         ],
         "parameters": [
           {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
             "in": "path",
             "name": "followingId",
             "description": "Enter following ID in params",
@@ -234,6 +1409,15 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful",
@@ -260,6 +1444,15 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful",
@@ -276,264 +1469,191 @@
         }
       }
     },
-    "/profiles/:username": {
-      "put": {
-        "tags": [
-          "Update profiles"
-        ],
-        "summary": "Update a new users profile",
-        "description": "This endpoint updates a profile for a new user",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "header",
-            "name": "access-token",
-            "description": "Valid auth token required",
-            "type": "string",
-            "required": true
-          },
-          {
-            "in": "path",
-            "name": "username",
-            "description": "Enter username in params",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "New user's profile credentials",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ProfileBody"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Users profile updated successfully",
-            "schema": {
-              "$ref": "#/definitions/UpdatedProfileResponse"
-            }
-          },
-          "401": {
-            "description": "You cannot edit another persons profile"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      },
+    "/articles/{articleId}/comments/{commentId}": {
       "get": {
         "tags": [
-          "Get profiles"
+          "Comment Edit History"
         ],
-        "summary": "View users profile",
-        "description": "This endpoint helps to view users profile",
-        "consumes": [
-          "application/json"
-        ],
+        "summary": "Gets all previous edits of a particular comment",
+        "description": "This endpoint get edit history of a particular comment",
         "produces": [
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "path",
-            "name": "username",
-            "description": "Enter username in params",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Users profile returned succesfully",
-            "schema": {
-              "$ref": "#/definitions/ViewProfileResponse"
-            }
-          },
-          "404": {
-            "description": "Users profile not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/ratings/articles/:articleId": {
-      "post": {
-        "tags": [
-          "Rate articles"
-        ],
-        "summary": "Rate an article",
-        "description": "This endpoint helps users rate articles",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "header",
-            "name": "access-token",
-            "description": "Valid auth token required",
-            "type": "string",
-            "required": true
-          },
           {
             "in": "path",
             "name": "articleId",
-            "description": "Enter articleId in params",
+            "description": "The article's id",
             "required": true,
-            "type": "integer",
-            "minimum": 1
+            "type": "integer"
           },
           {
-            "in": "body",
-            "name": "body",
-            "description": "Articles rating by stars",
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/RatingsBody"
-            }
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
-          "201": {
-            "description": "Users ratings on this article recorded succesfully",
+          "200": {
+            "description": "Successful",
             "schema": {
-              "$ref": "#/definitions/ArticleRatingsResponse"
+              "$ref": "#/definitions/GetACommentHistoryResponse"
             }
           },
           "400": {
-            "description": "You did not provide any token, please enter token, then retry"
+            "description": "Token not supplied, Invalid article's or comment's id"
           },
           "401": {
-            "description": "User token not authenticated, wrong token"
+            "description": "Invalid token or user does not exist"
+          },
+          "404": {
+            "description": "No comment edit history"
           },
           "500": {
-            "description": "Server error"
+            "description": "Internal error"
           }
         }
-      }
-    },
-    "/articles_search/author": {
-      "get": {
+      },
+      "put": {
         "tags": [
-          "Search articles by author"
+          "Comment Edit History"
         ],
-        "summary": "Search and filter articles by author",
-        "description": "This endpoint helps users search and filters articles by author",
-        "consumes": [
-          "application/json"
-        ],
+        "summary": "Edits a comment",
+        "description": "This endpoint edits an article's comment",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "query",
-            "name": "author",
-            "description": "Enter author in query",
+            "in": "path",
+            "name": "articleId",
+            "description": "The article's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "content",
+            "description": "The new comment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateACommentRequest"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "All Articles returned succesfully",
+            "description": "Successful",
             "schema": {
-              "$ref": "#/definitions/ArticlesByAuthorResponse"
+              "$ref": "#/definitions/UpdateACommentResponse"
             }
           },
+          "400": {
+            "description": "Token not supplied, Invalid article's or comment's id, Comment content is empty or is more than 1500 characters"
+          },
+          "401": {
+            "description": "Invalid token or user does not exist"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
           "404": {
-            "description": "No such author"
+            "description": "Article not found, Comment not found, No comment Edit history"
           },
           "500": {
-            "description": "Server error"
+            "description": "Internal error"
           }
         }
       }
     },
-    "/articles_search/title": {
+    "/auth/google": {
       "get": {
         "tags": [
-          "Search articles by title"
+          "Social Media Authentication"
         ],
-        "summary": "Search and filter articles by title",
-        "description": "This endpoint helps users search and filters articles by title",
-        "consumes": [
-          "application/json"
-        ],
+        "summary": "Authenticates a user using goole account",
+        "description": "This endpoint authenticates a user using google account",
         "produces": [
           "application/json"
         ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "title",
-            "description": "Enter title in query",
-            "required": true,
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Articles with this title returned succesfully",
+            "description": "Successful",
             "schema": {
-              "$ref": "#/definitions/ArticlesByTitleResponse"
+              "$ref": "#/definitions/SocialMediaAuthResponse"
             }
           },
-          "404": {
-            "description": "No Articles with such title"
-          },
           "500": {
-            "description": "Server error"
+            "description": "Internal error"
           }
         }
       }
     },
-    "/articles_search/tag": {
+    "/auth/facebook": {
       "get": {
         "tags": [
-          "Search articles by tag"
+          "Social Media Authentication"
         ],
-        "summary": "Search and filter articles by tag",
-        "description": "This endpoint helps users search and filters articles by tag",
-        "consumes": [
-          "application/json"
-        ],
+        "summary": "Authenticate a user using facebook account",
+        "description": "This endpoint authenticate a user using facebook account",
         "produces": [
           "application/json"
         ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "tag",
-            "description": "Enter tag in query",
-            "required": true,
-            "type": "string"
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
           }
+        }
+      }
+    },
+    "/auth_twitter/twitter": {
+      "get": {
+        "tags": [
+          "Social Media Authentication"
+        ],
+        "summary": "Authenticate a user using twitter account",
+        "description": "This endpoint authenticate a user using twitter account",
+        "produces": [
+          "application/json"
         ],
         "responses": {
           "200": {
-            "description": "All Articles using these tags returned succesfully",
+            "description": "Successful",
             "schema": {
-              "$ref": "#/definitions/ArticlesByTagResponse"
+              "$ref": "#/definitions/SocialMediaAuthResponse"
             }
           },
-          "404": {
-            "description": "No Articles with such tags"
-          },
           "500": {
-            "description": "Server error"
+            "description": "Internal error"
           }
         }
       }
@@ -597,6 +1717,361 @@
           "example": "user logged in successfully'"
         },
         "token": {
+          "type": "string"
+        }
+      }
+    },
+    "Article": {
+      "type": "object",
+      "required": [
+        "title",
+        "description",
+        "body"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Article created successfully"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "isArchived": {
+          "type": "boolean"
+        },
+        "readingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "getAllArticles": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "string",
+              "example": 2
+            },
+            "row": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "string-text"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "isArchived": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "isPublished": {
+                    "type": "string"
+                  },
+                  "readingTime": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "getArchived": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "string",
+              "example": 2
+            },
+            "row": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "string-text"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "isArchived": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "isPublished": {
+                    "type": "string"
+                  },
+                  "readingTime": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "getUnPublished": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "string",
+              "example": 2
+            },
+            "row": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "string-text"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "isArchived": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "isPublished": {
+                    "type": "string"
+                  },
+                  "readingTime": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ArticleUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Article updated successfully"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "isArchived": {
+          "type": "boolean"
+        },
+        "readingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "getArticle": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "success"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "isArchived": {
+          "type": "boolean"
+        },
+        "readingTime": {
           "type": "string"
         }
       }
@@ -799,217 +2274,410 @@
           "type": "string"
         },
         "facebookUsername": {
-          "type": "string"
-        }
-      }
-    },
-    "ViewProfileResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "Users profile returned succesfully"
-        },
-        "profile": {
-          "type": "object"
-        }
-      }
-    },
-    "UpdatedProfileResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "Users profile updated successfully"
-        },
-        "profile": {
-          "type": "object",
-          "example": {
-            "firstName": "Victor",
-            "lastName": "Obije",
-            "biodata": "I love design",
-            "image": "mycoolimage",
-            "location": "Lagos",
-            "twitterUsername": "akpante",
-            "facebookUsername": "akpante"
-          }
-        }
-      }
-    },
-    "RatingsBody": {
-      "type": "object",
-      "properties": {
-        "stars": {
-          "type": "integer",
-          "example": 1
-        }
-      }
-    },
-    "ArticleRatingsResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "Users ratings on this article recorded succesfully"
-        },
-        "ratings": {
-          "type": "object",
-          "example": {
-            "id": 1,
-            "userId": 2,
-            "articleId": 1,
-            "stars": 4,
-            "updatedAt": "2019-01-06T04:24:45.375Z",
-            "createdAt": "2019-01-06T04:24:45.375Z"
-          }
-        }
-      }
-    },
-    "ArticlesByAuthorResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "All Articles returned succesfully"
-        },
-        "articles": {
-          "type": "object",
-          "example": {
-            "count": 1,
-            "rows": [
-              {
-                "id": 3,
-                "slug": "this-is-third-post-title-u87ddsa",
-                "title": "This is the third post title",
-                "description": "Third descriptive title",
-                "image": null,
-                "isArchived": false,
-                "body": "Content from article creation",
-                "isPublished": false,
-                "readingTime": null,
-                "createdAt": "2019-01-06T23:19:49.361Z",
-                "updatedAt": "2019-01-06T23:19:49.361Z",
-                "user": {
-                  "id": 3,
-                  "profile": {
-                    "username": "john"
+          "SocialMediaAuthResponse": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "user logged in successfully'"
+              },
+              "token": {
+                "type": "string"
+              }
+            }
+          },
+          "Comments": {
+            "type": "object",
+            "required": [
+              "content",
+              "articleId",
+              "userId"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "content": {
+                "type": "string"
+              },
+              "articleId": {
+                "$ref": "#/definitions/Article"
+              },
+              "userId": {
+                "$ref": "#/definitions/Profile"
+              },
+              "isArchived": {
+                "type": "boolean",
+                "default": "false"
+              },
+              "isPrivate": {
+                "type": "boolean",
+                "default": "false"
+              },
+              "commentId": {
+                "$ref": "#/definitions/Comments"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            }
+          },
+          "ViewProfileResponse": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Users profile returned succesfully"
+              },
+              "profile": {
+                "type": "object"
+              }
+            }
+          },
+          "UpdatedProfileResponse": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Users profile updated successfully"
+              },
+              "profile": {
+                "type": "object",
+                "example": {
+                  "firstName": "Victor",
+                  "lastName": "Obije",
+                  "biodata": "I love design",
+                  "image": "mycoolimage",
+                  "location": "Lagos",
+                  "twitterUsername": "akpante",
+                  "facebookUsername": "akpante"
+                }
+              }
+            }
+          },
+          "RatingsBody": {
+            "type": "object",
+            "properties": {
+              "stars": {
+                "type": "integer",
+                "example": 1
+              }
+            }
+          },
+          "ArticleRatingsResponse": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Users ratings on this article recorded succesfully"
+              },
+              "ratings": {
+                "type": "object",
+                "example": {
+                  "id": 1,
+                  "userId": 2,
+                  "articleId": 1,
+                  "stars": 4,
+                  "updatedAt": "2019-01-06T04:24:45.375Z",
+                  "createdAt": "2019-01-06T04:24:45.375Z"
+                }
+              }
+            }
+          },
+          "ArticlesByAuthorResponse": {
+            "Replies": {
+              "type": "object",
+              "required": [
+                "content",
+                "articleId",
+                "userId"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "userId": {
+                  "$ref": "#/definitions/Profile"
+                },
+                "isArchived": {
+                  "type": "boolean",
+                  "default": "false"
+                },
+                "commentId": {
+                  "$ref": "#/definitions/Comments"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              }
+            },
+            "ReaderStats": {
+              "type": "object",
+              "required": [
+                "articleId",
+                "userId",
+                "timeVisited"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "userId": {
+                  "$ref": "#/definitions/Profile"
+                },
+                "timeVisited": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              }
+            },
+            "GetACommentHistoryResponse": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "All Articles returned succesfully"
+                },
+                "articles": {
+                  "type": "object",
+                  "example": {
+                    "count": 1,
+                    "rows": [
+                      {
+                        "id": 3,
+                        "slug": "this-is-third-post-title-u87ddsa",
+                        "title": "This is the third post title",
+                        "description": "Third descriptive title",
+                        "image": null,
+                        "isArchived": false,
+                        "body": "Content from article creation",
+                        "isPublished": false,
+                        "readingTime": null,
+                        "createdAt": "2019-01-06T23:19:49.361Z",
+                        "updatedAt": "2019-01-06T23:19:49.361Z",
+                        "user": {
+                          "id": 3,
+                          "profile": {
+                            "username": "john"
+                          }
+                        }
+                      }
+                    ],
+                    "example": "Success"
+                  },
+                  "commentHistory": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "userId": {
+                          "type": "integer"
+                        },
+                        "articleId": {
+                          "type": "integer"
+                        },
+                        "commentId": {
+                          "type": "integer"
+                        },
+                        "content": {
+                          "type": "string"
+                        },
+                        "isArchived": {
+                          "type": "boolean"
+                        },
+                        "isPrivate": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "ArticlesByTitleResponse": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Articles with this title returned succesfully"
+                  },
+                  "articles": {
+                    "type": "object",
+                    "example": {
+                      "count": 4,
+                      "rows": [
+                        {
+                          "id": 2,
+                          "slug": "this-is-the-second-post-title-mbjb7y",
+                          "userId": 2,
+                          "title": "This is the second post title",
+                          "description": "Second descriptive title",
+                          "image": null,
+                          "isArchived": false,
+                          "body": "Content from article creation",
+                          "isPublished": false,
+                          "readingTime": null,
+                          "createdAt": "2019-01-06T23:19:49.361Z",
+                          "updatedAt": "2019-01-06T23:19:49.361Z"
+                        },
+                        {
+                          "id": 3,
+                          "slug": "this-is-third-post-title-u87ddsa",
+                          "userId": 3,
+                          "title": "This is the third post title",
+                          "description": "Third descriptive title",
+                          "image": null,
+                          "isArchived": false,
+                          "body": "Content from article creation",
+                          "isPublished": false,
+                          "readingTime": null,
+                          "createdAt": "2019-01-06T23:19:49.361Z",
+                          "updatedAt": "2019-01-06T23:19:49.361Z"
+                        },
+                        {
+                          "id": 4,
+                          "slug": "this-is-third-pot-title-u87dda",
+                          "userId": 4,
+                          "title": "This is the third post title",
+                          "description": "Third descriptive title",
+                          "image": null,
+                          "isArchived": false,
+                          "body": "Content from article creation",
+                          "isPublished": false,
+                          "readingTime": null,
+                          "createdAt": "2019-01-06T23:19:49.361Z",
+                          "updatedAt": "2019-01-06T23:19:49.361Z"
+                        },
+                        {
+                          "id": 5,
+                          "slug": "this-is-trd-post-title-u87ddsa",
+                          "userId": 5,
+                          "title": "This is the thir post title",
+                          "description": "Third descriptive title",
+                          "image": null,
+                          "isArchived": false,
+                          "body": "Content from article creation",
+                          "isPublished": false,
+                          "readingTime": null,
+                          "createdAt": "2019-01-06T23:19:49.361Z",
+                          "updatedAt": "2019-01-06T23:19:49.361Z"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "ArticlesByTagResponse": {
+                "UpdateACommentRequest": {
+                  "type": "object",
+                  "required": [
+                    "content"
+                  ],
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "UpdateACommentResponse": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "All Articles using these tags returned succesfully"
+                    },
+                    "articles": {
+                      "type": "object",
+                      "example": {
+                        "count": 1,
+                        "rows": [
+                          {
+                            "article": {
+                              "id": 4,
+                              "slug": "this-is-third-pot-title-u87dda",
+                              "userId": 4,
+                              "title": "This is the third post title",
+                              "description": "Third descriptive title",
+                              "image": null,
+                              "isArchived": false,
+                              "body": "Content from article creation",
+                              "isPublished": false,
+                              "readingTime": null,
+                              "createdAt": "2019-01-06T23:19:49.361Z",
+                              "updatedAt": "2019-01-06T23:19:49.361Z"
+                            },
+                            "tag": {
+                              "id": 2,
+                              "tagName": "react",
+                              "createdAt": "2019-01-06T23:19:49.811Z",
+                              "updatedAt": "2019-01-06T23:19:49.811Z"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "example": "Success"
+              },
+              "comment": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "userId": {
+                    "type": "integer"
+                  },
+                  "articleId": {
+                    "type": "integer"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "isArchived": {
+                    "type": "boolean"
+                  },
+                  "isPrivate": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
                   }
                 }
               }
-            ]
-          }
-        }
-      }
-    },
-    "ArticlesByTitleResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "Articles with this title returned succesfully"
-        },
-        "articles": {
-          "type": "object",
-          "example": {
-            "count": 4,
-            "rows": [
-              {
-                "id": 2,
-                "slug": "this-is-the-second-post-title-mbjb7y",
-                "userId": 2,
-                "title": "This is the second post title",
-                "description": "Second descriptive title",
-                "image": null,
-                "isArchived": false,
-                "body": "Content from article creation",
-                "isPublished": false,
-                "readingTime": null,
-                "createdAt": "2019-01-06T23:19:49.361Z",
-                "updatedAt": "2019-01-06T23:19:49.361Z"
-              },
-              {
-                "id": 3,
-                "slug": "this-is-third-post-title-u87ddsa",
-                "userId": 3,
-                "title": "This is the third post title",
-                "description": "Third descriptive title",
-                "image": null,
-                "isArchived": false,
-                "body": "Content from article creation",
-                "isPublished": false,
-                "readingTime": null,
-                "createdAt": "2019-01-06T23:19:49.361Z",
-                "updatedAt": "2019-01-06T23:19:49.361Z"
-              },
-              {
-                "id": 4,
-                "slug": "this-is-third-pot-title-u87dda",
-                "userId": 4,
-                "title": "This is the third post title",
-                "description": "Third descriptive title",
-                "image": null,
-                "isArchived": false,
-                "body": "Content from article creation",
-                "isPublished": false,
-                "readingTime": null,
-                "createdAt": "2019-01-06T23:19:49.361Z",
-                "updatedAt": "2019-01-06T23:19:49.361Z"
-              },
-              {
-                "id": 5,
-                "slug": "this-is-trd-post-title-u87ddsa",
-                "userId": 5,
-                "title": "This is the thir post title",
-                "description": "Third descriptive title",
-                "image": null,
-                "isArchived": false,
-                "body": "Content from article creation",
-                "isPublished": false,
-                "readingTime": null,
-                "createdAt": "2019-01-06T23:19:49.361Z",
-                "updatedAt": "2019-01-06T23:19:49.361Z"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "ArticlesByTagResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string",
-          "example": "All Articles using these tags returned succesfully"
-        },
-        "articles": {
-          "type": "object",
-          "example": {
-            "count": 1,
-            "rows": [
-              {
-                "article": {
-                  "id": 4,
-                  "slug": "this-is-third-pot-title-u87dda",
-                  "userId": 4,
-                  "title": "This is the third post title",
-                  "description": "Third descriptive title",
-                  "image": null,
-                  "isArchived": false,
-                  "body": "Content from article creation",
-                  "isPublished": false,
-                  "readingTime": null,
-                  "createdAt": "2019-01-06T23:19:49.361Z",
-                  "updatedAt": "2019-01-06T23:19:49.361Z"
-                },
-                "tag": {
-                  "id": 2,
-                  "tagName": "react",
-                  "createdAt": "2019-01-06T23:19:49.811Z",
-                  "updatedAt": "2019-01-06T23:19:49.811Z"
-                }
-              }
-            ]
-          }
+            }
+          },
+          "Profile": {}
         }
       }
     }

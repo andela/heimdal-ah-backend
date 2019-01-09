@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/', validEmail, PasswordController.forgotPassword);
 router.put('/resetpassword/:token', passwordReset, PasswordController.resetPassword);
-router.get('/authors', UsersController.list);
+router.get('/', UsersController.list);
 
 // follow user begins here
 router.post('/:followingId/follow', checkAuthentication, FollowersController.followUsers);

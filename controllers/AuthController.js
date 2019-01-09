@@ -50,7 +50,7 @@ class AuthController {
 
       mailer.sendVerificationMail(email, username, link);
 
-      const { id: roleId } = await roles.find({ where: { name: 'user' } });
+      const { id: roleId } = await roles.find({ where: { name: 'author' } });
       const newUser = await users.create(
         {
           email,
