@@ -1,0 +1,2406 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "API docs for Author's Haven; a destination to share and discover new, inspiring content.  ",
+    "version": "v1",
+    "title": "Author's Haven",
+    "contact": {
+      "email": "heimdal42@gmail.com"
+    }
+  },
+  "host": "localhost:4000",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Signup and Login Endpoints"
+    },
+    {
+      "name": "Users",
+      "description": "All user related routes"
+    },
+    {
+      "name": "Articles",
+      "description": "All user related routes"
+    },
+    {
+      "name": "Comment Edit History",
+      "description": "Comment Edit History Endpoints"
+    },
+    {
+      "name": "Social Media Authentication",
+      "description": "Social Media Authentication"
+    },
+    {
+      "name": "Comment",
+      "description": "Users should be able to comment on articles"
+    },
+    {
+      "name": "Replies",
+      "description": "All Replies route"
+    },
+    {
+      "name": "ReaderStats",
+      "description": "User reading statistics"
+    },
+    {
+      "name": "Highlight",
+      "description": "Everything about an articles highlighted texts"
+    }
+  ],
+  "schemes": ["http"],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Add a new user",
+        "description": "This endpoint registers a new user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New user's signup credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserSignUp"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/UserSignUpResponse"
+            }
+          },
+          "409": {
+            "description": "Email or username already taken"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "logins in a user",
+        "description": "This endpoint logins in a registered user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Registered user's login credentials",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLogin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully login",
+            "schema": {
+              "$ref": "#/definitions/UserLogInResponse"
+            }
+          },
+          "404": {
+            "description": "Invalid credentials"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles": {
+      "post": {
+        "tags": ["Articles"],
+        "summary": "Create an article",
+        "description": "This endpoint creates an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Creating a new article",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Article"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully created",
+            "schema": {
+              "$ref": "#/definitions/ArticleResponse"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Articles"],
+        "summary": "Get all articles",
+        "description": "This endpoint fetches all articles",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "Provide a valid Authentication token",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of articles",
+            "schema": {
+              "$ref": "#/definitions/getAllArticles"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{identifier}": {
+      "get": {
+        "tags": ["Articles"],
+        "summary": "get an article",
+        "description": "This endpoint fetches an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "schema": {
+              "$ref": "#/definitions/getArticle"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Articles"],
+        "summary": "Update an article",
+        "description": "This endpoint updates an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Creating a new article",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Article"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully updated",
+            "schema": {
+              "$ref": "#/definitions/ArticleUpdateResponse"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Articles"],
+        "summary": "Archive an article",
+        "description": "This endpoint updates an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully archived"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{identifier}/publish": {
+      "put": {
+        "tags": ["Articles"],
+        "summary": "publish an article",
+        "description": "This endpoint publish an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article published successfully"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{identifier}/unpublish": {
+      "put": {
+        "tags": ["Articles"],
+        "summary": "unpublish an article",
+        "description": "This endpoint unpublish an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article unpublished successfully"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/archived": {
+      "get": {
+        "tags": ["Articles"],
+        "summary": "Get all archived articles",
+        "description": "This endpoint fetches all articles",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "Provide a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of articles",
+            "schema": {
+              "$ref": "#/definitions/getArchived"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/unpublished": {
+      "get": {
+        "tags": ["Articles"],
+        "summary": "Get all unpublished articles",
+        "description": "This endpoint fetches all unpublished articles",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "Provide a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of articles",
+            "schema": {
+              "$ref": "#/definitions/getUnPublished"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/reports": {
+      "post": {
+        "tags": ["Articles"],
+        "summary": "Report an article",
+        "description": "This endpoint Reports an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must have a valid Authentication token, context and reportType to report an article",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Report"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "You have succesfully reported an article",
+            "schema": {
+              "$ref": "#/definitions/UserLogInResponse"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{articleId}/comments": {
+      "post": {
+        "tags": ["Comment"],
+        "summary": "Create a comment on an article",
+        "description": "This endpoint allow users to create a comments",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Comment has been successfully created",
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          },
+          "404": {
+            "description": "Please enter the comment content"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{articleId/comments": {
+      "get": {
+        "tags": ["Comment"],
+        "summary": "get an article comments",
+        "description": "This endpoint get all comments on an article",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "All Comment for the Article",
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          },
+          "404": {
+            "description": "No comment exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:articleId/comments/:commentId": {
+      "delete": {
+        "tags": ["Comment"],
+        "summary": "Delete a specific comments",
+        "description": "This endpoint archives a specific comment",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/Comments"
+            }
+          },
+          "404": {
+            "description": "No comment exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:commentId/reply": {
+      "get": {
+        "tags": ["Replies"],
+        "summary": "get a comment replies",
+        "description": "This endpoint get all comments replies",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "All replies for the comment",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "No comment exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{commentId}/reply": {
+      "post": {
+        "tags": ["Replies"],
+        "summary": "Create a reply to a comment",
+        "description": "This endpoint allow users to reply to a comment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Enter comment ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Reply has been successfully created",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "Please enter the reply content"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:commentId/reply/:replyId": {
+      "put": {
+        "tags": ["Replies"],
+        "summary": "Create a reply to a comment",
+        "description": "This endpoint allow users to reply to a comment",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Succesfully updated the reply",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "Please enter the reply content"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/{commentId}/reply/{replyId}": {
+      "delete": {
+        "tags": ["Replies"],
+        "summary": "Delete a specific reply",
+        "description": "This endpoint archives a specific reply",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Enter comment ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "path",
+            "name": "replyId",
+            "description": "Enter reply ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the comment context which must not be more than 1500 characters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted",
+            "schema": {
+              "$ref": "#/definitions/Replies"
+            }
+          },
+          "404": {
+            "description": "No Reply exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/readerstats": {
+      "get": {
+        "tags": ["ReaderStats"],
+        "summary": "get a user reading statistics",
+        "description": "This endpoint gets a user reading stats",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Number of articles read",
+            "schema": {
+              "$ref": "#/definitions/ReaderStats"
+            }
+          },
+          "404": {
+            "description": "Statistics not found for this user"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/:identifier": {
+      "get": {
+        "tags": ["ReaderStats"],
+        "summary": "Create statistics for a user",
+        "description": "This endpoint create a reading statistics for a user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The User must be authenticated for a stat to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReaderStats"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ReaderStats"
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "get all users",
+        "description": "This endpoint fetches all users",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/admin/users/{id}": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "get a users",
+        "description": "This endpoint fetches a user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Admin"],
+        "summary": "update a user role",
+        "description": "This endpoint update a user role",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Enter article ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "get all users",
+        "description": "This endpoint get all users",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users/{followingId}/follow": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "follows a user",
+        "description": "This endpoint follows a user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "followingId",
+            "description": "Enter folowing ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User followed successfully"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users/{followingId}/unfollow": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Unfollow a user",
+        "description": "This endpoint unfollows a user",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "followingId",
+            "description": "Enter following ID in params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User unfollowed successfully"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users/followers": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "get all Followers",
+        "description": "This endpoint get all followers",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/getAllFollowers"
+            }
+          },
+          "404": {
+            "description": "You currently do not have any followers"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/users/following": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "get all Followers following a user",
+        "description": "This endpoint get all followers following a user",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/getAllFollowing"
+            }
+          },
+          "404": {
+            "description": "You currently have no followers following you"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{articleId}/comments/{commentId}": {
+      "get": {
+        "tags": ["Comment Edit History"],
+        "summary": "Gets all previous edits of a particular comment",
+        "description": "This endpoint get edit history of a particular comment",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "The article's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/GetACommentHistoryResponse"
+            }
+          },
+          "400": {
+            "description": "Token not supplied, Invalid article's or comment's id"
+          },
+          "401": {
+            "description": "Invalid token or user does not exist"
+          },
+          "404": {
+            "description": "No comment edit history"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Comment Edit History"],
+        "summary": "Edits a comment",
+        "description": "This endpoint edits an article's comment",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "The article's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "The comment's id",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "User's authentication token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "content",
+            "description": "The new comment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateACommentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/UpdateACommentResponse"
+            }
+          },
+          "400": {
+            "description": "Token not supplied, Invalid article's or comment's id, Comment content is empty or is more than 1500 characters"
+          },
+          "401": {
+            "description": "Invalid token or user does not exist"
+          },
+          "403": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "Article not found, Comment not found, No comment Edit history"
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": ["Social Media Authentication"],
+        "summary": "Authenticates a user using goole account",
+        "description": "This endpoint authenticates a user using google account",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "/auth/facebook": {
+      "get": {
+        "tags": ["Social Media Authentication"],
+        "summary": "Authenticate a user using facebook account",
+        "description": "This endpoint authenticate a user using facebook account",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+    "/auth_twitter/twitter": {
+      "get": {
+        "tags": ["Social Media Authentication"],
+        "summary": "Authenticate a user using twitter account",
+        "description": "This endpoint authenticate a user using twitter account",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "schema": {
+              "$ref": "#/definitions/SocialMediaAuthResponse"
+            }
+          },
+          "500": {
+            "description": "Internal error"
+          }
+        }
+      }
+    },
+
+    "/articles/{articleId}/highlights": {
+      "post": {
+        "tags": ["Highlight"],
+        "summary": "Add Highlight to an article and optionally add comment on the highlighted portion",
+        "description": "This endpoint allow users to highlight and optionally comment on a section of an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter articleId in url params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "header",
+            "name": "access-token",
+            "description": "You must have a valid Authentication token",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "You must provide the HighlightText and a comment(optional). The highlightedText must be contained in the body of the article being highligted",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateHighlight"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully highlight and comment on the article having the articleId in question",
+            "schema": {
+              "$ref": "#/definitions/CreateHighlightResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "When the article matching the articleId in question doesn't exist",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Highlight"],
+        "summary": "Fetch all the Highlighted sections/portions of a particular article",
+        "description": "This endpoint allow users to fetch all the highlighted sections of an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter articleId in url params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetch the highlighted sections of an article",
+            "schema": {
+              "$ref": "#/definitions/getOneHighlightResponse"
+            }
+          },
+          "404": {
+            "description": "When the article matching the articleId in question doesn't exist",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/articles/{articleId}/highlights/{highlightId}/comments": {
+      "get": {
+        "tags": ["Highlight"],
+        "summary": "Fetch all the comments belonging to a particular Highlighted section/portion of an article given the highlightId and articleId",
+        "description": "This endpoint fetches all the the comments belonging to a particular Highlighted section of an article",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "articleId",
+            "description": "Enter articleId in url params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          },
+          {
+            "in": "path",
+            "name": "highlightId",
+            "description": "Enter highlightId in url params",
+            "required": true,
+            "type": "integer",
+            "minimum": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully fetch all the comments belonging to one highlighted section of an article",
+            "schema": {
+              "$ref": "#/definitions/getHighlightCommentsResponse"
+            }
+          },
+          "404": {
+            "description": "When the article matching the articleId in question doesn't exist",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/verify-email/{emailToken}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "verify a users email using the provided token",
+        "description": "This endpoint verifies a users email using the provided token",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "emailToken",
+            "description": "You must provide the emailToken to verify",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response: When the token has been verified",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: When the emailToken provided is not valid, or might have been altered",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found: When a user with the provided emailToken could not be found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserSignUp": {
+      "type": "object",
+      "required": ["username", "email", "password"],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserSignUpResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "user created succesfully"
+        },
+        "token": {
+          "type": "string"
+        },
+        "emailToken": {
+          "type": "string"
+        }
+      }
+    },
+    "UserLogin": {
+      "type": "object",
+      "required": ["email", "password"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserLogInResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "user logged in successfully'"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "Article": {
+      "type": "object",
+      "required": ["title", "description", "body"],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ArticleResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Article created successfully"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "isArchived": {
+          "type": "boolean"
+        },
+        "readingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "getAllArticles": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "string",
+              "example": 2
+            },
+            "row": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "string-text"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "isArchived": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "isPublished": {
+                    "type": "string"
+                  },
+                  "readingTime": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "getArchived": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "string",
+              "example": 2
+            },
+            "row": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "string-text"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "isArchived": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "isPublished": {
+                    "type": "string"
+                  },
+                  "readingTime": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "getUnPublished": {
+      "type": "object",
+      "properties": {
+        "articles": {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "string",
+              "example": 2
+            },
+            "row": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  },
+                  "slug": {
+                    "type": "string",
+                    "example": "string-text"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "isArchived": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  },
+                  "isPublished": {
+                    "type": "string"
+                  },
+                  "readingTime": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ArticleUpdateResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Article updated successfully"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "isArchived": {
+          "type": "boolean"
+        },
+        "readingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "getArticle": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "success"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isPublished": {
+          "type": "boolean"
+        },
+        "isArchived": {
+          "type": "boolean"
+        },
+        "readingTime": {
+          "type": "string"
+        }
+      }
+    },
+    "Report": {
+      "type": "object",
+      "required": ["context", "reportType"],
+      "enum": ["spam", "plagarism", "others"],
+      "properties": {
+        "context": {
+          "type": "string"
+        },
+        "reportType": {
+          "type": "string"
+        }
+      }
+    },
+    "getAllFollowers": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followerId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followingId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "follow": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "biodata": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "twitterUsername": {
+                    "type": "string"
+                  },
+                  "facebookUsername": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "getAllFollowing": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followerId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "followingId": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "follow": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "firstName": {
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "biodata": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "twitterUsername": {
+                    "type": "string"
+                  },
+                  "facebookUsername": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "userId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "SocialMediaAuthResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "user logged in successfully'"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "Comments": {
+      "type": "object",
+      "required": ["content", "articleId", "userId"],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "content": {
+          "type": "string"
+        },
+        "articleId": {
+          "$ref": "#/definitions/Article"
+        },
+        "userId": {
+          "$ref": "#/definitions/Profile"
+        },
+        "isArchived": {
+          "type": "boolean",
+          "default": "false"
+        },
+        "isPrivate": {
+          "type": "boolean",
+          "default": "false"
+        },
+        "commentId": {
+          "$ref": "#/definitions/Comments"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "Replies": {
+      "type": "object",
+      "required": ["content", "articleId", "userId"],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "content": {
+          "type": "string"
+        },
+        "userId": {
+          "$ref": "#/definitions/Profile"
+        },
+        "isArchived": {
+          "type": "boolean",
+          "default": "false"
+        },
+        "commentId": {
+          "$ref": "#/definitions/Comments"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "ReaderStats": {
+      "type": "object",
+      "required": ["articleId", "userId", "timeVisited"],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "userId": {
+          "$ref": "#/definitions/Profile"
+        },
+        "timeVisited": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      }
+    },
+    "GetACommentHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Success"
+        },
+        "commentHistory": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "userId": {
+                "type": "integer"
+              },
+              "articleId": {
+                "type": "integer"
+              },
+              "commentId": {
+                "type": "integer"
+              },
+              "content": {
+                "type": "string"
+              },
+              "isArchived": {
+                "type": "boolean"
+              },
+              "isPrivate": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "UpdateACommentRequest": {
+      "type": "object",
+      "required": ["content"],
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateACommentResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "Success"
+        },
+        "comment": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "userId": {
+              "type": "integer"
+            },
+            "articleId": {
+              "type": "integer"
+            },
+            "content": {
+              "type": "string"
+            },
+            "isArchived": {
+              "type": "boolean"
+            },
+            "isPrivate": {
+              "type": "boolean"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "Profile": {},
+    "CreateHighlight": {
+      "type": "object",
+      "required": ["highlightedText"],
+      "properties": {
+        "highlightedText": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "startIndex": {
+          "type": "string"
+        },
+        "stopIndex": {
+          "type": "string"
+        }
+      }
+    },
+    "CreateHighlightResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "createdHighlight": {
+          "type": "object",
+          "properties": {
+            "createdHighlight": {
+              "type": "object",
+              "properties": {
+                "stillExist": {
+                  "type": "boolean"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "highlightId": { "type": "string" },
+                "startIndex": { "type": "integer" },
+                "stopIndex": { "type": "integer" },
+                "articleId": { "type": "integer" },
+                "userId": { "type": "integer" },
+                "text": { "type": "string" },
+                "updatedAt": { "type": "string" },
+                "createdAt": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "getOneHighlightResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "highlightedPortions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stillExist": {
+                "type": "boolean"
+              },
+              "id": {
+                "type": "integer"
+              },
+              "highlightId": { "type": "string" },
+              "startIndex": { "type": "integer" },
+              "stopIndex": { "type": "integer" },
+              "articleId": { "type": "integer" },
+              "userId": { "type": "integer" },
+              "text": { "type": "string" },
+              "updatedAt": { "type": "string" },
+              "createdAt": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "getHighlightCommentsResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "highlightId": {
+          "type": "string"
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "comment": { "type": "string" },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "integer" },
+                  "email": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "verifyToken": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
