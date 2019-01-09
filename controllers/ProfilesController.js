@@ -52,7 +52,8 @@ class ProfilesController {
    * @returns {object} Updated Users Profile
    */
   static async updateProfile(req, res) {
-    const decoded = jwtDecode(req.body.token).username;
+    const token = req.headers['access-token'];
+    const decoded = jwtDecode(token).username;
     if (decoded !== req.params.username) {
       Response.unauthorized(res, {
         errors: {
