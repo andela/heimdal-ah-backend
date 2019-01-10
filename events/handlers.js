@@ -29,6 +29,11 @@ const handlers = {
     );
 
     eventEmitter.on(
+      eventTypes.POST_ARTICLE_NOTIFICATION,
+      payload => Notifications.articleNotification(payload, io)
+    );
+
+    eventEmitter.on(
       eventTypes.UPDATEHIGHLIGHT_EVENT,
       (highlightedPortions, body, userId) => updateHighlights(highlightedPortions, body, userId)
     );

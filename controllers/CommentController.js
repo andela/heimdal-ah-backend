@@ -28,15 +28,34 @@ class CommentController {
         content,
         isPrivate
       });
+      const commentInfo = {
+        articleId,
+        userId
+      };
 
       const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
+      const users = await comments.findAll({
+        where: commentInfo,
+        attributes: ['userId']
+      });
 
-      eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {
-        to: articleOwner.dataValues,
-        from: userId,
-        articleId: req.params.articleId,
-        type: 'comment',
-        event: comment.dataValues
+      let usersId = users.map(user => user.userId);
+      usersId.push(articleOwner.userId);
+      usersId = [...new Set(usersId)];
+      const { dataValues: { title, slug } } = articleOwner;
+
+      usersId.forEach((notifyUserId) => {
+        eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {
+          to: {
+            userId: notifyUserId,
+            title,
+            slug
+          },
+          from: userId,
+          articleId: req.params.articleId,
+          type: 'commented',
+          event: comment.dataValues
+        });
       });
 
       const payload = {

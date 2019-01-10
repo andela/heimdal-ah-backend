@@ -29,7 +29,7 @@ const like = async (res, payload) => {
       to: articleOwner.dataValues,
       from: userId,
       articleId,
-      type: 'like',
+      type: 'liked',
       event: likes.dataValues
     });
 

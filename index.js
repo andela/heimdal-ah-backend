@@ -47,17 +47,19 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
-app.use('/api/v1/users', user);
-app.use('/api/v1/users', notifications);
-app.use('/api/v1/articles', articles);
-app.use('/api/v1/articles', bookmarks);
-app.use('/api/v1/articles', reports);
-app.use('/api/v1/articles', comment);
+app.use('/api/v1/users',
+  user,
+  notifications,
+  readStats);
+app.use('/api/v1/articles',
+  articles,
+  bookmarks,
+  reports,
+  comment,
+  highlights,
+  likes);
 app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);
-app.use('/api/v1/articles', highlights);
-app.use('/api/v1/users', readStats);
-app.use('/api/v1/articles', likes);
 app.use('/api/v1/admin', admin);
 app.use('/api/v1/comments', replies);
 passportAuth();

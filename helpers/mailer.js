@@ -1,6 +1,7 @@
 import sgMail from '@sendgrid/mail';
 import dotenv from 'dotenv';
 
+
 dotenv.config();
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -14,7 +15,6 @@ const mailer = {
    */
   sendCustomMail(emailAddress, emailContent) {
     const { emailSubject, emailBody } = emailContent;
-
     const msg = {
       to: emailAddress,
       from: 'Heimdal <hello@heimdal.com>',
@@ -59,13 +59,13 @@ const mailer = {
     const emailSubject = `${emailAddress}`;
     const emailBody = `
       <div>
-          <h3 style="color:blue;"> Hi!!! ${username} added a ${type} to your Article</h3> <div style="border:1px solid black; padding:5px;"><h1>${title}</h1></div> 
+          <h3 style="color:blue;"> Hi!!! ${username} ${type} to your content</h3> <div style="border:1px solid black; padding:5px;"><h1>${title}</h1></div> 
           <p> checkout link ${link}</p>
       </div>
     `;
     const emailContent = { emailSubject, emailBody };
     mailer.sendCustomMail(emailAddress, emailContent);
-    return true;
+    return { success: true };
   }
 };
 

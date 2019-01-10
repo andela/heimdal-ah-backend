@@ -12,6 +12,8 @@ import {
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
 import eventEmitter from '../helpers/eventEmitter';
 import eventTypes from '../events/eventTypes';
+import FollowersModelQuery from '../lib/FollowersModelQuery';
+
 
 const { articles: Article, tags: Tag, HighlightedText } = models;
 
@@ -51,6 +53,19 @@ class ArticlesController {
       }
 
       const payload = { article: newArticle, message: 'Article successfully created' };
+
+      const allReturnedFollowers = await FollowersModelQuery
+        .findAllFollowing(userId);
+      allReturnedFollowers.forEach((follower) => {
+        eventEmitter.emit(eventTypes.POST_ARTICLE_NOTIFICATION, {
+          to: follower.dataValues.followerId,
+          from: userId,
+          type: 'New Article',
+          event: payload,
+          link: `https://heimdal-ah-staging.herokuapp.com/api/v1/articles/${newArticle.id}`,
+        });
+      });
+
       return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {

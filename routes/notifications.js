@@ -4,7 +4,11 @@ import checkAuthentication from '../middlewares/checkAuthentication';
 
 
 const router = express.Router();
-
+router.put(
+  '/notifications',
+  checkAuthentication,
+  NotificationsController.subcribeNotification
+);
 router.get(
   '/:userId/notifications',
   checkAuthentication,
