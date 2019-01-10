@@ -7,7 +7,7 @@ import { checkHighlightUpdate, checkHighlightCreate } from '../middlewares/highl
 const router = express.Router();
 
 router.post(
-  '/:articleId/highlight',
+  '/:articleId/highlights',
   checkAuthentication,
   checkArticle,
   checkHighlightCreate,

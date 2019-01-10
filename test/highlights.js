@@ -13,14 +13,14 @@ chai.use(chaiHttp);
 chai.should();
 
 describe('Test For HighLights', () => {
-  describe('POST /api/v1/articles/:articleId/highlight', () => {
+  describe('POST /api/v1/articles/:articleId/highlights', () => {
     it('should return 400 when the highlighted text is undefined', async () => {
       const data = {
         highlightedText: undefined
       };
       const res = await chai
         .request(app)
-        .post(`/api/v1/articles/${bodyHelper.article.id}/highlight`)
+        .post(`/api/v1/articles/${bodyHelper.article.id}/highlights`)
         .send(data)
         .set('access-token', bodyHelper.userToken);
       res.status.should.equal(400);
@@ -34,7 +34,7 @@ describe('Test For HighLights', () => {
       };
       const res = await chai
         .request(app)
-        .post(`/api/v1/articles/${bodyHelper.article.id}/highlight`)
+        .post(`/api/v1/articles/${bodyHelper.article.id}/highlights`)
         .send(data)
         .set('access-token', bodyHelper.userToken);
 
@@ -50,7 +50,7 @@ describe('Test For HighLights', () => {
       };
       const res = await chai
         .request(app)
-        .post(`/api/v1/articles/${bodyHelper.article.id}/highlight`)
+        .post(`/api/v1/articles/${bodyHelper.article.id}/highlights`)
         .send(data)
         .set('access-token', bodyHelper.userToken);
 
