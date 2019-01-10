@@ -2,7 +2,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import httpMocks from 'node-mocks-http';
-import adminGuard from '../../middlewares/adminGuard';
+import { admin, publishAcess } from '../../middlewares/authorization';
 
 chai.use(chaiHttp);
 chai.should();
@@ -24,10 +24,17 @@ describe('admin role Tests', () => {
     });
 
     it('should return status code 401 if user is not an admin', () => {
-      adminGuard(user, res);
+      admin(user, res);
       const data = JSON.parse(res._getData());
       res.statusCode.should.equal(401);
-      data.message.should.be.equal('Unauthorized');
+      data.message.should.be.equal('Only available to admin');
+    });
+
+    it('should return status code 401 if user does not have an admin or publisher access', () => {
+      publishAcess(user, res);
+      const data = JSON.parse(res._getData());
+      res.statusCode.should.equal(401);
+      data.message.should.be.equal('You do not have enough permission');
     });
   });
 });

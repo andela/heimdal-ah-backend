@@ -1,6 +1,7 @@
 import models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import { checkUser } from '../helpers/articleHelper';
+import { getArticleWhereClause, getCommentWhereClause } from '../helpers/commentHelper';
 
 const { comments, articles } = models;
 
@@ -60,7 +61,7 @@ class CommentHistoriesController {
         limit: 1
       });
 
-
+      updatedComment[1].commentId = undefined;
       await comments.create(latestComment.dataValues);
 
       return StatusResponse.success(res, {
@@ -82,15 +83,27 @@ class CommentHistoriesController {
    */
   static async getACommentHistory(req, res) {
     const { articleId, commentId } = req.params;
+    const { userId, roleId } = req.app.locals.user;
+
     try {
+      const article = await articles.findOne({ where: { id: articleId } });
+      if (!article) {
+        return StatusResponse.notfound(res, {
+          message: 'Article Not Found'
+        });
+      }
+      const comment = await comments.findOne({ where: { commentId: null, id: commentId } });
+      if (!comment) {
+        return StatusResponse.notfound(res, {
+          message: 'Comment Not Found'
+        });
+      }
       const commentHistory = await comments.findAll({
-        where: { articleId, commentId, isArchived: false },
+        where: { articleId, commentId, ...getCommentWhereClause(article, comment, roleId, userId) },
         order: [['id', 'DESC']],
         include: [{
           model: articles,
-          where: {
-            isArchived: false
-          },
+          where: getArticleWhereClause(article, roleId, userId),
           attributes: []
         }],
       });

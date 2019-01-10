@@ -14,7 +14,7 @@ const { users, roles, profiles } = models;
  */
 const facebookCallback = async (req, accessToken, refreshToken, profileInfo, done) => {
   const userObject = {};
-  const { id: roleId } = await roles.findOne({ where: { name: 'user' } });
+  const { id: roleId } = await roles.findOne({ where: { name: 'author' } });
 
   userObject.email = profileInfo.emails[0].value;
   userObject.emailVerification = true;

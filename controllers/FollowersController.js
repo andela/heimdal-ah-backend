@@ -94,7 +94,7 @@ class FollowersController {
         return StatusResponse.notfound(res, payload);
       }
       const payload = {
-        message: allReturnedFollowers
+        data: allReturnedFollowers
       };
       return StatusResponse.success(res, payload);
     } catch (error) {
@@ -126,7 +126,7 @@ class FollowersController {
         return StatusResponse.success(res, payload);
       }
       return res.status(200).send({
-        message: following
+        data: following
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {

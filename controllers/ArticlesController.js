@@ -7,7 +7,9 @@ import {
   checkUser,
   checkTitle,
   createNewTags,
-  calcReadingTime
+  calcReadingTime,
+  userIsOnwerOrAdmin,
+  checkUserRole
 } from '../helpers/articleHelper';
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
 import eventEmitter from '../helpers/eventEmitter';
@@ -84,8 +86,13 @@ class ArticlesController {
     const {
       size = 20, order = 'ASC', orderBy = 'id', offset = 0
     } = req.query;
+
     try {
       const articles = await Article.findAndCountAll({
+        where: {
+          isPublished: true,
+          isArchived: false
+        },
         include: [
           {
             model: Tag,
@@ -118,6 +125,101 @@ class ArticlesController {
   }
 
   /**
+   * @description - list archived articles
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async getArchived(req, res) {
+    const {
+      size = 20, order = 'ASC', orderBy = 'id', offset = 0
+    } = req.query;
+
+    try {
+      const articles = await Article.findAndCountAll({
+        where: {
+          isArchived: true
+        },
+        include: [
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['tagName'],
+            through: {
+              attributes: []
+            }
+          }
+        ],
+        limit: size,
+        offset,
+        order: [[orderBy, order]]
+      });
+      if (articles.rows.length === 0) {
+        return StatusResponse.success(res, {
+          message: 'No article found'
+        });
+      }
+      return StatusResponse.success(res, {
+        message: 'List of archived articles',
+        articles,
+        ...pagination(articles, offset, size)
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - list unpublished articles
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async getUnpublished(req, res) {
+    const {
+      size = 20, order = 'ASC', orderBy = 'id', offset = 0
+    } = req.query;
+
+    try {
+      const articles = await Article.findAndCountAll({
+        where: {
+          isPublished: false,
+          isArchived: false,
+        },
+        include: [
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['tagName'],
+            through: {
+              attributes: []
+            }
+          }
+        ],
+        limit: size,
+        offset,
+        order: [[orderBy, order]]
+      });
+      if (articles.rows.length === 0) {
+        return StatusResponse.success(res, {
+          message: 'No article found'
+        });
+      }
+      return StatusResponse.success(res, {
+        message: 'List of unpublished articles',
+        articles,
+        ...pagination(articles, offset, size)
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
    * @description - fetch single article
    * @param {object} req
    * @param {object} res
@@ -125,10 +227,14 @@ class ArticlesController {
    */
   static async get(req, res) {
     const whereFilter = checkIdentifier(req.params.identifier);
+    const { userId, roleId } = req.app.locals.user;
 
     try {
       const fetchArticle = await Article.findOne({
-        where: { ...whereFilter },
+        where: {
+          ...whereFilter,
+          ...checkUserRole(roleId, userId)
+        },
         include: [
           {
             model: Tag,
@@ -144,14 +250,33 @@ class ArticlesController {
           }
         ]
       });
-      if (req.app.locals.user) {
-        const { userId } = req.app.locals.user;
+      if (!fetchArticle) {
+        return StatusResponse.notfound(res, {
+          message: 'Could not find article'
+        });
+      }
+
+      if (userId) {
         const readInfo = {
           articleId: fetchArticle.id,
           userId
         };
         await ReadingStatsModelQuery.createReaderStats(readInfo);
       }
+      if ((fetchArticle.userId === userId)
+       || (roleId === 3 || (userId && fetchArticle.isPublished))) {
+        return StatusResponse.success(res, {
+          message: 'success',
+          article: fetchArticle
+        });
+      }
+
+      if (roleId !== 1 && (userId && !fetchArticle.isPublished)) {
+        return StatusResponse.notfound(res, {
+          message: 'Could not find article'
+        });
+      }
+
       return StatusResponse.success(res, {
         message: 'success',
         article: fetchArticle
@@ -228,23 +353,84 @@ class ArticlesController {
    */
   static async archive(req, res) {
     const { articles } = models;
-    const { userId } = req.app.locals.user;
+    const { userId, roleId } = req.app.locals.user;
     const whereFilter = checkIdentifier(req.params.identifier);
     try {
       const article = await ArticleQueryModel.getArticleByIdentifier(whereFilter);
-      if (!checkUser(article, userId)) {
+
+      if (!userIsOnwerOrAdmin(article, userId, roleId)) {
         return StatusResponse.forbidden(res, {
           message: 'Request denied'
         });
       }
       const data = { isArchived: true };
-      await articles.update(data, {
+      const archivedArticle = await articles.update(data, {
+        where: { ...whereFilter },
+        returning: true,
+        plain: true
+      });
+      const payload = roleId === 1
+        ? {
+          message: 'Article deleted(archived) successfully',
+          article: archivedArticle[1]
+        }
+        : {
+          message: 'Article deleted(archived) successfully'
+        };
+      return StatusResponse.success(res, payload);
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - publish article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async publish(req, res) {
+    const { articles } = models;
+    const whereFilter = checkIdentifier(req.params.identifier);
+    try {
+      const data = { isPublished: true };
+      const article = await articles.update(data, {
         where: { ...whereFilter },
         returning: true,
         plain: true
       });
       return StatusResponse.success(res, {
-        message: 'Article deleted(archived) successfully'
+        message: 'Article published successfully!',
+        article: article[1]
+      });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, {
+        message: `something went wrong, please try again.... ${error}`
+      });
+    }
+  }
+
+  /**
+   * @description - publish article
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} Returned object
+   */
+  static async unpublish(req, res) {
+    const { articles } = models;
+    const whereFilter = checkIdentifier(req.params.identifier);
+    try {
+      const data = { isPublished: false };
+      const article = await articles.update(data, {
+        where: { ...whereFilter },
+        returning: true,
+        plain: true
+      });
+      return StatusResponse.success(res, {
+        message: 'Article unpublished successfully!',
+        article: article[1]
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-
+import Sequelize from 'sequelize';
 import models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 
@@ -26,7 +26,9 @@ class UsersController {
           {
             model: roles,
             where: {
-              name: 'author'
+              name: {
+                [Sequelize.Op.or]: ['author', 'publisher']
+              }
             }
           }
         ],
