@@ -93,9 +93,16 @@ class NotificationsController {
       const { userId } = req.app.locals.user;
       const user = await UserModelQuery.getUserById(userId);
       if (user) {
+        if (user.notification) {
+          await user.update({
+            notification: false
+          });
+          return StatusResponse.success(res, { message: 'success, you have Unsubcribed for notifications' });
+        }
         await user.update({
           notification: true
         });
+
         return StatusResponse.success(res, { message: 'success, you have subcribed for notifications' });
       }
       return StatusResponse.notfound(res, { message: 'failure, notification was not' });
