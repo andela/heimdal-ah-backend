@@ -47,17 +47,21 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/auth_twitter', twitterRouter);
 app.use('/api/v1/profiles', profiles);
 app.use('/api/v1/password', password);
-app.use('/api/v1/users',
+app.use(
+  '/api/v1/users',
   user,
   notifications,
-  readStats);
-app.use('/api/v1/articles',
+  readStats
+);
+app.use(
+  '/api/v1/articles',
   articles,
   bookmarks,
   reports,
   comment,
   highlights,
-  likes);
+  likes
+);
 app.use('/api/v1/articles_search', search);
 app.use('/api/v1/ratings', ratings);
 app.use('/api/v1/admin', admin);
