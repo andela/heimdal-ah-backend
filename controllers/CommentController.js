@@ -1,10 +1,8 @@
 import { Op } from 'sequelize';
 import db from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import eventEmitter from '../helpers/eventEmitter';
-import ArticleQueryModel from '../lib/ArticleQueryModel';
-import eventTypes from '../events/eventTypes';
 import CommentQueryModel from '../lib/CommentQueryModel';
+import { commentEvent } from '../lib/events';
 
 const { comments } = db;
 /**
@@ -32,36 +30,19 @@ class CommentController {
         articleId,
         userId
       };
-
-      const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
-      const users = await comments.findAll({
-        where: commentInfo,
-        attributes: ['userId']
-      });
-
-      let usersId = users.map(user => user.userId);
-      usersId.push(articleOwner.userId);
-      usersId = [...new Set(usersId)];
-      const { dataValues: { title, slug } } = articleOwner;
-
-      usersId.forEach((notifyUserId) => {
-        eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {
-          to: {
-            userId: notifyUserId,
-            title,
-            slug
-          },
-          from: userId,
-          articleId: req.params.articleId,
-          type: 'commented',
-          event: comment.dataValues
-        });
-      });
+      const info = {
+        articleId,
+        commentInfo,
+        userId,
+        comment
+      };
 
       const payload = {
         message: 'Comment has been successfully created',
         comment
       };
+
+      commentEvent(info);
       return StatusResponse.created(res, payload);
     } catch (error) {
       const payload = {

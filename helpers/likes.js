@@ -1,6 +1,5 @@
 import StatusResponse from './StatusResponse';
-import myEmitter from './eventEmitter';
-import eventTypes from '../events/eventTypes';
+import { likesEvents } from '../lib/events';
 import {
   findLikes,
   deleteLikes,
@@ -15,7 +14,6 @@ import {
    * @public
    */
 const like = async (res, payload) => {
-  const { articleOwner, articleId, userId } = payload;
   try {
     const ifExist = await findLikes(payload);
     // if like already exist
@@ -25,13 +23,7 @@ const like = async (res, payload) => {
     }
     //  if like does not exist create new like
     const likes = await createLikes(payload);
-    myEmitter.emit(eventTypes.ARTICLE_NOTIFICATION_EVENT, {
-      to: articleOwner.dataValues,
-      from: userId,
-      articleId,
-      type: 'liked',
-      event: likes.dataValues
-    });
+    likesEvents(payload, likes);
 
     return StatusResponse.success(res, { message: 'like was successful' });
   } catch (error) {

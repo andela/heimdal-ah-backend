@@ -2,8 +2,7 @@ import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import ProfilesModelQuery from '../lib/ProfilesModelQuery';
 import FollowersModelQuery from '../lib/FollowersModelQuery';
-import eventEmitter from '../helpers/eventEmitter';
-import eventTypes from '../events/eventTypes';
+import { followEvent } from '../lib/events';
 
 
 const { followers } = model;
@@ -53,11 +52,9 @@ class FollowersController {
       });
 
       if (followUser) {
-        eventEmitter.emit(eventTypes.FOLLOW_INTERACTION_EVENT, {
-          to: intFollowId,
-          from: userId,
-          type: 'follow'
-        });
+        const info = { intFollowId, userId, followUser };
+        followEvent(info);
+
         return StatusResponse.success(res, {
           message: 'User followed successfully',
         });

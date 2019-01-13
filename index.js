@@ -75,7 +75,8 @@ app.use('/*', (req, res) => res.status(404).json({ message: 'This endpoint does 
 
 const server = app.listen(PORT, () => {
   logger.log(`connected on port ${PORT}`);
-  events.start(server);
+  events.start(server, PORT);
 });
+
 
 export default app;

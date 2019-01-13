@@ -12,9 +12,9 @@ import {
   checkUserRole
 } from '../helpers/articleHelper';
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
+import { articleEvent } from '../lib/events';
 import eventEmitter from '../helpers/eventEmitter';
 import eventTypes from '../events/eventTypes';
-import FollowersModelQuery from '../lib/FollowersModelQuery';
 
 
 const { articles: Article, tags: Tag, HighlightedText } = models;
@@ -56,17 +56,8 @@ class ArticlesController {
 
       const payload = { article: newArticle, message: 'Article successfully created' };
 
-      const allReturnedFollowers = await FollowersModelQuery
-        .findAllFollowing(userId);
-      allReturnedFollowers.forEach((follower) => {
-        eventEmitter.emit(eventTypes.POST_ARTICLE_NOTIFICATION, {
-          to: follower.dataValues.followerId,
-          from: userId,
-          type: 'New Article',
-          event: payload,
-          link: `https://heimdal-ah-staging.herokuapp.com/api/v1/articles/${newArticle.id}`,
-        });
-      });
+      const info = { userId, payload, newArticle };
+      articleEvent(info);
 
       return StatusResponse.created(res, payload);
     } catch (error) {

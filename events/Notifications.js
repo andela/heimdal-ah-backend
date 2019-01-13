@@ -1,7 +1,5 @@
 import UsermodelQuery from '../lib/UserModelQuery';
-import mailer from '../helpers/mailer';
-import { createNotification } from '../lib/notifications';
-import eventype from './eventTypes';
+import notify from '../helpers/events';
 
 
 /** @description Notifications class
@@ -17,11 +15,11 @@ class Notifications {
   static async addNotification(payload, io) {
     try {
       const {
-        to: { userId, title, slug }, type, from: user, event
+        to: { userId, title, slug }, type, from: user, data
       } = payload;
-      const articleOwner = await UsermodelQuery.getUserById(userId);
+      const recipient = await UsermodelQuery.getUserById(userId);
       const sender = await UsermodelQuery.getUserById(user);
-      const { dataValues: { email } } = articleOwner;
+      const { dataValues: { email } } = recipient;
       const { profile: { dataValues: { username } } } = sender;
 
       const info = {
@@ -31,15 +29,17 @@ class Notifications {
         userId,
         senderUsername: username,
         senderId: user,
-        event
+        data
       };
-
-      if (articleOwner.notification) {
-        const created = await createNotification(info);
-        if (created) {
-          await mailer.sendNotificationMail(email, username, info);
-          return io.emit(eventype.NOTIFICATION_CREATED, info);
-        }
+      const notifyData = {
+        recipient,
+        info,
+        username,
+        email
+      };
+      const result = notify(notifyData, io);
+      if (result) {
+        return true;
       }
       return false;
     } catch (error) {
@@ -55,7 +55,12 @@ class Notifications {
    */
   static async followNotification(payload, io) {
     try {
-      const { to: intFollowId, type, from: userId } = payload;
+      const {
+        to: intFollowId,
+        type,
+        data,
+        from: userId
+      } = payload;
       const followed = await UsermodelQuery.getUserById(intFollowId);
       const follower = await UsermodelQuery.getUserById(userId);
       const { dataValues: { email } } = followed;
@@ -65,15 +70,18 @@ class Notifications {
         type,
         userId,
         senderId: intFollowId,
-        link: ''
+        link: '',
+        data
       };
-
-      if (followed.notification) {
-        const created = await createNotification(info);
-        if (created) {
-          await mailer.sendNotificationMail(email, username, info);
-          return io.emit(eventype.NOTIFICATION_CREATED, info);
-        }
+      const notifyData = {
+        recipient: followed,
+        info,
+        username,
+        email
+      };
+      const result = await notify(notifyData, io);
+      if (result) {
+        return true;
       }
       return false;
     } catch (error) {
@@ -90,26 +98,29 @@ class Notifications {
   static async articleNotification(payload, io) {
     try {
       const {
-        to: intFollowId, event, type, link, from: userId
+        to: intFollowId, data, type, link, from: userId
       } = payload;
       const follower = await UsermodelQuery.getUserById(intFollowId);
-      const articleOwner = await UsermodelQuery.getUserById(userId);
+      const author = await UsermodelQuery.getUserById(userId);
       const { dataValues: { email } } = follower;
-      const { profile: { dataValues: { username } } } = articleOwner;
+      const { profile: { dataValues: { username } } } = author;
       const info = {
         type,
         userId,
         senderId: intFollowId,
-        event,
+        data,
         link
       };
 
-      if (follower.notification) {
-        const created = await createNotification(info);
-        if (created) {
-          await mailer.sendNotificationMail(email, username, info);
-          return io.emit(eventype.NOTIFICATION_CREATED, info);
-        }
+      const notifyData = {
+        recipient: follower,
+        info,
+        username,
+        email
+      };
+      const result = await notify(notifyData, io);
+      if (result) {
+        return true;
       }
       return false;
     } catch (error) {
