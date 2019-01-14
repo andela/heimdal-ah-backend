@@ -58,7 +58,7 @@ class Notifications {
         data,
         from: userId
       } = payload;
-      console.log(recipient, 'uuuuuuuuuuuuuuuuu');
+
       const followed = await UsermodelQuery.getUserById(recipient);
       const follower = await UsermodelQuery.getUserById(userId);
       const { dataValues: { email } } = followed;
