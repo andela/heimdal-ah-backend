@@ -101,7 +101,7 @@ class Notifications {
       const info = {
         type,
         userId,
-        senderId: recipient,
+        recipient,
         data,
         link
       };
