@@ -26,13 +26,9 @@ class CommentController {
         content,
         isPrivate
       });
-      const commentInfo = {
-        articleId,
-        userId
-      };
+
       const info = {
         articleId,
-        commentInfo,
         userId,
         comment
       };

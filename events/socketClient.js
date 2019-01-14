@@ -1,8 +1,8 @@
 import io from 'socket.io-client';
 import logger from '../config/logger';
 
-const socketClient = (PORT) => {
-  const socket = io(`http://localhost:${PORT}`);
+const socketClient = (port) => {
+  const socket = io(`http://localhost:${port}`);
 
   if (process.env.NODE_ENV !== 'production') {
     socket.on('connect', () => {

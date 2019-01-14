@@ -17,6 +17,7 @@ class Notifications {
       const {
         to: { userId, title, slug }, type, from: user, data
       } = payload;
+
       const recipient = await UsermodelQuery.getUserById(userId);
       const sender = await UsermodelQuery.getUserById(user);
       const { dataValues: { email } } = recipient;
@@ -37,11 +38,7 @@ class Notifications {
         username,
         email
       };
-      const result = notify(notifyData, io);
-      if (result) {
-        return true;
-      }
-      return false;
+      return await notify(notifyData, io);
     } catch (error) {
       return error;
     }
@@ -56,12 +53,13 @@ class Notifications {
   static async followNotification(payload, io) {
     try {
       const {
-        to: intFollowId,
+        to: recipient,
         type,
         data,
         from: userId
       } = payload;
-      const followed = await UsermodelQuery.getUserById(intFollowId);
+      console.log(recipient, 'uuuuuuuuuuuuuuuuu');
+      const followed = await UsermodelQuery.getUserById(recipient);
       const follower = await UsermodelQuery.getUserById(userId);
       const { dataValues: { email } } = followed;
       const { profile: { dataValues: { username } } } = follower;
@@ -69,7 +67,7 @@ class Notifications {
         title: 'followed',
         type,
         userId,
-        senderId: intFollowId,
+        senderId: recipient,
         link: '',
         data
       };
@@ -79,11 +77,7 @@ class Notifications {
         username,
         email
       };
-      const result = await notify(notifyData, io);
-      if (result) {
-        return true;
-      }
-      return false;
+      return await notify(notifyData, io);
     } catch (error) {
       return error;
     }
@@ -98,16 +92,16 @@ class Notifications {
   static async articleNotification(payload, io) {
     try {
       const {
-        to: intFollowId, data, type, link, from: userId
+        to: recipient, data, type, link, from: userId
       } = payload;
-      const follower = await UsermodelQuery.getUserById(intFollowId);
+      const follower = await UsermodelQuery.getUserById(recipient);
       const author = await UsermodelQuery.getUserById(userId);
       const { dataValues: { email } } = follower;
       const { profile: { dataValues: { username } } } = author;
       const info = {
         type,
         userId,
-        senderId: intFollowId,
+        senderId: recipient,
         data,
         link
       };
@@ -118,11 +112,7 @@ class Notifications {
         username,
         email
       };
-      const result = await notify(notifyData, io);
-      if (result) {
-        return true;
-      }
-      return false;
+      return await notify(notifyData, io);
     } catch (error) {
       return error;
     }

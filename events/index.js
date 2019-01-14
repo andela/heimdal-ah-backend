@@ -4,8 +4,8 @@ import socketClient from './socketClient';
 
 
 const events = {
-  start(server, PORT) {
-    socketClient(PORT);
+  start(server, port) {
+    socketClient(port);
     socketIo.connect(server, handlers);
   },
 };
