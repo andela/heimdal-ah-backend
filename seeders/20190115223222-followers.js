@@ -1,20 +1,20 @@
 export default {
   up: queryInterface => queryInterface.bulkInsert('followers', [{
-    id: 1,
+    id: 3,
     followerId: 2,
     followingId: 3,
     createdAt: new Date(),
     updatedAt: new Date()
   },
   {
-    id: 2,
+    id: 4,
     followerId: 1,
     followingId: 3,
     createdAt: new Date(),
     updatedAt: new Date()
   },
   {
-    id: 3,
+    id: 5,
     followerId: 1,
     followingId: 2,
     createdAt: new Date(),
