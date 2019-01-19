@@ -1014,7 +1014,7 @@
         }
       }
     },
-    "/users/{followingId}/follow": {
+    "/users/{followedId}/follow": {
       "post": {
         "tags": [
           "Users"
@@ -1037,7 +1037,7 @@
           },
           {
             "in": "path",
-            "name": "followingId",
+            "name": "followedId",
             "description": "Enter folowing ID in params",
             "required": true,
             "type": "integer",
@@ -1057,7 +1057,7 @@
         }
       }
     },
-    "/users/{followingId}/unfollow": {
+    "/users/{followedId}/unfollow": {
       "post": {
         "tags": [
           "Users"
@@ -1080,7 +1080,7 @@
           },
           {
             "in": "path",
-            "name": "followingId",
+            "name": "followedId",
             "description": "Enter following ID in params",
             "required": true,
             "type": "integer",
@@ -2652,7 +2652,7 @@
                 "type": "integer",
                 "format": "int64"
               },
-              "followingId": {
+              "followedId": {
                 "type": "integer",
                 "format": "int64"
               },
@@ -2730,7 +2730,7 @@
                 "type": "integer",
                 "format": "int64"
               },
-              "followingId": {
+              "followedId": {
                 "type": "integer",
                 "format": "int64"
               },
