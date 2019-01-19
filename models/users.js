@@ -27,13 +27,16 @@ export default (sequelize, DataTypes) => {
     Users.belongsTo(models.roles, {
       foreignKey: 'roleId',
       onDelete: 'CASCADE',
-      as: 'roles',
+      // as: 'roles',
     });
     Users.hasOne(models.profiles, {
       foreignKey: 'userId',
       as: 'profile'
     });
-    Users.hasMany(models.articles, {
+    Users.belongsToMany(models.articles, {
+      as: 'ReadArticles',
+      foreignKey: 'userId',
+      through: 'ReaderStat',
     });
     Users.hasOne(models.profiles, {});
     Users.hasMany(models.articles, {});
@@ -42,6 +45,7 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     Users.hasMany(models.likes, {});
+    Users.hasMany(models.notifications, {});
     Users.hasMany(models.ratings);
   };
   return Users;

@@ -15,12 +15,12 @@ describe('Heimdal Search and Filter Test Suite', () => {
       res.body.should.be.a('object');
       res.body.should.have.property('message');
       res.body.should.have.property('articles');
-      res.body.message.should.equal('All Articles by this author returned succesfully');
+      res.body.message.should.equal('All Articles returned succesfully');
     });
 
     it('should return status code 404 on not finding an author', async () => {
       const res = await chai.request(app)
-        .get('/api/v1/articles_search/author?author=johnjdbsjsibbwojbwdbwid8383e3939e3iw39i###$@!@#@@#@#');
+        .get('/api/v1/articles_search/author?author=1234545');
       res.status.should.equal(404);
       res.body.should.be.a('object');
       res.body.should.have.property('message');
@@ -72,7 +72,7 @@ describe('Heimdal Search and Filter Test Suite', () => {
 
     it('should return status code 404 if articles do not exist that have such tags ', async () => {
       const res = await chai.request(app)
-        .get('/api/v1/articles_search/tag?tag=nosuchtags');
+        .get('/api/v1/articles_search/tag?tag=§zxj');
       res.status.should.equal(404);
       res.body.should.be.a('object');
       res.body.should.have.property('message');

@@ -6,6 +6,7 @@ import UserModelQuery from '../lib/UserModelQuery';
 dotenv.config();
 const checkAuthentication = async (req, res, next) => {
   const token = req.headers['access-token'];
+
   if (!token) {
     StatusResponse.badRequest(res, {
       message: 'You did not provide any token, please enter token, then retry',
@@ -30,9 +31,11 @@ const checkAuthentication = async (req, res, next) => {
 
       req.userId = decoded.userId;
       req.username = decoded.username;
+      req.roleId = decoded.roleId;
       req.app.locals.user = {
-        userId: req.userId,
-        username: req.username
+        userId: decoded.userId,
+        username: decoded.username,
+        roleId: req.roleId
       };
       return next();
     });

@@ -12,8 +12,9 @@ class ArticleValidation {
    */
   static async validateInput(req, res, next) {
     req.checkBody('title', 'title cannot be empty').notEmpty();
+    req.checkBody('title', 'title Length cannot be more than 1500 characters').isLength({ max: 1500 });
     req.checkBody('description', 'description cannot be empty').notEmpty();
-    req.checkBody('image', 'image cannot be empty').notEmpty();
+    req.checkBody('description', 'description Length cannot be more than 1500 characters').isLength({ max: 2500 });
     req.checkBody('body', 'body cannot be empty').notEmpty();
 
     try {
@@ -37,6 +38,30 @@ class ArticleValidation {
       };
       return StatusResponse.internalServerError(res, payload);
     }
+  }
+
+  /**
+   * @param {object} req Takes comment request
+   * @param {object} res Response to request
+   * @param {object} next Move to the next function
+   * @return {object} User validation response to user
+   */
+  static checkArticleId(req, res, next) {
+    req.checkParams('identifier', 'Article Id must be an Integer').isInt();
+    const errors = req.validationErrors();
+    const err = [];
+
+    if (errors) {
+      errors.forEach(({ param, msg }) => {
+        if (!err[param]) {
+          err[param] = {
+            msg
+          };
+        }
+      });
+      return StatusResponse.badRequest(res, { errors: { ...err } });
+    }
+    return next();
   }
 }
 

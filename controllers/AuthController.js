@@ -4,7 +4,7 @@ import StatusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/UserModelQuery';
 import getToken from '../helpers/getToken';
 import mailer from '../helpers/mailer';
-import helper from '../helpers/helper';
+import generateEmailToken from '../helpers/generateEmailToken';
 
 /**
  * Signup validation class
@@ -23,7 +23,7 @@ class AuthController {
     const genSalt = bcrypt.genSaltSync(8);
     const hashPassword = bcrypt.hashSync(password, genSalt);
 
-    const emailToken = helper.generateEmailToken(email);
+    const emailToken = generateEmailToken(email);
 
     const link = `http://${req.headers.host}/api/v1/users/verify-email/${emailToken}`;
 
@@ -50,7 +50,7 @@ class AuthController {
 
       mailer.sendVerificationMail(email, username, link);
 
-      const { id: roleId } = await roles.find({ where: { name: 'user' } });
+      const { id: roleId } = await roles.find({ where: { name: 'author' } });
       const newUser = await users.create(
         {
           email,
@@ -101,8 +101,8 @@ class AuthController {
         };
         return StatusResponse.notfound(res, payload);
       }
-      const { id, profile: { username } } = user;
-      const token = getToken(id, username);
+      const { id, roleId, profile: { username } } = user;
+      const token = getToken(id, username, roleId);
       user.dataValues.password = undefined;
       const payload = {
         message: 'user logged in succesfully',
@@ -124,7 +124,10 @@ class AuthController {
    * @return {object} login response to user
    */
   static socialAuth(req, res) {
-    const { id, profile: { username } } = req.user;
+    const {
+      id,
+      profile: { username }
+    } = req.user;
     const token = getToken({ id, username });
     const payload = {
       message: 'user logged in succesfully',

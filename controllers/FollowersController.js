@@ -2,6 +2,9 @@ import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import ProfilesModelQuery from '../lib/ProfilesModelQuery';
 import FollowersModelQuery from '../lib/FollowersModelQuery';
+import eventEmitter from '../helpers/eventEmitter';
+import eventTypes from '../events/eventTypes';
+
 
 const { followers } = model;
 
@@ -50,6 +53,11 @@ class FollowersController {
       });
 
       if (followUser) {
+        eventEmitter.emit(eventTypes.FOLLOW_INTERACTION_EVENT, {
+          to: intFollowId,
+          from: userId,
+          type: 'follow'
+        });
         return StatusResponse.success(res, {
           message: 'User followed successfully',
         });
@@ -86,7 +94,7 @@ class FollowersController {
         return StatusResponse.notfound(res, payload);
       }
       const payload = {
-        message: allReturnedFollowers
+        data: allReturnedFollowers
       };
       return StatusResponse.success(res, payload);
     } catch (error) {
@@ -118,7 +126,7 @@ class FollowersController {
         return StatusResponse.success(res, payload);
       }
       return res.status(200).send({
-        message: following
+        data: following
       });
     } catch (error) {
       return StatusResponse.internalServerError(res, {
