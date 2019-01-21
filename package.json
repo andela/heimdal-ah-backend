@@ -21,7 +21,8 @@
     "db:seed:admin": "node_modules/.bin/sequelize db:seed --seed 20181211166543-admin-seeder",
     "lint:fix": "eslint --fix ./ --ext .js --color",
     "start": "npm run build && node dist/index.js",
-    "build": " npm run db:migrate:production && babel ./ --ignore node_modules,test,coverage,dist -d dist/ && cp swagger.json dist/"
+    "heroku-postbuild": "npm run db:migrate:production",
+    "build": "babel ./ --ignore node_modules,test,coverage,dist -d dist/ && cp swagger.json dist/"
   },
   "nyc": {
     "exclude": [
@@ -39,6 +40,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "chance": "^1.0.18",
+    "cors": "^2.8.5",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "email-validator": "^2.0.4",

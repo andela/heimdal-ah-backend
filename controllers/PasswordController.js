@@ -36,7 +36,7 @@ class PasswordResetController {
       const emailBody = `
      <div>
          <h1> please follow this link to update your password </h1>
-         ${process.env.PASSWORD_RESET_LINK}/${token}
+         ${process.env.PASSWORD_RESET_LINK}?token=${token}
      </div>`;
       // send email
       const emailContent = { emailSubject, emailBody };

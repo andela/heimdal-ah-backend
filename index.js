@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import validator from 'express-validator';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
+import cors from 'cors';
 
 import swaggerDocument from './swagger.json';
 
@@ -35,6 +36,7 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
+app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
