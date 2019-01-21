@@ -36,7 +36,7 @@ class PasswordResetController {
       const emailBody = `
      <div>
          <h1> please follow this link to update your password </h1>
-         ${token}
+         ${process.env.PASSWORD_RESET_LINK}/${token}
      </div>`;
       // send email
       const emailContent = { emailSubject, emailBody };
@@ -46,7 +46,10 @@ class PasswordResetController {
         resettingPassword: true
       });
 
-      return Response.success(res, { message: 'Email was sent successfully' });
+      return Response.success(res, {
+        passwordResetToken: token,
+        message: 'Email was sent successfully'
+      });
     } catch (err) {
       return Response.internalServerError(res, { message: 'Server error' });
     }
