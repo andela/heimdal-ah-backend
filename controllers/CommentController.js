@@ -1,10 +1,8 @@
 import { Op } from 'sequelize';
 import db from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import eventEmitter from '../helpers/eventEmitter';
-import ArticleQueryModel from '../lib/ArticleQueryModel';
-import eventTypes from '../events/eventTypes';
 import CommentQueryModel from '../lib/CommentQueryModel';
+import { commentEvent } from '../lib/events';
 
 const { comments } = db;
 /**
@@ -29,20 +27,18 @@ class CommentController {
         isPrivate
       });
 
-      const articleOwner = await ArticleQueryModel.getArticleByIdentifier({ id: articleId });
-
-      eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {
-        to: articleOwner.dataValues,
-        from: userId,
-        articleId: req.params.articleId,
-        type: 'comment',
-        event: comment.dataValues
-      });
+      const info = {
+        articleId,
+        userId,
+        comment
+      };
 
       const payload = {
         message: 'Comment has been successfully created',
         comment
       };
+
+      commentEvent(info);
       return StatusResponse.created(res, payload);
     } catch (error) {
       const payload = {

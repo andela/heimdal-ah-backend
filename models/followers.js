@@ -4,16 +4,15 @@ export default (sequelize, DataTypes) => {
     followerId: {
       type: DataTypes.INTEGER
     },
-    followingId: {
+    followedId: {
       type: DataTypes.INTEGER
     }
   }, {});
   // eslint-disable-next-line no-unused-vars
   followers.associate = (models) => {
     followers.belongsTo(models.profiles, {
-      foreignKey: 'followingId',
+      foreignKey: 'followerId',
       onDelete: 'CASCADE',
-      as: 'follow'
     });
   };
   return followers;

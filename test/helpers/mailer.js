@@ -47,4 +47,14 @@ describe('Mail Sender test', () => {
     result.should.have.property('message');
     result.message.should.equal('email not sent');
   });
+
+  it('should send an email to a particular User when proper params are provided', async () => {
+    const emailAddress = 'pereowei.izontimi@andela.com';
+    const username = 'Verify your email on Authors Haven';
+    const info = { type: 'like', link: 'afro-skool', title: 'test' };
+
+    const result = await mailer.sendNotificationMail(emailAddress, username, info);
+
+    result.success.should.equal(true);
+  });
 });

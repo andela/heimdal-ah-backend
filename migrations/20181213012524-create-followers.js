@@ -9,7 +9,7 @@ export default {
     followerId: {
       type: Sequelize.INTEGER
     },
-    followingId: {
+    followedId: {
       type: Sequelize.INTEGER,
       allowNull: false,
       references: {

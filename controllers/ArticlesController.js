@@ -12,8 +12,10 @@ import {
   checkUserRole
 } from '../helpers/articleHelper';
 import ReadingStatsModelQuery from '../lib/ReadingStatsModelQuery';
+import { articleEvent } from '../lib/events';
 import eventEmitter from '../helpers/eventEmitter';
 import eventTypes from '../events/eventTypes';
+
 
 const { articles: Article, tags: Tag, HighlightedText } = models;
 
@@ -53,6 +55,10 @@ class ArticlesController {
       }
 
       const payload = { article: newArticle, message: 'Article successfully created' };
+
+      const info = { userId, payload, newArticle };
+      articleEvent(info);
+
       return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {

@@ -1,8 +1,6 @@
 import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
-import ArticleQueryModel from '../lib/ArticleQueryModel';
-import eventEmitter from '../helpers/eventEmitter';
-import eventTypes from '../events/eventTypes';
+import { ratingEvent } from '../lib/events';
 
 const { ratings } = model;
 
@@ -21,23 +19,17 @@ class RatingsController {
    */
   static async create(req, res) {
     const { userId } = req.app.locals.user;
+    const { articleId } = req.params;
     try {
       const usersRatings = await ratings.create({
         userId,
-        articleId: req.params.articleId,
+        articleId,
         stars: req.body.stars
       });
 
-      const articleOwner = await ArticleQueryModel.getArticleByIdentifier({
-        id: req.params.articleId
-      });
-      eventEmitter.emit(eventTypes.RATING_INTERACTION_EVENT, {
-        to: articleOwner.dataValues,
-        from: userId,
-        articleId: req.params.articleId,
-        type: 'rating',
-        event: usersRatings.dataValues
-      });
+      const info = { userId, articleId, usersRatings };
+      ratingEvent(info);
+
 
       StatusResponse.created(res, {
         message: 'Users ratings on this article recorded succesfully',
