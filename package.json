@@ -40,6 +40,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
     "chance": "^1.0.18",
+    "cors": "^2.8.5",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "email-validator": "^2.0.4",
