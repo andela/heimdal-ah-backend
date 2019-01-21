@@ -12,7 +12,7 @@
     "db:undo:migrate": "node_modules/.bin/sequelize db:migrate:undo:all",
     "db:undo:migrate:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate:undo:all",
     "db:migrate": "node_modules/.bin/sequelize db:migrate",
-    "db:migrate:production": "node_modules/.bin/sequelize db:migrate && npm run db:seed:roles && npm run db:seed:admin",
+    "db:migrate:production": "node_modules/.bin/sequelize db:migrate && node_modules/.bin/sequelize db:seed:all",
     "db:migrate:test": "cross-env NODE_ENV=test node_modules/.bin/sequelize db:migrate",
     "db:seed:undo": "node_modules/.bin/sequelize db:seed:undo:all",
     "db:seed": "node_modules/.bin/sequelize db:seed:all",
@@ -21,7 +21,7 @@
     "db:seed:admin": "node_modules/.bin/sequelize db:seed --seed 20181211166543-admin-seeder",
     "lint:fix": "eslint --fix ./ --ext .js --color",
     "start": "npm run build && node dist/index.js",
-    "build": "babel ./ --ignore node_modules,test,coverage,dist -d dist/ && cp swagger.json dist/"
+    "build": " npm run db:migrate:production && babel ./ --ignore node_modules,test,coverage,dist -d dist/ && cp swagger.json dist/"
   },
   "nyc": {
     "exclude": [
