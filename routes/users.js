@@ -12,8 +12,8 @@ router.put('/resetpassword/:token', passwordReset, PasswordController.resetPassw
 router.get('/', UsersController.list);
 
 // follow user begins here
-router.post('/:followingId/follow', checkAuthentication, FollowersController.followUsers);
-router.post('/:followingId/unfollow', checkAuthentication, FollowersController.unfollowUser);
+router.post('/:followedId/follow', checkAuthentication, FollowersController.followUsers);
+router.post('/:followedId/unfollow', checkAuthentication, FollowersController.unfollowUser);
 router.get('/followers', checkAuthentication, FollowersController.getAllFollowers);
 router.get('/following', checkAuthentication, FollowersController.getAllFollowing);
 /**

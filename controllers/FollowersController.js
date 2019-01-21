@@ -2,8 +2,7 @@ import model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import ProfilesModelQuery from '../lib/ProfilesModelQuery';
 import FollowersModelQuery from '../lib/FollowersModelQuery';
-import eventEmitter from '../helpers/eventEmitter';
-import eventTypes from '../events/eventTypes';
+import { followEvent } from '../lib/events';
 
 
 const { followers } = model;
@@ -22,8 +21,8 @@ class FollowersController {
  */
   static async followUsers(req, res) {
     try {
-      const { followingId } = req.params;
-      const intFollowId = parseInt(followingId, 10);
+      const { followedId } = req.params;
+      const intFollowId = parseInt(followedId, 10);
       const { userId } = req.app.locals.user;
 
       const verifyFollowerUsernameAndId = await FollowersModelQuery
@@ -39,7 +38,7 @@ class FollowersController {
         };
         return StatusResponse.notfound(res, payload);
       }
-      // console.log('====> ', typeof (userId), typeof (followingId));
+      // console.log('====> ', typeof (userId), typeof (followedId));
       if (intFollowId === userId) {
         const payload = {
           message: 'You cannot follow yourself',
@@ -49,15 +48,13 @@ class FollowersController {
 
       const followUser = await followers.create({
         followerId: userId,
-        followingId
+        followedId
       });
 
       if (followUser) {
-        eventEmitter.emit(eventTypes.FOLLOW_INTERACTION_EVENT, {
-          to: intFollowId,
-          from: userId,
-          type: 'follow'
-        });
+        const info = { intFollowId, userId, followUser };
+        followEvent(info);
+
         return StatusResponse.success(res, {
           message: 'User followed successfully',
         });
@@ -146,22 +143,22 @@ class FollowersController {
  */
   static async unfollowUser(req, res) {
     try {
-      const { followingId } = req.params;
+      const { followedId } = req.params;
       const { userId } = req.app.locals.user;
 
       const verifyFollowerUsernameAndId = await FollowersModelQuery
-        .findFollowingById(followingId, userId);
+        .findFollowingById(followedId, userId);
       if (!verifyFollowerUsernameAndId) {
         return res.send({ message: 'you are not following this user' });
       }
-      const verifyUsername = await ProfilesModelQuery.getUserById(followingId);
+      const verifyUsername = await ProfilesModelQuery.getUserById(followedId);
       if (!verifyUsername) {
         const payload = {
           message: 'Username does not exist'
         };
         return StatusResponse.notfound(res, payload);
       }
-      if (followingId === userId) {
+      if (followedId === userId) {
         const payload = {
           message: 'You cannot unfollow yourself',
         };
@@ -170,7 +167,7 @@ class FollowersController {
       const followUser = await followers.destroy({
         where: {
           followerId: userId,
-          followingId,
+          followedId,
         }
       });
       if (followUser) {

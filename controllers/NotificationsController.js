@@ -1,6 +1,7 @@
 import Model from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import { findNotificationById } from '../lib/notifications';
+import UserModelQuery from '../lib/UserModelQuery';
 
 const { notifications } = Model;
 /** @description NotificationsController class
@@ -76,6 +77,31 @@ class NotificationsController {
         return StatusResponse.success(res, { message: 'notification was updated successfully' });
       }
       return StatusResponse.notfound(res, { message: 'no notification found' });
+    } catch (error) {
+      return StatusResponse.internalServerError(res, { message: 'server error' });
+    }
+  }
+
+  /** @description function get one notification
+   * @param {string} req is the request parameter
+   * @param {string} res is the response parameter
+   * @return {object} the response object
+   * @public
+   */
+  static async subcribeNotification(req, res) {
+    try {
+      const { userId } = req.app.locals.user;
+      const user = await UserModelQuery.getUserById(userId);
+      if (user.notification) {
+        await user.update({
+          notification: false
+        });
+        return StatusResponse.success(res, { message: 'success, you have Unsubcribed for notifications' });
+      }
+      await user.update({
+        notification: true
+      });
+      return StatusResponse.success(res, { message: 'success, you have subcribed for notifications' });
     } catch (error) {
       return StatusResponse.internalServerError(res, { message: 'server error' });
     }

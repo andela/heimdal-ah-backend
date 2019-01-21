@@ -20,6 +20,10 @@ export default {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
+    notification: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

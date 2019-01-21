@@ -1,12 +1,16 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 import app from '../index';
+import { createNotification } from '../lib/notifications';
 
 chai.use(chaiHttp);
 chai.should();
+chai.use(sinonChai);
 
 chai.use(chaiHttp);
-
+const { expect } = chai;
 describe('/Notifications', () => {
   let userToken;
   before(async () => {
@@ -21,6 +25,16 @@ describe('/Notifications', () => {
     userToken = token;
   });
 
+  it('return a false when invalid params are being passed throught the function', async () => {
+    const spy = sinon.spy();
+    const info = { userId: 1, type: 'like', senderId: 2 };
+
+    await createNotification(info, spy);
+
+    // eslint-disable-next-line no-unused-expressions
+    expect(spy.called).to.be.false;
+  });
+
   it('should return a 401 when user tries to access notification thats does not belong to them', async () => {
     const res = await chai
       .request(app)
@@ -30,6 +44,16 @@ describe('/Notifications', () => {
     res.status.should.equal(401);
     res.body.should.be.a('object');
     res.body.message.should.be.equal('access cannot be granted');
+  });
+
+  it('should return a 200 when registred a user to subcribes to receive notifications', async () => {
+    const res = await chai
+      .request(app)
+      .put('/api/v1/users/notifications')
+      .set('access-token', userToken);
+
+    res.status.should.equal(200);
+    res.body.message.should.be.equal('success, you have subcribed for notifications');
   });
 
   it('should return a 200 when user tries to access notification that belongs to them', async () => {
