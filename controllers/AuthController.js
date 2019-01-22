@@ -1,10 +1,13 @@
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
 import usersModel from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 import UserModelQuery from '../lib/UserModelQuery';
 import getToken from '../helpers/getToken';
 import mailer from '../helpers/mailer';
 import generateEmailToken from '../helpers/generateEmailToken';
+
+dotenv.config();
 
 /**
  * Signup validation class
@@ -68,7 +71,6 @@ class AuthController {
         token,
         emailToken
       };
-
       return StatusResponse.created(res, payload);
     } catch (error) {
       return StatusResponse.internalServerError(res, {
@@ -133,7 +135,9 @@ class AuthController {
       message: 'user logged in succesfully',
       token
     };
-    return StatusResponse.success(res, payload);
+    // return StatusResponse.success(res, payload);
+    // console.log('this is working..');
+    return res.redirect(`${process.env.CLIENT_APP_URL}/social-auth/?token=${token}`);
   }
 }
 
