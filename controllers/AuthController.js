@@ -136,7 +136,7 @@ class AuthController {
       token
     };
     // return StatusResponse.success(res, payload);
-    // console.log('this is working..');
+    // console.log('this is working..')
     return res.redirect(`${process.env.CLIENT_APP_URL}/social-auth/?token=${token}`);
   }
 }
