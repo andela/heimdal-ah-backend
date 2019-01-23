@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import db from '../models';
@@ -12,17 +13,17 @@ chai.should();
 
 describe('Test To Follow, Unfollow user, View Followes, and view following', async () => {
   let token;
-  //   let id;
-  let user;
   before(async () => {
-    const userInfo = {
+    const data = {
       username: 'sunny',
       password: 'sunny12345',
       email: 'sunny@gmail.com'
     };
-    user = await users.create(userInfo);
-    token = getToken(user.id, user.username);
-    // ({ id } = user);
+    const res = await chai
+      .request(app)
+      .post('/api/v1/auth/signup')
+      .send(data);
+    token = res.body.token;
   });
 
   describe('Test to login an existing user', () => {

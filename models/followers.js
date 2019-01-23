@@ -14,6 +14,11 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'followerId',
       onDelete: 'CASCADE',
     });
+
+    followers.belongsTo(models.profiles, {
+      foreignKey: 'followedId',
+      onDelete: 'CASCADE',
+    });
   };
   return followers;
 };

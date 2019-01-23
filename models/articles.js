@@ -55,7 +55,9 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'articleId',
       as: 'highlightedPortions'
     });
-    Articles.hasMany(models.likes, {});
+    Articles.hasMany(models.likes, {
+      foreignKey: 'articleId'
+    });
     Articles.belongsToMany(models.tags, {
       through: 'ArticleTag',
       as: 'tags',
@@ -65,6 +67,12 @@ export default (sequelize, DataTypes) => {
       as: 'Readers',
       foreignKey: 'articleId',
       through: 'ReadingStat',
+    });
+    Articles.hasMany(models.comments, {
+      foreignKey: 'articleId'
+    });
+    Articles.hasMany(models.ratings, {
+      foreignKey: 'articleId',
     });
     // Articles.hasMany(models.report, {
     //   foreignKey: 'articleId',

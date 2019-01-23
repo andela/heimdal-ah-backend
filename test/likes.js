@@ -45,7 +45,7 @@ describe('/likes', () => {
   it('should return a 200 when an authenticated user likes an article', async () => {
     const res = await chai
       .request(app)
-      .post('/api/v1/articles/1/likes')
+      .post('/api/v1/articles/10/likes')
       .set('access-token', userToken);
 
     res.status.should.equal(200);
@@ -56,7 +56,7 @@ describe('/likes', () => {
   it('should return a 200 when an authenticated user unlikes an article', async () => {
     const res = await chai
       .request(app)
-      .post('/api/v1/articles/1/likes')
+      .post('/api/v1/articles/10/likes')
       .set('access-token', userToken);
 
     res.status.should.equal(200);
@@ -98,7 +98,7 @@ describe('/likes', () => {
   it('should return a 200 when a registered user likes a comment', async () => {
     const res = await chai
       .request(app)
-      .post('/api/v1/articles/1/comments/1/likes')
+      .post('/api/v1/articles/1/comments/20/likes')
       .set('access-token', userToken);
 
     res.status.should.equal(200);
@@ -109,7 +109,7 @@ describe('/likes', () => {
   it('should return a 200 when a registered user UNlikes a comment', async () => {
     const res = await chai
       .request(app)
-      .post('/api/v1/articles/1/comments/1/likes')
+      .post('/api/v1/articles/1/comments/20/likes')
       .set('access-token', userToken);
 
     res.status.should.equal(200);

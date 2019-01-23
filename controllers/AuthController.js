@@ -61,7 +61,7 @@ class AuthController {
         { include: [{ model: profiles, as: 'profile' }] }
       );
 
-      const token = getToken(newUser.id, newUser.username);
+      const token = getToken(newUser.id, newUser.username, roleId);
 
       const payload = {
         message: 'user created succesfully',
@@ -128,7 +128,7 @@ class AuthController {
       id,
       profile: { username }
     } = req.user;
-    const token = getToken({ id, username });
+    const token = getToken(id, username, 2);
     const payload = {
       message: 'user logged in succesfully',
       token

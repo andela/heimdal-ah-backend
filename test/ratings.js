@@ -110,7 +110,7 @@ describe('Heimdal Test Suite', () => {
 
     it('should return status code 404 if no ratings is found for an article', async () => {
       const res = await chai.request(app)
-        .get('/api/v1/ratings/articles/2');
+        .get('/api/v1/ratings/articles/10');
       res.status.should.equal(404);
       res.body.should.be.a('object');
       res.body.should.have.property('message');

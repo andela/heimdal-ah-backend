@@ -2,7 +2,7 @@ import jwtDecode from 'jwt-decode';
 import model from '../models';
 import Response from '../helpers/StatusResponse';
 
-const { profiles } = model;
+const { profiles, followers } = model;
 
 /**
  * @description - This class is all about users
@@ -22,7 +22,11 @@ class ProfilesController {
       const usersProfile = await profiles.findOne({
         where: {
           username: req.params.username
-        }
+        },
+        include: [
+          { model: followers, as: 'followers', attributes: ['followerId'] },
+          { model: followers, as: 'followed', attributes: ['followedId'] }
+        ]
       });
       if (!usersProfile) {
         Response.notfound(res, {
