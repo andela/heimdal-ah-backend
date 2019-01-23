@@ -94,7 +94,15 @@ class ArticlesController {
         include: [
           { model: comments, attributes: ['id'] },
           { model: likes, attributes: ['userId'] },
-          { model: ratings, attributes: ['stars', 'userId'] }
+          { model: ratings, attributes: ['stars', 'userId'] },
+          {
+            model: Tag,
+            as: 'tags',
+            attributes: ['tagName'],
+            through: {
+              attributes: []
+            }
+          }
         ],
         distinct: true,
         limit: size,
