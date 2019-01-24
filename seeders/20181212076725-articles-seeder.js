@@ -28,7 +28,7 @@ export default {
   },
   {
     slug: 'this-is-third-post-title-u87ddsa',
-    title: chance.sentence({ words: 10 }),
+    title: 'This is the third post title',
     description: 'Third descriptive title',
     body: chance.sentence({ words: 300 }),
     userId: 3,
