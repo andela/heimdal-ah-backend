@@ -56,12 +56,12 @@ class AuthController {
           email,
           roleId,
           password: hashPassword,
-          profile: { username }
+          profile: { username },
         },
         { include: [{ model: profiles, as: 'profile' }] }
       );
 
-      const token = getToken(newUser.id, newUser.username, roleId);
+      const token = getToken(newUser.id, username, newUser.email, null, roleId);
 
       const payload = {
         message: 'user created succesfully',
@@ -101,8 +101,14 @@ class AuthController {
         };
         return StatusResponse.notfound(res, payload);
       }
-      const { id, roleId, profile: { username } } = user;
-      const token = getToken(id, username, roleId);
+      const {
+        id,
+        roleId,
+        email: emailAddress,
+        profile: { username, image }
+      } = user;
+
+      const token = getToken(id, username, emailAddress, image, roleId);
       user.dataValues.password = undefined;
       const payload = {
         message: 'user logged in succesfully',
@@ -126,10 +132,11 @@ class AuthController {
   static socialAuth(req, res) {
     const {
       id,
+      email,
       roleId,
-      profile: { username }
+      profile: { username, image }
     } = req.user;
-    const token = getToken(id, username, roleId);
+    const token = getToken(id, username, email, image, roleId);
     const payload = {
       message: 'user logged in succesfully',
       token
