@@ -40,7 +40,9 @@ const facebookCallback = async (req, accessToken, refreshToken, profileInfo, don
     { include: [{ model: profiles, as: 'profile' }] }
   );
 
-  return done(null, newUser);
+  userObject.id = newUser.id;
+
+  return done(null, userObject);
 };
 
 export default facebookCallback;

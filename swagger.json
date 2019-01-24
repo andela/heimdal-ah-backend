@@ -2705,6 +2705,42 @@
                     "items": {
                       "type": "string"
                     }
+                  },
+                  "comments": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "likes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "ratings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "userId": {
+                          "type": "integer"
+                        },
+                        "stars": {
+                          "type": "integer"
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -2928,6 +2964,42 @@
         },
         "readingTime": {
           "type": "string"
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "ratings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "integer"
+              },
+              "stars": {
+                "type": "integer"
+              }
+            }
+          }
         }
       }
     },
@@ -3335,6 +3407,28 @@
         },
         "facebookUsername": {
           "type": "string"
+        },
+        "followers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "followerId": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "followed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "followedId": {
+                "type": "string"
+              }
+            }
+          }
         }
       }
     },
@@ -3428,6 +3522,42 @@
                   "id": 3,
                   "profile": {
                     "username": "john"
+                  }
+                },
+                "comments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "likes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "ratings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "integer"
+                      },
+                      "stars": {
+                        "type": "integer"
+                      }
+                    }
                   }
                 }
               }
@@ -3541,6 +3671,42 @@
                   "tagName": "react",
                   "createdAt": "2019-01-06T23:19:49.811Z",
                   "updatedAt": "2019-01-06T23:19:49.811Z"
+                },
+                "comments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "likes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                },
+                "ratings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "integer"
+                      },
+                      "stars": {
+                        "type": "integer"
+                      }
+                    }
+                  }
                 }
               }
             ]

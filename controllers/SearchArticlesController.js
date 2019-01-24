@@ -8,7 +8,10 @@ const {
   ArticleTag,
   tags,
   users,
-  profiles
+  profiles,
+  comments,
+  likes,
+  ratings
 } = model;
 
 /**
@@ -35,15 +38,20 @@ class SearchArticlesController {
             [Sequelize.Op.or]: req.app.locals.user.userIds
           }
         },
-        attributes: { exclude: ['userId'] },
-        include: {
-          model: users,
-          attributes: { exclude: ['email', 'password', 'emailVerification', 'resettingPassword', 'createdAt', 'updatedAt', 'roleId'], },
-          include: {
-            model: profiles,
-            attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'image', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
+        include: [
+          { model: comments, attributes: ['id'] },
+          { model: likes, attributes: ['userId'] },
+          { model: ratings, attributes: ['stars', 'userId'] },
+          {
+            model: users,
+            attributes: { exclude: ['email', 'password', 'emailVerification', 'resettingPassword', 'createdAt', 'updatedAt', 'roleId'], },
+            include: {
+              model: profiles,
+              attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'image', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
+            },
           },
-        },
+        ],
+        distinct: true,
         offset,
         limit: size,
         order: [[orderBy, order]]
@@ -81,7 +89,13 @@ class SearchArticlesController {
       const articlesByTitle = await articles.findAndCountAll({
         where: {
           title: { $ilike: `%${req.query.title}%` }
-        }
+        },
+        include: [
+          { model: comments, attributes: ['id'] },
+          { model: likes, attributes: ['userId'] },
+          { model: ratings, attributes: ['stars', 'userId'] }
+        ],
+        distinct: true,
       });
       if (articlesByTitle.count >= 1) {
         StatusResponse.success(res, {
@@ -120,12 +134,18 @@ class SearchArticlesController {
         },
         include: [
           {
-            model: articles
+            model: articles,
+            include: [
+              { model: comments, attributes: ['id'] },
+              { model: likes, attributes: ['userId'] },
+              { model: ratings, attributes: ['stars', 'userId'] }
+            ],
           },
           {
             model: tags
-          }
+          },
         ],
+        distinct: true,
         attributes: { exclude: ['createdAt', 'updatedAt', 'tagId', 'articleId'] }
       });
       if (articlesByTags.count >= 1) {

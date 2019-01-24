@@ -17,7 +17,14 @@ import eventEmitter from '../helpers/eventEmitter';
 import eventTypes from '../events/eventTypes';
 
 
-const { articles: Article, tags: Tag, HighlightedText } = models;
+const {
+  articles: Article,
+  tags: Tag,
+  HighlightedText,
+  comments,
+  likes,
+  ratings
+} = models;
 
 /**
  * @description ArticlesController class
@@ -85,6 +92,9 @@ class ArticlesController {
           isArchived: false
         },
         include: [
+          { model: comments, attributes: ['id'] },
+          { model: likes, attributes: ['userId'] },
+          { model: ratings, attributes: ['stars', 'userId'] },
           {
             model: Tag,
             as: 'tags',
@@ -94,6 +104,7 @@ class ArticlesController {
             }
           }
         ],
+        distinct: true,
         limit: size,
         offset,
         order: [[orderBy, order]]
@@ -238,8 +249,17 @@ class ArticlesController {
           {
             model: HighlightedText,
             as: 'highlightedPortions'
+          },
+          {
+            model: comments, attributes: ['id']
+          },
+          {
+            model: likes, attributes: ['userId']
+          },
+          {
+            model: ratings, attributes: ['stars', 'userId']
           }
-        ]
+        ],
       });
       if (!fetchArticle) {
         return StatusResponse.notfound(res, {

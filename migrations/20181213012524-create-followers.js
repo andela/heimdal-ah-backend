@@ -7,7 +7,12 @@ export default {
       type: Sequelize.INTEGER
     },
     followerId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'profiles',
+        key: 'userId'
+      },
     },
     followedId: {
       type: Sequelize.INTEGER,
