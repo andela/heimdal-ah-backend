@@ -19,7 +19,7 @@ export function up(queryInterface, Sequelize) {
       unique: true
     },
     biodata: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
     },
     image: {
       type: Sequelize.STRING,

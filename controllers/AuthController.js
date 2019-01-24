@@ -126,9 +126,10 @@ class AuthController {
   static socialAuth(req, res) {
     const {
       id,
+      roleId,
       profile: { username }
     } = req.user;
-    const token = getToken(id, username, 2);
+    const token = getToken(id, username, roleId);
     const payload = {
       message: 'user logged in succesfully',
       token

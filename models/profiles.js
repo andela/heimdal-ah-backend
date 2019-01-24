@@ -13,7 +13,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     biodata: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     image: {
       type: DataTypes.STRING,
