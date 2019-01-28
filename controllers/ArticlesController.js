@@ -23,7 +23,9 @@ const {
   HighlightedText,
   comments,
   likes,
-  ratings
+  ratings,
+  users,
+  profiles
 } = models;
 
 /**
@@ -102,7 +104,14 @@ class ArticlesController {
             through: {
               attributes: []
             }
-          }
+          },
+          {
+            model: users,
+            attributes: ['id'],
+            include: {
+              model: profiles
+            },
+          },
         ],
         distinct: true,
         limit: size,
@@ -150,7 +159,14 @@ class ArticlesController {
             through: {
               attributes: []
             }
-          }
+          },
+          {
+            model: users,
+            attributes: ['id'],
+            include: {
+              model: profiles
+            },
+          },
         ],
         limit: size,
         offset,
@@ -198,7 +214,14 @@ class ArticlesController {
             through: {
               attributes: []
             }
-          }
+          },
+          {
+            model: users,
+            attributes: ['id'],
+            include: {
+              model: profiles
+            },
+          },
         ],
         limit: size,
         offset,
@@ -258,7 +281,14 @@ class ArticlesController {
           },
           {
             model: ratings, attributes: ['stars', 'userId']
-          }
+          },
+          {
+            model: users,
+            attributes: ['id'],
+            include: {
+              model: profiles
+            },
+          },
         ],
       });
       if (!fetchArticle) {

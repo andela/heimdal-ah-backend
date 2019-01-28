@@ -21,7 +21,7 @@ router.get('/', ArticlesController.list); // done
 router.get('/archived', checkAuthentication, admin, ArticlesController.getArchived); // done
 router.get('/unpublished', checkAuthentication, publishAcess, ArticlesController.getUnpublished); // done
 
-router.get('/:identifier', checkRoleAuthentication, checkArticleId, ArticlesController.get); // done
+router.get('/:identifier', checkRoleAuthentication, ArticlesController.get); // done
 router.put('/:identifier', checkAuthentication, checkArticleId, checkArticle, checkTags, ArticlesController.update); // done
 router.delete('/:identifier', checkAuthentication, checkArticleId, checkArticle, ArticlesController.archive); // done
 

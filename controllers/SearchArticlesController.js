@@ -47,7 +47,7 @@ class SearchArticlesController {
             attributes: { exclude: ['email', 'password', 'emailVerification', 'resettingPassword', 'createdAt', 'updatedAt', 'roleId'], },
             include: {
               model: profiles,
-              attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'image', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
+              attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
             },
           },
         ],
