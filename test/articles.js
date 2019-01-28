@@ -99,16 +99,6 @@ describe('Test for articles controller', () => {
       res.body.message.should.equal('Could not find article');
     });
 
-    it('should return status code 400 if article id is not an integer', async () => {
-      const res = await chai.request(app)
-        .get('/api/v1/articles/nm')
-        .set('access-token', userToken);
-      res.status.should.equal(400);
-      res.body.should.be.a('object');
-      res.body.should.have.property('errors');
-      res.body.errors.identifier.should.have.property('msg');
-    });
-
     it('should return 200 on successful retrieval of an article', async () => {
       const res = await chai
         .request(app)
