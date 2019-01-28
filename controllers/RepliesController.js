@@ -27,15 +27,6 @@ class RepliesController {
       };
       const replies = await ReplyQueryModel.createReplies(info);
 
-      const commentOwner = await ArticleQueryModel.getArticleByIdentifier({ id: commentId });
-
-      eventEmitter.emit(eventTypes.COMMENT_NOTIFICATION_EVENT, {
-        to: commentOwner.dataValues,
-        from: userId,
-        articleId: req.params.commentId,
-        type: 'comment',
-        event: replies.dataValues
-      });
       const payload = {
         message: 'Reply has been successfully created',
         replies
