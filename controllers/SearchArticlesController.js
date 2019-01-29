@@ -93,7 +93,15 @@ class SearchArticlesController {
         include: [
           { model: comments, attributes: ['id'] },
           { model: likes, attributes: ['userId'] },
-          { model: ratings, attributes: ['stars', 'userId'] }
+          { model: ratings, attributes: ['stars', 'userId'] },
+          {
+            model: users,
+            attributes: { exclude: ['email', 'password', 'emailVerification', 'resettingPassword', 'createdAt', 'updatedAt', 'roleId'], },
+            include: {
+              model: profiles,
+              attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
+            },
+          },
         ],
         distinct: true,
       });
@@ -138,7 +146,15 @@ class SearchArticlesController {
             include: [
               { model: comments, attributes: ['id'] },
               { model: likes, attributes: ['userId'] },
-              { model: ratings, attributes: ['stars', 'userId'] }
+              { model: ratings, attributes: ['stars', 'userId'] },
+              {
+                model: users,
+                attributes: { exclude: ['email', 'password', 'emailVerification', 'resettingPassword', 'createdAt', 'updatedAt', 'roleId'], },
+                include: {
+                  model: profiles,
+                  attributes: { exclude: ['id', 'firstName', 'lastName', 'biodata', 'location', 'twitterUsername', 'facebookUsername', 'createdAt', 'updatedAt', 'userId'] },
+                },
+              },
             ],
           },
           {
