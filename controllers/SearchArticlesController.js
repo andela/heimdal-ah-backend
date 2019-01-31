@@ -85,6 +85,9 @@ class SearchArticlesController {
    * @returns {object} Articles by title
    */
   static async byTitle(req, res) {
+    const {
+      size = 20, order = 'DESC', orderBy = 'id', offset = 0
+    } = req.query;
     try {
       const articlesByTitle = await articles.findAndCountAll({
         where: {
@@ -104,11 +107,15 @@ class SearchArticlesController {
           },
         ],
         distinct: true,
+        offset,
+        limit: size,
+        order: [[orderBy, order]]
       });
       if (articlesByTitle.count >= 1) {
         StatusResponse.success(res, {
           message: 'Articles with this title returned succesfully',
-          articles: articlesByTitle
+          articles: articlesByTitle,
+          ...pagination(articlesByTitle, offset, size),
         });
       } else {
         StatusResponse.notfound(res, {
@@ -133,6 +140,9 @@ class SearchArticlesController {
    * @returns {object} Articles by tags
    */
   static async byTags(req, res) {
+    const {
+      size = 20, order = 'DESC', orderBy = 'id', offset = 0
+    } = req.query;
     try {
       const articlesByTags = await ArticleTag.findAndCountAll({
         where: {
@@ -162,12 +172,16 @@ class SearchArticlesController {
           },
         ],
         distinct: true,
+        offset,
+        limit: size,
+        order: [[orderBy, order]],
         attributes: { exclude: ['createdAt', 'updatedAt', 'tagId', 'articleId'] }
       });
       if (articlesByTags.count >= 1) {
         StatusResponse.success(res, {
           message: 'All Articles using these tags returned succesfully',
-          articles: articlesByTags
+          articles: articlesByTags,
+          ...pagination(articlesByTags, offset, size),
         });
       } else {
         StatusResponse.notfound(res, {
