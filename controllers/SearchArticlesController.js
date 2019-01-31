@@ -141,7 +141,7 @@ class SearchArticlesController {
    */
   static async byTags(req, res) {
     const {
-      size = 20, order = 'DESC', orderBy = 'id', offset = 0
+      size = 20, offset = 0
     } = req.query;
     try {
       const articlesByTags = await ArticleTag.findAndCountAll({
@@ -174,8 +174,6 @@ class SearchArticlesController {
         distinct: true,
         offset,
         limit: size,
-        order: [[orderBy, order]],
-        attributes: { exclude: ['createdAt', 'updatedAt', 'tagId', 'articleId'] }
       });
       if (articlesByTags.count >= 1) {
         StatusResponse.success(res, {
