@@ -3,7 +3,7 @@ import StatusResponse from '../helpers/StatusResponse';
 import { findNotificationById } from '../lib/notifications';
 import UserModelQuery from '../lib/UserModelQuery';
 
-const { notifications, profiles } = Model;
+const { notifications, profiles, users } = Model;
 /** @description NotificationsController class
  * @return {object} the response object
  * @public
@@ -56,12 +56,7 @@ class NotificationsController {
       include: [
         {
           model: profiles,
-          as: 'senderId',
-          attributes: ['username', 'image']
-        },
-        {
-          model: profiles,
-          as: 'userId',
+          as: 'profile',
           attributes: ['username', 'image']
         }
       ],
