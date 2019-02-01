@@ -7,8 +7,12 @@ export default (sequelize, DataTypes) => {
   }, {});
   notifications.associate = (models) => {
     // associations can be defined here
-    notifications.belongsTo(models.users, {
+    notifications.belongsTo(models.profiles, {
       foreignKey: 'userId',
+      onDelete: 'CASCADE',
+    });
+    notifications.belongsTo(models.profiles, {
+      foreignKey: 'senderId',
       onDelete: 'CASCADE',
     });
   };

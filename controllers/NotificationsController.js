@@ -3,7 +3,7 @@ import StatusResponse from '../helpers/StatusResponse';
 import { findNotificationById } from '../lib/notifications';
 import UserModelQuery from '../lib/UserModelQuery';
 
-const { notifications } = Model;
+const { notifications, profiles } = Model;
 /** @description NotificationsController class
  * @return {object} the response object
  * @public
@@ -22,6 +22,13 @@ class NotificationsController {
       return StatusResponse.unauthorized(res, { message: 'access cannot be granted' });
     }
     const findNotifications = await notifications.findAndCountAll({
+      include: [
+        {
+          model: profiles,
+          as: 'profile',
+          attributes: ['username', 'image']
+        }
+      ],
       where: {
         userId
       }
@@ -46,6 +53,18 @@ class NotificationsController {
       return StatusResponse.unauthorized(res, { message: 'access cannot be granted' });
     }
     const findNotifications = await notifications.findOne({
+      include: [
+        {
+          model: profiles,
+          as: 'senderId',
+          attributes: ['username', 'image']
+        },
+        {
+          model: profiles,
+          as: 'userId',
+          attributes: ['username', 'image']
+        }
+      ],
       where: {
         id: notificationId
       }
