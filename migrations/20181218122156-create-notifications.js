@@ -18,7 +18,14 @@ export default {
       type: Sequelize.STRING
     },
     senderId: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      references: {
+        model: 'profiles',
+        key: 'userId',
+        as: 'userId'
+      },
+      allowNull: false
     },
     message: {
       type: Sequelize.STRING

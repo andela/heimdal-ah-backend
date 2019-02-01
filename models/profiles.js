@@ -50,6 +50,10 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'followedId',
       as: 'followers'
     });
+    Profiles.hasMany(models.notifications, {
+      foreignKey: 'senderId',
+      as: 'senderId'
+    });
   };
   return Profiles;
 };
