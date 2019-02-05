@@ -110,12 +110,12 @@ class NotificationsController {
         await user.update({
           notification: false
         });
-        return StatusResponse.success(res, { message: 'success, you have Unsubcribed for notifications' });
+        return StatusResponse.success(res, { message: 'success, you have Unsubcribed for notifications', status: false });
       }
       await user.update({
         notification: true
       });
-      return StatusResponse.success(res, { message: 'success, you have subcribed for notifications' });
+      return StatusResponse.success(res, { message: 'success, you have subcribed for notifications', status: true });
     } catch (error) {
       return StatusResponse.internalServerError(res, { message: 'server error' });
     }
