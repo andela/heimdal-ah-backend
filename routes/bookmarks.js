@@ -24,7 +24,7 @@ router.get(
   BookmarksController.search
 );
 router.delete(
-  '/bookmarks/:bookmarkId',
+  '/bookmarks/:articleId',
   checkAuthentication,
   BookmarksController.delete
 );
