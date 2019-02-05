@@ -1,7 +1,9 @@
 import Models from '../models';
 import StatusResponse from '../helpers/StatusResponse';
 
-const { bookmarks, articles } = Models;
+const {
+  bookmarks, articles, profiles, users
+} = Models;
 /** @description usersController class
  * @return {object} the response object
  * @public
@@ -85,8 +87,16 @@ class BookmarksController {
         include: [{
           model: articles,
           as: 'article',
-          attributes: ['title', 'id', 'slug']
-        }]
+          attributes: ['title', 'body', 'id', 'slug'],
+          include: [{
+            model: users,
+            attributes: ['id'],
+            include: [{
+              model: profiles,
+              attributes: ['username', 'image'],
+            }]
+          }],
+        }],
       });
       if (!bookmark) {
         return StatusResponse.notfound(res, { message: 'no bookmark found' });
@@ -105,11 +115,11 @@ class BookmarksController {
    */
   static async delete(req, res) {
     const { user: { userId } } = req.app.locals;
-    const { bookmarkId } = req.params;
+    const { articleId } = req.params;
     try {
       const bookmark = await bookmarks.destroy({
         where: {
-          id: bookmarkId,
+          articleId,
           userId
         }
       });
