@@ -2,7 +2,7 @@ import jwtDecode from 'jwt-decode';
 import model from '../models';
 import Response from '../helpers/StatusResponse';
 
-const { profiles, followers } = model;
+const { profiles, followers, users } = model;
 
 /**
  * @description - This class is all about users
@@ -25,8 +25,16 @@ class ProfilesController {
         },
         include: [
           { model: followers, as: 'followers', attributes: ['followerId'] },
-          { model: followers, as: 'followed', attributes: ['followedId'] }
+          { model: followers, as: 'followed', attributes: ['followedId'] },
+          {
+            model: users,
+            as: 'user',
+            attributes: ['notification']
+          }
+
         ]
+
+
       });
       if (!usersProfile) {
         Response.notfound(res, {

@@ -33,6 +33,7 @@ export default (sequelize, DataTypes) => {
     Profiles.belongsTo(models.users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE',
+      as: 'user'
     });
     Profiles.hasMany(models.comments, {
       foreignKey: 'userId',

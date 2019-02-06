@@ -1,5 +1,6 @@
 export default (sequelize, DataTypes) => {
   const notifications = sequelize.define('notifications', {
+    userId: DataTypes.INTEGER,
     senderId: DataTypes.INTEGER,
     message: DataTypes.STRING,
     type: DataTypes.STRING,
