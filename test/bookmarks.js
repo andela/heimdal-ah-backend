@@ -62,7 +62,7 @@ describe('/bookmarks', () => {
   it('should return a 404 when article is not avaliable', async () => {
     const res = await chai
       .request(app)
-      .post('/api/v1/articles/67/bookmarks')
+      .post('/api/v1/articles/0/bookmarks')
       .set('access-token', userToken);
 
     res.status.should.equal(404);

@@ -60,28 +60,45 @@ class CommentController {
   static async list(req, res) {
     const { articleId } = req.params;
     const { article } = req.app.locals;
-    const { userId } = req.app.locals.user;
-    const articleUser = article.userId;
-    const commentInfo = {
-      userId,
-      articleId
-    };
     try {
-      if (articleUser === userId) {
-        const comment = await CommentQueryModel.getPrivateComment(commentInfo);
-        if (!comment) {
-          const payload = {
-            message: 'No Comment exist'
-          };
-          return StatusResponse.notfound(res, payload);
-        }
-        const payload = {
-          message: 'All Comment for the Article',
-          comment
+      if (req.app.locals.user) {
+        
+        const { userId } = req.app.locals.user;
+
+        const articleUser = article.userId;
+        const commentInfo = {
+          userId,
+          articleId
         };
-        return StatusResponse.success(res, payload);
+        if (articleUser === userId) {
+          const comment = await CommentQueryModel.getPrivateComment(commentInfo);
+          if (!comment) {
+            const payload = {
+              message: 'No Comment exist'
+            };
+            return StatusResponse.notfound(res, payload);
+          }
+          const payload = {
+            message: 'All Comment for the Article',
+            comment
+          };
+          return StatusResponse.success(res, payload);
+        } else {
+          const comment = await CommentQueryModel.getPublicComment(articleId);
+          if (!comment) {
+            const payload = {
+              message: 'No Comment exist'
+            };
+            return StatusResponse.notfound(res, payload);
+          }
+          const payload = {
+            message: 'All Comment for the Article',
+            comment
+          };
+          return StatusResponse.success(res, payload);
+        }
       }
-      const comment = await CommentQueryModel.getPublicComment(commentInfo);
+      const comment = await CommentQueryModel.getAllPublicComment(articleId);
       if (!comment) {
         const payload = {
           message: 'No Comment exist'
@@ -95,7 +112,7 @@ class CommentController {
       return StatusResponse.success(res, payload);
     } catch (error) {
       const payload = {
-        message: 'Cannot succesfully list out Comments',
+        message: 'Cannot successfully list out Comments',
         error: {
           body: [`Internal server error => ${error.message}`]
         }

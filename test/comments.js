@@ -11,7 +11,7 @@ describe('Comment Validation and Creation', () => {
   let userToken;
   before(async () => {
     const userData = {
-      email: 'publisherb@heimdal.com',
+      email: 'admin@heimdal.com',
       password: '12345678heimdal',
     };
     const userResponse = await chai
@@ -195,8 +195,7 @@ describe('Comment Validation and Creation', () => {
 
   it('should return 200 to get a public comment', async () => {
     const res = await chai.request(app)
-      .get('/api/v1/articles/2/comments')
-      .set('access-token', userToken);
+      .get('/api/v1/articles/1/comments');
     res.status.should.equal(200);
     res.body.should.be.a('object');
     res.body.should.have.property('message');
