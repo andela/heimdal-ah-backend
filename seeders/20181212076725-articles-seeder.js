@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import Chance from 'chance';
+import slugify from 'slugify';
 
 const chance = new Chance();
 
@@ -219,7 +220,20 @@ export default {
     readingTime: '8 mins read',
     createdAt: new Date(),
     updatedAt: new Date(),
-  }], {}),
+  }].concat(
+    Array(300).fill('r').map(() => ({
+      slug: slugify(chance.sentence({ words: 10 })),
+      title: chance.sentence({ words: 10 }),
+      description: chance.sentence({ words: 8 }),
+      body: chance.sentence({ words: 200 }),
+      userId: chance.integer({ min: 1, max: 3 }),
+      isArchived: false,
+      isPublished: chance.bool({ likelihood: 80 }),
+      readingTime: '2 mins read',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }))
+  ), {}),
 
   down: (queryInterface, Sequelize) => {
     /*

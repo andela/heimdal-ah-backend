@@ -88,7 +88,7 @@ describe('Heimdal Role based access control functionality Test Suite', () => {
     it('should return 404 if article to be published is not found', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/50/publish')
+        .put('/api/v1/articles/0/publish')
         .set('access-token', adminToken)
         .send();
       res.status.should.equal(404);
@@ -127,7 +127,7 @@ describe('Heimdal Role based access control functionality Test Suite', () => {
     it('should return 404 if article to be unpublished is not found', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/50/unpublish')
+        .put('/api/v1/articles/0/unpublish')
         .set('access-token', adminToken)
         .send();
       res.status.should.equal(404);

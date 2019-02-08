@@ -92,7 +92,7 @@ describe('Test for articles controller', () => {
     it('should return 404 if an article is not found', async () => {
       const res = await chai
         .request(app)
-        .get('/api/v1/articles/88')
+        .get('/api/v1/articles/0')
         .set('access-token', userToken);
       res.status.should.equal(404);
       res.body.should.have.a('object');
@@ -128,7 +128,7 @@ describe('Test for articles controller', () => {
     it('should return 404 if article to be edited is not found', async () => {
       const res = await chai
         .request(app)
-        .put('/api/v1/articles/50')
+        .put('/api/v1/articles/0')
         .set('access-token', userToken)
         .send({
           title: 'This is a title'
@@ -172,7 +172,7 @@ describe('Test for articles controller', () => {
     it('should return 404 if article to be deleted is not found', async () => {
       const res = await chai
         .request(app)
-        .delete('/api/v1/articles/50')
+        .delete('/api/v1/articles/0')
         .set('access-token', userToken);
       res.status.should.equal(404);
       res.body.should.have.a('object');

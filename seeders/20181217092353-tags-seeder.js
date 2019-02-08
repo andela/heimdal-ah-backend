@@ -20,6 +20,26 @@ export default {
     updatedAt: new Date()
   },
   {
+    tagName: 'game',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    tagName: 'music',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    tagName: 'lifestyles',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
+    tagName: 'redux',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
+  {
     tagName: 'design',
     createdAt: new Date(),
     updatedAt: new Date()
